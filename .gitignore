@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# dewrito files
+*.map
+variant.*
+
 # Distribution / packaging
 .Python
 build/
