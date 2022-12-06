@@ -1,8 +1,6 @@
 from fastapi import APIRouter
-from api.api_v1.endpoints import upload
+from api.api_v1.endpoints import upload, user
 
 api_router = APIRouter()
 api_router.include_router(upload.router, prefix="/api_v1", tags=["upload"])
-#api_router.include_router(login.router, tags=["login"])
-#api_router.include_router(utils.router, prefix="/utils", tags=["utils"])
-#api_router.include_router(items.router, prefix="/items", tags=["items"])
+api_router.include_router(user.router, prefix="/api_v1", tags=["user"])

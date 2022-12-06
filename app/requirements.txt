@@ -1,4 +1,5 @@
 fastapi
 python-multipart
 sqlalchemy
+pydantic
 uvicorn[standard]
