@@ -9,7 +9,7 @@ db_database = os.environ.get("DB_DATABASE")
 db_user = os.environ.get("DB_USER")
 db_password = os.environ.get("DB_PASSWORD")
 
-SQLALCHEMY_DATABASE_URL = "mysql://{}:{}@{}:{}/{}".format(db_user, db_password, db_host, db_port, db_database)
+SQLALCHEMY_DATABASE_URL = "mysql+mysqldb://{}:{}@{}:{}/{}".format(db_user, db_password, db_host, db_port, db_database)
 
 try:
     engine = create_engine(SQLALCHEMY_DATABASE_URL)

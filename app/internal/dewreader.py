@@ -10,9 +10,9 @@ class mapReader(object):
     mapBudgetCount = None
 
     def __init__(self, mapfile, contents):
-        self.mapfile = mapfile
+        self.mapFile = mapfile
         self.contents = contents
-
+        self.read()
 
     def byte2ascii(self, hval):
         ascii_object = hval.decode("utf-8").replace(u"\u0000", "")
@@ -26,9 +26,8 @@ class mapReader(object):
 
 
     def read(self):
-        dataDict = {}
         #Create a file object from our byte stream
-        with open(self.mapfile, "w+b") as f:
+        with open(self.mapFile, "w+b") as f:
             f.write(self.contents)
 
             #ToDo: add check for magic number
@@ -36,10 +35,10 @@ class mapReader(object):
             #Verify the map file size since they are static
             size = f.tell()
             if size != 61440:
-                return {"File size too large"}
+                return 1
         
             if size == 0:
-                return {"File empty"}
+                return 2
 
             #Map name
             f.seek(0x0048, 0)
@@ -70,6 +69,10 @@ class mapReader(object):
             f.seek(0x0246, 0)
             self.mapBudgetCount = self.byte2int(f.read(2))
 
+            #Cleanup
+            f.close()
+
+        '''
         dataDict["mapName"] = self.mapName
         dataDict["mapAuthor"] = self.mapAuthor
         dataDict["mapDescription"] = self.mapDescription
@@ -77,8 +80,9 @@ class mapReader(object):
         dataDict["mapScnrObjectCount"] = self.mapScnrObjectCount
         dataDict["mapTotalObject"] = self.mapTotalObject
         dataDict["mapBudgetCount"] = self.mapBudgetCount
+        dataDict["mapFile"] = self.mapFile
 
-        return dataDict
+        self.Dict = dataDict'''
 
         
 
