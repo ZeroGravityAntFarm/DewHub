@@ -28,7 +28,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 
 def get_maps(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Map).offset(skip).limit(limit).all()
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).offset(skip).limit(limit).all()
 
 
 def create_user_map(db: Session, map: schemas.MapCreate, user_id: int):

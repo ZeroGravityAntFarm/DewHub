@@ -57,5 +57,7 @@ def upload(user_id: int = Form(...), files: List[UploadFile] = File(...), db: Se
     map_create = controller.create_user_map(db, map=mapData, user_id=user_id)
     #variant_create = controller.create_user_variant(variantData,  user_id=user_id)
 
+    return HTTPException(status_code=200, detail="Success!")
+
     if map_create is None:
         raise HTTPException(status_code=404, detail="User not found")

@@ -9,10 +9,10 @@ class MapBase(BaseModel):
     mapFile: bytes
     mapScnrObjectCount: int
     mapTotalObject: int
-    mapBudgetCount:int
-    variantName: str
-    variantType: str
-    variantAuthor: str
+    mapBudgetCount:int | None = None
+    variantName: str | None = None
+    variantType: str | None = None
+    variantAuthor: str | None = None
 
 #Inherits from MapBase
 class MapCreate(MapBase):
@@ -26,12 +26,27 @@ class Map(MapBase):
     class Config:
         orm_mode = True
 
+class MapQuery(BaseModel):
+    mapName: str
+    mapDescription: str | None = None
+    mapAuthor: str
+    mapScnrObjectCount: int
+    mapTotalObject: int
+    mapBudgetCount:int | None = None
+    variantName: str | None = None
+    variantType: str | None = None
+    variantAuthor: str | None = None
+
+    class Config:
+        orm_mode = True
+
+
 
 #User models
 class UserBase(BaseModel):
     email: str
     name: str
-    
+
 #Inherits from UserBase
 class UserCreate(UserBase):
     password: str

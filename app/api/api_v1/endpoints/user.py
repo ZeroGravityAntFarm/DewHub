@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException, Depends
-from db.models import models
 from db.schemas import schemas
 from db import controller
 from db.session import SessionLocal, engine
