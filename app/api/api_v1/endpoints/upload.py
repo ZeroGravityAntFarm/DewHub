@@ -4,7 +4,6 @@ from db.session import SessionLocal
 from sqlalchemy.orm import Session
 from typing import List
 from internal.dewreader import *
-import json 
 
 router = APIRouter()
 
@@ -19,7 +18,7 @@ def get_db():
 def upload(user_id: int = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db)):
     valid_variants = ['variant.zombiez', 'variant.ctf', 'variant.koth', 'variant.slayer', 'variant.assault', 'variant.vip', 'variant.jugg', 'variant.terries']
 
-    if files == None:
+    if len(files) < 2:
         raise HTTPException(status_code=400, detail="Missing files")
 
     if len(files) > 2:
@@ -39,25 +38,29 @@ def upload(user_id: int = Form(...), files: List[UploadFile] = File(...), db: Se
             raise HTTPException(status_code=400, detail="Invalid file {}".format(file.filename))
 
     mapContents = mapFile.file.read()
-    #variantContents = variantFile.file.read()
+    variantContents = variantFile.file.read()
 
+    #Cleanup
+    mapFile.file.close()
+    variantFile.file.close()
+
+    #Extract map and variant file meta data
     mapData = mapReader(mapFile.filename, mapContents)
-    #dewVariant = variantReader(variantFile, variantContents)
+    variantData = variantReader(variantFile.filename, variantContents)
 
-    #mapData = dewMap.read()
     if mapData == 1:
         raise HTTPException(status_code=400, detail="Unexpected map file size")
     
     if mapData == 2:
         raise HTTPException(status_code=400, detail="Map file empty")
 
-    #variantData = dewVariant.read()
-    file.file.close()
+    if variantData == 1:
+        raise HTTPException(status_code=400, detail="Unexpected variant file size")
 
-    map_create = controller.create_user_map(db, map=mapData, user_id=user_id)
-    #variant_create = controller.create_user_variant(variantData,  user_id=user_id)
+    if variantData == 2:
+        raise HTTPException(status_code=400, detail="Variant file empty")
+
+    variant_id = controller.create_user_variant(db, variant=variantData,  user_id=user_id)
+    map_create = controller.create_user_map(db, map=mapData, user_id=user_id, variant_id=variant_id)
 
     return HTTPException(status_code=200, detail="Success!")
-
-    if map_create is None:
-        raise HTTPException(status_code=404, detail="User not found")

@@ -30,8 +30,6 @@ class mapReader(object):
         with open(self.mapFile, "w+b") as f:
             f.write(self.contents)
 
-            #ToDo: add check for magic number
-
             #Verify the map file size since they are static
             size = f.tell()
             if size != 61440:
@@ -88,9 +86,15 @@ class mapReader(object):
 
 
 class variantReader(object):
+    variantName = None
+    variantAuthor = None
+    variantDescription = None
+    variantId = None
 
-    def __init__(self, variantfile):
-        self.variantfile = variantfile
+    def __init__(self, variantfile, contents):
+        self.variantFile = variantfile
+        self.contents = contents
+        self.read()
 
     def byte2ascii(self, hval):
         ascii_object = hval.decode("utf-8")
@@ -102,7 +106,35 @@ class variantReader(object):
 
         return int_object
 
-    def read(self, variantfile):
-        stats = os.stat(variantfile)
-        if stats.st_size > 4000:
-            return "{File size too large}"
+    def read(self):
+        #Create a file object from our byte stream
+        with open(self.variantFile, "w+b") as f:
+            f.write(self.contents)
+
+            #Verify the map file size since they are static
+            size = f.tell()
+            if size != 4096:
+                return 1
+        
+            if size == 0:
+                return 2
+
+            #Map name
+            f.seek(0x0048, 0)
+            self.variantName = self.byte2ascii(f.read(32))
+            self.variantName.encode('ascii', 'ignore')
+
+            #Map description
+            f.seek(0x0068, 0)
+            self.variantDescription = self.byte2ascii(f.read(64))
+
+            #Map author
+            f.seek(0x00E8, 0)
+            self.variantAuthor = self.byte2ascii(f.read(16))
+
+            #Map ID
+            f.seek(0x0228, 0)
+            self.variantId = self.byte2int(f.read(4))
+
+            #Cleanup
+            f.close()

@@ -10,12 +10,10 @@ class MapBase(BaseModel):
     mapScnrObjectCount: int
     mapTotalObject: int
     mapBudgetCount:int | None = None
-    variantName: str | None = None
-    variantType: str | None = None
-    variantAuthor: str | None = None
 
 #Inherits from MapBase
 class MapCreate(MapBase):
+    variantId: int | None = None
     pass
 
 #Inherits from MapBase
@@ -25,6 +23,27 @@ class Map(MapBase):
 
     class Config:
         orm_mode = True
+
+
+#Variant models
+class VariantBase(BaseModel):
+    variantName: str
+    variantDescription: str | None = None
+    variantAuthor: str
+    variantFile: bytes
+
+#Inherits from VariantBase
+class VariantCreate(VariantBase):
+    pass
+
+#Inherits from VariantBase
+class Variant(VariantBase):
+    variantId: int
+    owner_id: int
+
+    class Config:
+        orm_mode = True
+
 
 class MapQuery(BaseModel):
     mapName: str

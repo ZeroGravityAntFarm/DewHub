@@ -14,6 +14,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
 
     maps = relationship("Map", back_populates="owner")
+    variants = relationship("Variant", back_populates="owner")
 
 
 class Map(Base):
@@ -28,6 +29,18 @@ class Map(Base):
     mapTotalObject = Column(Integer, index=True)
     mapBudgetCount = Column(Integer, index=True)
     mapFile = Column(LargeBinary)
+
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    variant_id = Column(Integer, ForeignKey("variants.id"))
+
+    owner = relationship("User", back_populates="maps")
+    variant = relationship("Variant", back_populates="maps")
+
+
+class Variant(Base):
+    __tablename__ = "variants"
+
+    id = Column(Integer, primary_key=True, index=True)
     variantName = Column(String(128), index=True)
     variantType = Column(String(64), index=True)
     variantAuthor = Column(String(128), index=True)
@@ -36,4 +49,5 @@ class Map(Base):
 
     owner_id = Column(Integer, ForeignKey("users.id"))
 
-    owner = relationship("User", back_populates="maps")
+    maps = relationship("Map", back_populates="variant")
+    owner = relationship("User", back_populates="variants")
