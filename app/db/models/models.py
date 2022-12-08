@@ -46,6 +46,8 @@ class Variant(Base):
     variantAuthor = Column(String(128), index=True)
     variantDescription = Column(String(1200), index=True)
     variantFile = Column(LargeBinary)
+    variantFileName = Column(String(32), index=True)
+
 
     owner_id = Column(Integer, ForeignKey("users.id"))
 

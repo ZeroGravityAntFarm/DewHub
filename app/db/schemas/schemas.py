@@ -24,6 +24,20 @@ class Map(MapBase):
     class Config:
         orm_mode = True
 
+#Map query without file
+class MapQuery(BaseModel):
+    mapName: str
+    mapDescription: str | None = None
+    mapAuthor: str
+    mapScnrObjectCount: int
+    mapTotalObject: int
+    mapBudgetCount:int | None = None
+    variant_id:int | None = None
+
+
+    class Config:
+        orm_mode = True
+
 
 #Variant models
 class VariantBase(BaseModel):
@@ -31,6 +45,7 @@ class VariantBase(BaseModel):
     variantDescription: str | None = None
     variantAuthor: str
     variantFile: bytes
+    variantFile: str
 
 #Inherits from VariantBase
 class VariantCreate(VariantBase):
@@ -43,23 +58,6 @@ class Variant(VariantBase):
 
     class Config:
         orm_mode = True
-
-
-class MapQuery(BaseModel):
-    mapName: str
-    mapDescription: str | None = None
-    mapAuthor: str
-    mapScnrObjectCount: int
-    mapTotalObject: int
-    mapBudgetCount:int | None = None
-    variantName: str | None = None
-    variantType: str | None = None
-    variantAuthor: str | None = None
-
-    class Config:
-        orm_mode = True
-
-
 
 #User models
 class UserBase(BaseModel):

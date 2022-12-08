@@ -97,7 +97,7 @@ class variantReader(object):
         self.read()
 
     def byte2ascii(self, hval):
-        ascii_object = hval.decode("utf-8")
+        ascii_object = hval.decode("utf-8").replace(u"\u0000", "")
 
         return ascii_object
 
