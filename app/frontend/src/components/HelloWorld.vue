@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     getMessage() {
-      axios.get('/api_v1/')
+      axios.get('/api_v1/maps')
         .then((res) => {
           this.msg = res.data;
         })

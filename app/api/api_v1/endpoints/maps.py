@@ -38,7 +38,7 @@ def read_map(map_name: str = 0, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Map not found")
 
 #Get single map file
-@router.get("/maps/{map_name}/map")
+@router.get("/maps/{map_name}/file")
 def read_map(map_name: str = 0, db: Session = Depends(get_db)):
     map_file = controller.get_map_file(db, map_name=map_name)
 

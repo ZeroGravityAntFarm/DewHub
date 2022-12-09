@@ -76,3 +76,12 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+#Auth token
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+#Token data
+class TokenData(BaseModel):
+    name: str | None = None
