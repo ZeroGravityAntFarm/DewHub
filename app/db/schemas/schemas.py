@@ -80,8 +80,9 @@ class User(UserBase):
 #Auth token
 class Token(BaseModel):
     access_token: str
-    token_type: str
+    token_type: str = None
 
 #Token data
 class TokenData(BaseModel):
-    name: str | None = None
+    sub: str = None
+    exp: int = None

@@ -32,9 +32,9 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 #Query full 
-def get_user(db: Session, user_name: str):
+def get_user(db: Session, name: str):
 
-    return db.query(models.User).filter(models.User.name == user_name).first()
+    return db.query(models.User).filter(models.User.name == name).first()
 
 #Query user by email
 def get_user_by_email(db: Session, email: str):
