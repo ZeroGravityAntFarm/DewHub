@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from internal.auth import *
 from jose import jwt
 
+#Authenticate a user
 def authenticate_user(db, username: str, password: str):
     user = get_user(db, username)
     if not user:
@@ -16,6 +17,7 @@ def authenticate_user(db, username: str, password: str):
 
     return user
 
+#Create a JWT access token
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
@@ -29,17 +31,15 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
     return encoded_jwt
 
+#Query full 
 def get_user(db: Session, user_name: str):
 
     return db.query(models.User).filter(models.User.name == user_name).first()
 
+#Query user by email
 def get_user_by_email(db: Session, email: str):
 
     return db.query(models.User).filter(models.User.email == email).first()
-
-def get_user_by_name(db: Session, name: str):
-
-    return db.query(models.User).filter(models.User.name == name).first()
 
 #Get all users
 def get_users(db: Session, skip: int = 0, limit: int = 100):
@@ -65,6 +65,21 @@ def get_maps(db: Session, skip: int = 0, limit: int = 100):
 def get_map(db: Session, map_name: str):
 
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.mapName == map_name).first()
+
+#Delete single map
+def delete_map(db: Session, map_name: str):
+    #Create a map object so we can find and delete the game variant it references
+    map_query = db.query(models.Map).filter(models.Map.mapName == map_name).first()
+
+    #Delete map and variant rows
+    db.query(models.Map).filter(models.Map.mapName == map_name).delete()
+    db.query(models.Variant).filter(models.Variant.id == map_query.variant_id).delete()
+
+    #Commit our changes to the database
+    db.commit()
+
+    #Return something on success
+    return "{Deleted succesfully}"
 
 #Get map file
 def get_map_file(db: Session, map_name: str):

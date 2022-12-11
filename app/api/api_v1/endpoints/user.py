@@ -22,7 +22,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
 
     #Check if username already registered
-    db_user = controller.get_user_by_name(db, name=user.name)
+    db_user = controller.get_user(db, name=user.name)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already exists")
 

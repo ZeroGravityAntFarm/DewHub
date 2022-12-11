@@ -37,6 +37,17 @@ def read_map(map_name: str = 0, db: Session = Depends(get_db)):
     else:
         raise HTTPException(status_code=400, detail="Map not found")
 
+#Delete Map entry 
+@router.delete("/maps/{map_name}")
+def read_map(map_name: str = 0, db: Session = Depends(get_db)):
+    map = controller.delete_map(db, map_name=map_name)
+
+    if map:
+        return HTTPException(status_code=200, detail="Map and variant deleted successfully")
+
+    else:
+        raise HTTPException(status_code=400, detail="Map not found")
+
 #Get single map file
 @router.get("/maps/{map_name}/file")
 def read_map(map_name: str = 0, db: Session = Depends(get_db)):
