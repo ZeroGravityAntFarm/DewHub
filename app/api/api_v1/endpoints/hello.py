@@ -7,4 +7,4 @@ router = APIRouter()
 @router.get("/")
 def upload():
 
-    return "Hello world!"
+    return "DewShare v0.2"

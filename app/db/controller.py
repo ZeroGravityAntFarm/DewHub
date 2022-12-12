@@ -8,7 +8,7 @@ from jose import jwt
 
 #Authenticate a user
 def authenticate_user(db, username: str, password: str):
-    user = get_user(db, username)
+    user = get_user_auth(db, username)
     
     #Check if user exists
     if not user:
@@ -55,10 +55,22 @@ def get_user(db: Session, user_name: str):
     return user_data
 
 
+#Query user profile 
+def get_user_auth(db: Session, user_name: str):
+    user = db.query(models.User).filter(models.User.name == user_name).first()
+
+    return user
+
 #Get all users
 def get_users(db: Session, skip: int = 0, limit: int = 100):
 
     return db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email']).offset(skip).limit(limit).all()
+
+
+#Query user by email
+def get_user_by_email(db: Session, email: str):
+
+    return db.query(models.User).filter(models.User.email == email).first()
 
 
 #Create new user
@@ -85,19 +97,34 @@ def get_map(db: Session, map_name: str):
 
 
 #Delete single map
-def delete_map(db: Session, map_name: str):
+def delete_map(db: Session, map_name: str, user: str):
     #Create a map object so we can find and delete the game variant it references
-    map_query = db.query(models.Map).filter(models.Map.mapName == map_name).first()
+    map = db.query(models.Map).filter(models.Map.mapName == map_name and models.Map.owner_id == user.id).first()
+    variant = db.query(models.Variant).filter(models.Variant.id == map.variant_id).first()
 
-    #Delete map and variant rows
-    db.query(models.Map).filter(models.Map.mapName == map_name).delete()
-    db.query(models.Variant).filter(models.Variant.id == map_query.variant_id).delete()
 
-    #Commit our changes to the database
-    db.commit()
+    if map:
+        if user:
+            if user.id == map.owner_id:
 
-    #Return something on success
-    return "{Deleted succesfully}"
+                #Delete map and variant rows
+                db.delete(map)
+                db.delete(variant)
+
+                #Commit our changes to the database
+                db.commit()
+
+                return True, "{ Deleted successfully }"
+
+            else:
+                return False, "{ Unauthorized }"
+        
+        else:
+            return False, "{ User not found }"
+    
+    else:
+        return False, "{ Map not found }"
+    
 
 
 #Get map file

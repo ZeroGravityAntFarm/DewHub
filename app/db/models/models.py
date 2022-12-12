@@ -40,7 +40,7 @@ class Map(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
     variant_id = Column(Integer, ForeignKey("variants.id"))
     owner = relationship("User", back_populates="maps")
-    variant = relationship("Variant", back_populates="maps")
+    variant = relationship("Variant", back_populates="maps", cascade="all, delete")
 
 
 class Variant(Base):

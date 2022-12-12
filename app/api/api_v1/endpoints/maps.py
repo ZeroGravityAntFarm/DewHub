@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
 from db.schemas import schemas
 from db import controller
-from db.session import SessionLocal, engine
+from db.session import SessionLocal
+from internal.auth import get_current_user
 from sqlalchemy.orm import Session
 
 router = APIRouter()
@@ -38,15 +39,15 @@ def read_map(map_name: str = 0, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Map not found")
 
 #Delete Map entry 
-@router.delete("/maps/{map_name}")
-def read_map(map_name: str = 0, db: Session = Depends(get_db)):
-    map = controller.delete_map(db, map_name=map_name)
+@router.delete("/maps/{map_name}", )
+def read_map(map_name: str = 0, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    map = controller.delete_map(db, map_name=map_name, user=user)
 
     if map:
         return HTTPException(status_code=200, detail="Map and variant deleted successfully")
 
     else:
-        raise HTTPException(status_code=400, detail="Map not found")
+        raise HTTPException(status_code=400, detail="Unauthorized or map not found")
 
 #Get single map file
 @router.get("/maps/{map_name}/file")
