@@ -38,14 +38,14 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 
 @router.get("/usermaps/{user_name}")
-def read_users(user_name: str, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_users_maps(user_name: str, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = controller.get_user_maps(db, skip=skip, limit=limit, user_name=user_name)
     return users
 
 
-@router.get("/users/{user_id}", response_model=schemas.User)
-def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = controller.get_user(db, user_id=user_id)
+@router.get("/users/{user_name}")
+def read_user(user_name: str, db: Session = Depends(get_db)):
+    db_user = controller.get_user(db, user_name=user_name)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user

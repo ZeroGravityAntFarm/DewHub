@@ -24,6 +24,7 @@ def authenticate_user(db, username: str, password: str):
 
     return user
 
+
 #Create a JWT access token
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
@@ -38,20 +39,27 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
     return encoded_jwt
 
-#Query full 
-def get_user(db: Session, name: str):
 
-    return db.query(models.User).filter(models.User.name == name).first()
+#Query user profile 
+def get_user(db: Session, user_name: str):
+    user = db.query(models.User).filter(models.User.name == user_name).first()
+    user_data = db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email']).filter(models.User.name == user_name).first()
 
-#Query user by email
-def get_user_by_email(db: Session, email: str):
+    if user:
+        if user.prof_views != None:
+            user.prof_views += 1
+        else:
+            user.prof_views = 1
+        db.commit()
 
-    return db.query(models.User).filter(models.User.email == email).first()
+    return user_data
+
 
 #Get all users
 def get_users(db: Session, skip: int = 0, limit: int = 100):
 
-    return db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role']).offset(skip).limit(limit).all()
+    return db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email']).offset(skip).limit(limit).all()
+
 
 #Create new user
 def create_user(db: Session, user: schemas.UserCreate):
@@ -63,15 +71,18 @@ def create_user(db: Session, user: schemas.UserCreate):
 
     return db_user
 
+
 #Get all maps
 def get_maps(db: Session, skip: int = 0, limit: int = 100):
 
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).offset(skip).limit(limit).all()
 
+
 #Get map data
 def get_map(db: Session, map_name: str):
 
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.mapName == map_name).first()
+
 
 #Delete single map
 def delete_map(db: Session, map_name: str):
@@ -88,21 +99,22 @@ def delete_map(db: Session, map_name: str):
     #Return something on success
     return "{Deleted succesfully}"
 
+
 #Get map file
 def get_map_file(db: Session, map_name: str):
     map = db.query(models.Map).filter(models.Map.mapName == map_name).first()
 
     #This is bad and will run on every download. --v
-    if map.map_downloads != None:
-        map.map_downloads += 1
+    if map:
+        if map.map_downloads != None:
+            map.map_downloads += 1
+        #This condition will never be met again after the first download. 
+        else:
+            map.map_downloads = 1
+        db.commit()
 
-    #This condition will never be met again after the first download. 
-    else:
-        map.map_downloads = 1
+    return map
 
-    db.commit()
-
-    return db.query(models.Map).filter(models.Map.mapName == map_name).first()
 
 #Get variant data
 def get_variant(db: Session, map_name: str):
@@ -110,11 +122,13 @@ def get_variant(db: Session, map_name: str):
 
     return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).filter(models.Variant.id == map_query.variant_id).first()
 
+
 #Get variant file
 def get_variant_file(db: Session, map_name: str):
     map_query = db.query(models.Map).filter(models.Map.mapName == map_name).first()
 
     return db.query(models.Variant).filter(models.Variant.id == map_query.variant_id).first()
+
 
 #Get all maps for a specific user 
 def get_user_maps(db: Session, user_name: str, skip: int = 0, limit: int = 100):
@@ -122,6 +136,7 @@ def get_user_maps(db: Session, user_name: str, skip: int = 0, limit: int = 100):
     user = db.query(models.User).filter(models.User.name == user_name).first()
 
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile' and c.name != 'id']).filter(models.Map.owner_id == user.id).offset(skip).limit(limit).all()
+
 
 #Create new map entry
 def create_user_map(db: Session, map: schemas.MapCreate, user_id: int, variant_id: int):
@@ -139,6 +154,7 @@ def create_user_map(db: Session, map: schemas.MapCreate, user_id: int, variant_i
     db.refresh(db_map)
 
     return db_map
+
 
 #Create new variant entry
 def create_user_variant(db: Session, variant: schemas.VariantCreate, user_id: int):
