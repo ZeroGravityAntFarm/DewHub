@@ -15,6 +15,7 @@ def get_db():
     finally:
         db.close()
 
+
 @router.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     #Check if email already registered
@@ -30,9 +31,15 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return controller.create_user(db=db, user=user)
 
 
-@router.get("/users/", response_model=list[schemas.User])
+@router.get("/users/")
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = controller.get_users(db, skip=skip, limit=limit)
+    return users
+
+
+@router.get("/usermaps/{user_name}")
+def read_users(user_name: str, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    users = controller.get_user_maps(db, skip=skip, limit=limit, user_name=user_name)
     return users
 
 
@@ -42,6 +49,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
 
 @router.get("/me", response_model=schemas.User)
 def get_me(user: str = Depends(get_current_user)):

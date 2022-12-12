@@ -9,9 +9,16 @@ from jose import jwt
 #Authenticate a user
 def authenticate_user(db, username: str, password: str):
     user = get_user(db, username)
+    
+    #Check if user exists
     if not user:
         return False
+    
+    #Check if account is active
+    if not user.is_active:
+        return False
 
+    #Verify password against hashed password
     if not verify_password(password, user.hashed_password):
         return False
 
@@ -44,7 +51,7 @@ def get_user_by_email(db: Session, email: str):
 #Get all users
 def get_users(db: Session, skip: int = 0, limit: int = 100):
 
-    return db.query(models.User).offset(skip).limit(limit).all()
+    return db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role']).offset(skip).limit(limit).all()
 
 #Create new user
 def create_user(db: Session, user: schemas.UserCreate):
@@ -83,6 +90,17 @@ def delete_map(db: Session, map_name: str):
 
 #Get map file
 def get_map_file(db: Session, map_name: str):
+    map = db.query(models.Map).filter(models.Map.mapName == map_name).first()
+
+    #This is bad and will run on every download. --v
+    if map.map_downloads != None:
+        map.map_downloads += 1
+
+    #This condition will never be met again after the first download. 
+    else:
+        map.map_downloads = 1
+
+    db.commit()
 
     return db.query(models.Map).filter(models.Map.mapName == map_name).first()
 
@@ -97,6 +115,13 @@ def get_variant_file(db: Session, map_name: str):
     map_query = db.query(models.Map).filter(models.Map.mapName == map_name).first()
 
     return db.query(models.Variant).filter(models.Variant.id == map_query.variant_id).first()
+
+#Get all maps for a specific user 
+def get_user_maps(db: Session, user_name: str, skip: int = 0, limit: int = 100):
+    #Lookup ID of requested user
+    user = db.query(models.User).filter(models.User.name == user_name).first()
+
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile' and c.name != 'id']).filter(models.Map.owner_id == user.id).offset(skip).limit(limit).all()
 
 #Create new map entry
 def create_user_map(db: Session, map: schemas.MapCreate, user_id: int, variant_id: int):

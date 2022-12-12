@@ -1,6 +1,7 @@
 fastapi
 python-multipart
 sqlalchemy
+sqlalchemy-utils
 pydantic
 mysqlclient
 python-jose
