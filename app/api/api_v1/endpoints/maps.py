@@ -41,13 +41,13 @@ def read_map(map_name: str = 0, db: Session = Depends(get_db)):
 #Delete Map entry 
 @router.delete("/maps/{map_name}", )
 def read_map(map_name: str = 0, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
-    map = controller.delete_map(db, map_name=map_name, user=user)
+    status, msg = controller.delete_map(db, map_name=map_name, user=user)
 
-    if map:
+    if status:
         return HTTPException(status_code=200, detail="Map and variant deleted successfully")
 
     else:
-        raise HTTPException(status_code=400, detail="Unauthorized or map not found")
+        raise HTTPException(status_code=400, detail=msg)
 
 #Get single map file
 @router.get("/maps/{map_name}/file")

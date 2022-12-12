@@ -100,30 +100,30 @@ def get_map(db: Session, map_name: str):
 def delete_map(db: Session, map_name: str, user: str):
     #Create a map object so we can find and delete the game variant it references
     map = db.query(models.Map).filter(models.Map.mapName == map_name and models.Map.owner_id == user.id).first()
-    variant = db.query(models.Variant).filter(models.Variant.id == map.variant_id).first()
-
 
     if map:
-        if user:
-            if user.id == map.owner_id:
+        #Wait for a valid map object to query its respective variant. 
+        variant = db.query(models.Variant).filter(models.Variant.id == map.variant_id).first()
+        if variant:
+            if user:
+                #Verify authenticated user is owner of requested map 
+                if user.id == map.owner_id:
+                    #Delete map and variant rows
+                    db.delete(map)
+                    db.delete(variant)
 
-                #Delete map and variant rows
-                db.delete(map)
-                db.delete(variant)
+                    #Commit our changes to the database
+                    db.commit()
 
-                #Commit our changes to the database
-                db.commit()
-
-                return True, "{ Deleted successfully }"
-
+                    return True, "Deleted successfully"
+                else:
+                    return False, "Unauthorized"
             else:
-                return False, "{ Unauthorized }"
-        
+                return False, "User not found"
         else:
-            return False, "{ User not found }"
-    
+            return False, "Variant not found"
     else:
-        return False, "{ Map not found }"
+        return False, "Map not found"
     
 
 

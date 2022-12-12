@@ -155,3 +155,9 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 app/envars.py
+app/frontend/package-lock.json
+app/frontend/public/ed.png
+app/frontend/public/guardian.jpg
+app/frontend/public/halo.jpg
+app/frontend/package-lock.json
+app/frontend/package-lock.json

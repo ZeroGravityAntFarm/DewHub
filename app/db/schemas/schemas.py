@@ -31,6 +31,7 @@ class MapQuery(BaseModel):
     mapAuthor: str
     mapScnrObjectCount: int
     mapTotalObject: int
+    map_downloads: int | None = None
     mapBudgetCount:int | None = None
     variant_id:int | None = None
 

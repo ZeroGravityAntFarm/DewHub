@@ -1,6 +1,21 @@
 <template>
-  <div>
-    <p>{{ msg }}</p>
+  <div id="app">
+    <h1>DewShare</h1>
+    <div v-for="mapData in mapList" v-bind:key="mapData.id" class="map">
+      <div>
+        <span style="color:black;font-weight:bold;">Map Name:</span><span>{{ mapData.mapName }}</span>
+      </div>
+      <div>
+       <span style="color:black;font-weight:bold;">Map Author:</span><span>{{ mapData.mapAuthor }}</span>
+      </div>
+      <div>
+       <span style="color:black;font-weight:bold;">Map Description:</span><span>{{ mapData.mapDescription }}</span>
+      </div>
+      <div>
+       <span style="color:black;font-weight:bold;">Downloads: </span><span>{{ mapData.map_downloads }}</span>
+      </div>
+      <v-btn color="primary" elevation="2">Download</v-btn>
+    </div>
   </div>
 </template>
 
