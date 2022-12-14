@@ -13,6 +13,7 @@
     <!-- <link href="index.css" rel="stylesheet"> -->
   </head>
   <body>
+    <div class="bg"></div>
     
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
@@ -65,22 +66,20 @@ function loadCards() {
             trHTML += '<div class="row top-buffer">';
           }
 
-        trHTML += '<div class="col mb-3">';
-        trHTML += '<div class="card">';
+        trHTML += '<div class="col mb-3 mt-4">';
+        trHTML += '<div class="card text-white bg-dark" >';
         trHTML += '<img src="guardian.jpg" class="card-img-top" alt="...">';
-        trHTML += '<div class="card-img-overlay text-white">';
-        trHTML += '<h5 class="card-title">'+object['mapName']+'</h5></div>';
         trHTML += '<div class="card-body">';
-        trHTML += '<p class="card-text">'+object['mapDescription']+'</p>';
+        trHTML += '<h4 class="card-title">'+object['mapName']+'</h4>';
+        trHTML += '<h5 class="card-title">Author: '+object['mapAuthor']+'</h5>';
         trHTML += '</div>';
-        trHTML += '<ul class="list-group list-group-flush">';
-        trHTML += '<li class="list-group-item">Author: '+object['mapAuthor']+'</li>';
+        trHTML += '<p class="card-text p-3">'+object['mapDescription']+'</p>';
         trHTML += '</ul>';
-        trHTML += '<div class="card-body">';
-        trHTML += '<button class="btn btn-primary me-1" type="submit">Map File</button>';
-        trHTML += '<button class="btn btn-primary me-1" type="submit">Variant File</button>';
+        trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
+        trHTML += '<a href="http://localhost:8001/api_v1/maps/'+object['mapName']+'/file" class="btn btn-primary me-1">Map File</a>';
+        trHTML += '<a href="http://localhost:8001/api_v1/maps/'+object['mapName']+'/variant/file" class="btn btn-primary me-1">Variant File</a>';
+        trHTML += '</div>'
         trHTML += '<div class="card-footer"><small class="text-muted">Downloads: '+object['map_downloads']+'</small></div>';
-        trHTML += '</div>';
         trHTML += '</div>';
         trHTML += '</div>';
 
@@ -98,9 +97,13 @@ loadCards();
         font-size: 1.25rem;
         background-image: url("halo.jpg");
         background-color: #51a8ff;
+        background-position: center;
         background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+
     }
-  
+
     map-container{
         margin-top: 25%;
     }
