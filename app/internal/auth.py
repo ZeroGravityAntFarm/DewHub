@@ -46,7 +46,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
             headers={"WWW-Authenticate": "Bearer"},
         )
         
-    user = db.query(models.User).filter(models.User.name == token_data.sub).first()
+    user = db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role']).filter(models.User.name == token_data.sub).first()
     
     if user is None:
         raise HTTPException(

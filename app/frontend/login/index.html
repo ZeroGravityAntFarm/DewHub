@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>Dewrito Share</title>
+
+    <!-- <link href="index.css" rel="stylesheet"> -->
+  </head>
+  <body>
+    <div class="container w-25 p-3 text-white bg-dark">
+      <form id="login-form">
+        <fieldset enabled>
+          <legend>Login</legend>
+          <div class="mb-3">
+            <label for="UserInput" class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" placeholder="username">
+          </div>
+          <div class="mb-3">
+            <label for="PasswordInput" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password">
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" form="login-form">Submit</button>
+        </fieldset>
+      </form>
+    </div>
+
+    <div id="status-container" class="container w-25 p-3">
+      <div class="row">
+        <div id="status-message"></div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+<script>
+
+const form = document.getElementById('login-form');
+
+form.onsubmit = function(event){
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData(form);
+        data = {}
+        formData.forEach((value, key) => (data[key] = value));
+        console.log(formData)
+        //open the request
+        xhr.open('POST','http://localhost:8001/api_v1/login')
+
+        //send the form data
+        xhr.send(formData);
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                var responseText = JSON.parse(xhr.responseText);
+                var trHTML = '';
+
+                console.log(responseText)
+                if (xhr.status == 403){
+                  trHTML += '<div class="alert alert-danger" role="alert">';
+                  trHTML += 'Wrong Username or Password';
+                  trHTML += '</div>'
+                  document.getElementById("status-message").innerHTML = trHTML;
+                } else if (xhr.status == 200){
+                  trHTML += '<div class="alert alert-success" role="alert">';
+                  trHTML += 'Success!';
+                  trHTML += '</div>'
+                  document.getElementById("status-message").innerHTML = trHTML;
+
+                  setCookie("Authorization", responseText.access_token, 1)
+                  delayRedirect();
+
+                } else if (xhr.status == 401){
+                  trHTML += '<div class="alert alert-danger" role="alert">';
+                  trHTML += 'Wrong Username or Password';
+                  trHTML += '</div>'
+                  document.getElementById("status-message").innerHTML = trHTML;
+
+                } else {
+                  trHTML += '<div class="alert alert-danger" role="alert">';
+                  trHTML += 'Could not access API (Contact Buck)';
+                  trHTML += '</div>'
+                  document.getElementById("status-message").innerHTML = trHTML;
+                }
+                
+                form.reset(); //reset form after AJAX success or do something else
+            }
+        }
+        //Fail the onsubmit to avoid page refresh.
+        return false; 
+    }
+
+function setCookie(c_name, value, exdays) {
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + exdays);
+    var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+    document.cookie = c_name + "=" + c_value + "; SameSite=None; " + "Secure;" + "path=/";
+    console.log(document.cookie)
+}
+
+function delayRedirect() {
+  setTimeout(function() {
+    window.location.href = "file:///C:/Users/mcfly/Desktop/DewHub/app/frontend/index.html";
+  }, 2000); 
+}
+
+</script>
+
+<style>  
+    body {
+        font-size: 1.25rem;
+        background-image: url("file:\\C:\\Users\\mcfly\\Desktop\\DewHub\\app\\frontend\\static\\halo.jpg");
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    map-container{
+        margin-top: 25%;
+    }
+
+    td {
+        line-height: 3rem;
+    }
+
+    .avatar {
+        vertical-align: middle;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+</style>
