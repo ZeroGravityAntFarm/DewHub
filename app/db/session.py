@@ -4,13 +4,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database
 
-db_host = os.environ.get("DB_HOST")
-db_port = os.environ.get("DB_PORT")
-db_database = os.environ.get("DB_DATABASE")
-db_user = os.environ.get("DB_USER")
-db_password = os.environ.get("DB_PASSWORD")
+db_host = ""
+db_port = ""
+db_database = ""
+db_user = ""
+db_password = ""
 
-SQLALCHEMY_DATABASE_URL = "mysql+mysqldb://{}:{}@{}:{}/{}".format(db_user, db_password, db_host, db_port, db_database)
+SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(db_user, db_password, db_host, db_port, db_database)
 
 try:
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
@@ -21,6 +21,7 @@ try:
 
 except Exception as e:
     print("Failed to connect to database.")
+    print(e)
     exit()
     
 

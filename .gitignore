@@ -164,3 +164,5 @@ app/frontend/package-lock.json
 app/frontend/static/eldewrito.png
 app/frontend/static/guardian.jpg
 app/frontend/static/halo.jpg
+app/frontend/content/eldewrito.png
+app/frontend/content/guardian.jpg

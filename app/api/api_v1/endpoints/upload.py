@@ -16,7 +16,7 @@ def get_db():
         db.close()
 
 @router.post("/upload")
-def upload(user_id: int = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+def upload(files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     valid_variants = ['variant.zombiez', 'variant.ctf', 'variant.koth', 'variant.slayer', 'variant.assault', 'variant.vip', 'variant.jugg', 'variant.terries']
 
     if not user:
@@ -27,9 +27,6 @@ def upload(user_id: int = Form(...), files: List[UploadFile] = File(...), db: Se
 
     if len(files) > 2:
         raise HTTPException(status_code=400, detail="Unexpected file in request")
-
-    if user_id == None:
-        raise HTTPException(status_code=400, detail="Invalid request")
 
     for file in files:
         if file.filename == "sandbox.map":
@@ -64,7 +61,7 @@ def upload(user_id: int = Form(...), files: List[UploadFile] = File(...), db: Se
     if variantData == 2:
         raise HTTPException(status_code=400, detail="Variant file empty")
 
-    variant_id = controller.create_user_variant(db, variant=variantData,  user_id=user_id)
-    map_create = controller.create_user_map(db, map=mapData, user_id=user_id, variant_id=variant_id)
+    variant_id = controller.create_user_variant(db, variant=variantData,  user_id=user.id)
+    map_create = controller.create_user_map(db, map=mapData, user_id=user.id, variant_id=variant_id)
 
     return HTTPException(status_code=200, detail="Success!")

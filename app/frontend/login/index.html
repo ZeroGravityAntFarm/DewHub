@@ -53,7 +53,7 @@ form.onsubmit = function(event){
         formData.forEach((value, key) => (data[key] = value));
         console.log(formData)
         //open the request
-        xhr.open('POST','http://localhost:8001/api_v1/login')
+        xhr.open('POST','https://api.zgaf.io/api_v1/login')
 
         //send the form data
         xhr.send(formData);
@@ -108,7 +108,7 @@ function setCookie(c_name, value, exdays) {
 
 function delayRedirect() {
   setTimeout(function() {
-    window.location.href = "file:///C:/Users/mcfly/Desktop/DewHub/app/frontend/index.html";
+    window.location.href = "https://fileshare.zgaf.io/index.html";
   }, 2000); 
 }
 
@@ -117,7 +117,7 @@ function delayRedirect() {
 <style>  
     body {
         font-size: 1.25rem;
-        background-image: url("file:\\C:\\Users\\mcfly\\Desktop\\DewHub\\app\\frontend\\static\\halo.jpg");
+        background-image: url("https://fileshare.zgaf.io/content/halo.jpg");
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;

@@ -3,7 +3,7 @@ python-multipart
 sqlalchemy
 sqlalchemy-utils
 pydantic
-mysqlclient
+psycopg2
 python-jose
 cryptography
 bcrypt
