@@ -4,6 +4,7 @@ from db import controller
 from db.session import SessionLocal
 from internal.auth import get_current_user
 from sqlalchemy.orm import Session
+from os import listdir
 
 router = APIRouter()
 
@@ -15,6 +16,19 @@ def get_db():
 
     finally:
         db.close()
+
+@router.get("/maps/{map_id}")
+def read_content(map_id: int = 0):
+    if map_id:
+        content = listdir("/app/static/maps/" + str(map_id) + "/")
+
+        return content
+
+    if map_id == 0:
+        default = "/app/static/content/default/forge.jpg"
+
+        return default
+
 
 #Get all Maps
 @router.get("/maps/", response_model=list[schemas.MapQuery])
@@ -39,7 +53,7 @@ def read_map(map_name: str = 0, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Map not found")
 
 #Delete Map entry 
-@router.delete("/maps/{map_name}", )
+@router.delete("/maps/{map_name}")
 def read_map(map_name: str = 0, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     status, msg = controller.delete_map(db, map_name=map_name, user=user)
 

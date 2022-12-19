@@ -166,9 +166,10 @@ def get_user_maps(db: Session, user_name: str, skip: int = 0, limit: int = 100):
 
 
 #Create new map entry
-def create_user_map(db: Session, map: schemas.MapCreate, user_id: int, variant_id: int):
+def create_user_map(db: Session, mapTags: str, map: schemas.MapCreate, user_id: int, variant_id: int):
     db_map = models.Map(mapName=map.mapName, 
                         mapAuthor=map.mapAuthor,
+                        mapTags=mapTags,
                         mapDescription=map.mapDescription,
                         mapId=map.mapId,
                         mapScnrObjectCount=map.mapScnrObjectCount,

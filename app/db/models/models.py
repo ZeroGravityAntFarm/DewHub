@@ -35,6 +35,7 @@ class Map(Base):
     mapFile = Column(LargeBinary)
     map_downloads = Column(Integer, index=True)
     map_rating = Column(Integer, index=True)
+    mapTags = Column(String(64))
 
     #Relationships
     owner_id = Column(Integer, ForeignKey("users.id"))

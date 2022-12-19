@@ -5,8 +5,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database
 
 db_host = ""
-db_port = ""
-db_database = ""
+db_port = "5432"
+db_database = "postgres"
 db_user = ""
 db_password = ""
 

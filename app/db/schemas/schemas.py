@@ -14,6 +14,7 @@ class MapBase(BaseModel):
 #Inherits from MapBase
 class MapCreate(MapBase):
     variantId: int | None = None
+    mapTags: str  | None = None
     pass
 
 #Inherits from MapBase
