@@ -5,6 +5,7 @@ from db.session import SessionLocal
 from internal.auth import get_current_user
 from sqlalchemy.orm import Session
 from os import listdir
+import json
 
 router = APIRouter()
 
@@ -20,12 +21,16 @@ def get_db():
 @router.get("/maps/{map_id}")
 def read_content(map_id: int = 0):
     if map_id:
-        content = listdir("/app/static/maps/" + str(map_id) + "/")
+        try:
+            content = listdir("/app/static/maps/" + str(map_id) + "/")
+
+        except Exception as e:
+            content = "/static/content/default/forge.jpg"
 
         return content
 
     if map_id == 0:
-        default = "/app/static/content/default/forge.jpg"
+        default = "/static/content/default/forge.jpg"
 
         return default
 

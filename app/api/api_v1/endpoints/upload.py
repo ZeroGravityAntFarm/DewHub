@@ -72,16 +72,11 @@ def upload(mapTags: str = Form(...), files: List[UploadFile] = File(...), db: Se
     map_create = controller.create_user_map(db, map=mapData, mapTags=mapTags, user_id=user.id, variant_id=variant_id)
 
     if len(map_images) > 0:
-        for image in map_images:
+        for idx, image in enumerate(map_images):
             Path("/app/static/maps/" + str(map_create.id) + "/").mkdir(parents=True, exist_ok=True)
-            with open("/app/static/maps/" + str(map_create.id) + "/" + image.filename, "wb") as f:
+            with open("/app/static/maps/" + str(map_create.id) + "/" + str(idx), "wb") as f:
                 f.write(image.file.read())
                 f.close()
-                image.file.close()
-
-    elif len(map_images) == 0:
-        Path("/app/static/maps/" + str(map_create.id) + "/").mkdir(parents=True, exist_ok=True)
-        shutil.copy("/app/static/content/default/forge.jpg", "/app/static/maps/" + str(map_create.id) + "/default.jpg")
-
+                image.file.close()    
 
     return HTTPException(status_code=200, detail="Success!")

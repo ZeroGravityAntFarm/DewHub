@@ -27,6 +27,7 @@ class Map(MapBase):
 
 #Map query without file
 class MapQuery(BaseModel):
+    id: int
     mapName: str
     mapDescription: str | None = None
     mapAuthor: str

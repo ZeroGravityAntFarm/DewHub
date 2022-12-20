@@ -100,7 +100,6 @@ function userLogin() {
       bearer_token = "Bearer " + token
       xmlHttp.setRequestHeader("Authorization", bearer_token);
       xmlHttp.send();
-      console.log(xmlHttp.status)
       const user = JSON.parse(xmlHttp.responseText);
 
       if (xmlHttp.status == 200){
@@ -135,7 +134,7 @@ function loadCards() {
       var trHTML = ''; 
       const objects = JSON.parse(this.responseText);
       for (let [i, object] of objects.entries()) {
-        
+
         if (i % 3 === 0){
             trHTML += '</div>';
             trHTML += '<div class="row top-buffer">';
@@ -143,7 +142,7 @@ function loadCards() {
 
         trHTML += '<div class="col mb-3 mt-4">';
         trHTML += '<div class="card text-white bg-dark" >';
-        trHTML += '<img src="https://fileshare.zgaf.io/content/guardian.jpg" class="card-img-top" alt="...">';
+        trHTML += '<img src="https://api.zgaf.io/static/maps/'+object['id']+'/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';">';
         trHTML += '<div class="card-body">';
         trHTML += '<h4 class="card-title">'+object['mapName']+'</h4>';
         trHTML += '<h5 class="card-title">Author: '+object['mapAuthor']+'</h5>';
@@ -162,7 +161,7 @@ function loadCards() {
     }
     document.getElementById("map-cards").innerHTML = trHTML;
   }
-};
+}
 
 function setCookie(c_name, value, exdays) {
     var exdate = new Date();
@@ -175,16 +174,16 @@ function setCookie(c_name, value, exdays) {
 function getCookie(cname) {
   let name = cname + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for(let i = 0; i <ca.length; i++) {
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
     let c = ca[i];
     while (c.charAt(0) == ' ') {
-      c = c.substring(1);
+      c = c.substring(1);
     }
     if (c.indexOf(name) == 0) {
       return c.substring(name.length, c.length);
-    }
-  }
+    }
+  }
   return "";
 }
 
