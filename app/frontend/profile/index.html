@@ -10,9 +10,40 @@
 
     <title>Dewrito Share</title>
 
-    <div id="status-container" class="container w-25 p-3">
+    <div id="status-container" class="container w-75 p-3">
       <div class="row">
         <div id="user-profile"></div>
+      </div>
+    </div>
+
+   <div class="modal" tabindex="-1" id="delete-map">
+     <div class="modal-dialog">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title">Delete Map</h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+          <p>Are you sure? This action cannot be undone.</p>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+           <button type="button" class="btn btn-danger" onclick="deleteMap('+object['id']+')">Delete</button>
+         </div>
+       </div>
+     </div>
+   </div>
+
+
+   <div id="status-container" class="container w-25 p-3">
+      <div class="row">
+        <div id="status-message"></div>
+      </div>
+    </div>
+
+    <div id="map-container" class="container">
+      <div class="row">
+        <div id="map-cards"></div>
       </div>
     </div>
 
@@ -40,7 +71,7 @@ function loadUser() {
                 console.log(responseText)
                 if (xmlHttp.status == 200) {
 
-                  trHTML += '<ol class="list-group">'
+                  trHTML += '<ol class="list-group bg-dark">'
                   trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">'
                   trHTML += '<div class="ms-2 me-auto">'
                   trHTML += '<div class="fw-bold">Username</div>'
@@ -59,6 +90,11 @@ function loadUser() {
                   trHTML += ''+user["id"]+''
                   trHTML += '</div>'
                   trHTML += '</li>'
+		  trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">'
+                  trHTML += '<div class="ms-2 me-auto">'
+                  trHTML += '<div class="fw-bold">Profile Views</div>'
+                  trHTML += ''+user["prof_views"]+''
+                  trHTML += '</div>'
 		  trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">'
                   trHTML += '<div class="ms-2 me-auto">'
                   trHTML += '<div class="fw-bold">Account Enabled</div>'
@@ -93,15 +129,81 @@ function loadUser() {
       	 user = JSON.parse(xmlHttp.responseText);
       	 console.log(user)
 
+	 const maps = loadUserMaps(user["name"]);
+	 for (let [i, object] of maps.entries()) {
+        
+             if (i % 3 === 0){
+               trHTML += '</div>';
+               trHTML += '<div class="row top-buffer">';
+             }
+
+        trHTML += '<div class="col mb-3 mt-4">';
+        trHTML += '<div class="card text-white bg-dark" >';
+	trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'"><img src="https://api.zgaf.io/static/maps/'+object['id']+'/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+        trHTML += '<div class="card-body">';
+	trHTML += '<h4 class="card-title">'+object['mapName']+'</h4>';
+        trHTML += '<h5 class="card-title">Author: '+object['mapAuthor']+'</h5>';
+        trHTML += '</div>';
+        trHTML += '<p class="card-text p-3">'+object['mapDescription']+'</p>';
+        trHTML += '</ul>';
+        trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
+        trHTML += '<a href="" class="btn btn-success me-1">Edit</a>';
+        trHTML += '<button type="button" class="btn btn-danger" onclick="deleteMap('+object['id']+')">Delete</button>';
+        trHTML += '</div>';
+        trHTML += '<div class="card-footer"><small class="text-muted">Downloads: '+object['map_downloads']+'</small></div>';
+        trHTML += '</div>';
+        trHTML += '</div>';
+
+        } 
+
+	 document.getElementById("map-cards").innerHTML = trHTML;
          //Fail the onsubmit to avoid page refresh.
          return false; 
-
+	
     } else {
 
       delayRedirect()
 
     }
-    
+  }
+
+
+
+function loadUserMaps(userName) {
+
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "https://api.zgaf.io/api_v1/usermaps/" + userName, async=false);
+  xhttp.send();
+  const objects = JSON.parse(xhttp.responseText);
+
+  return objects
+
+}
+
+
+function deleteMap(mapId) {
+  const xhttp = new XMLHttpRequest();
+  token = getCookie("Authorization");
+  var trHTML = '';
+  xhttp.open("DELETE", "https://api.zgaf.io/api_v1/maps/" + mapId, async=false);
+  xhttp.setRequestHeader("Authorization", bearer_token);
+  xhttp.send();
+  const objects = JSON.parse(xhttp.responseText);
+
+  if (xhttp.status == 200){
+     trHTML += '<div class="alert alert-success" role="alert">';
+     trHTML += 'Success!';
+     trHTML += '</div>'
+     document.getElementById("status-message").innerHTML = trHTML;
+     location.reload(); 
+
+  } else if (xhttp.status != 200) {
+    trHTML += '<div class="alert alert-danger" role="alert">';
+    trHTML += 'Problem deleting map';
+    trHTML += '</div>'
+    document.getElementById("status-message").innerHTML = trHTML;
+
+  }
 }
 
 

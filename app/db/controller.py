@@ -97,9 +97,9 @@ def get_map(db: Session, map_name: str):
 
 
 #Delete single map
-def delete_map(db: Session, map_name: str, user: str):
+def delete_map(db: Session, map_id: int, user: str):
     #Create a map object so we can find and delete the game variant it references
-    map = db.query(models.Map).filter(models.Map.mapName == map_name and models.Map.owner_id == user.id).first()
+    map = db.query(models.Map).filter(models.Map.id == map_id and models.Map.owner_id == user.id).first()
 
     if map:
         #Wait for a valid map object to query its respective variant. 
@@ -162,7 +162,7 @@ def get_user_maps(db: Session, user_name: str, skip: int = 0, limit: int = 100):
     #Lookup ID of requested user
     user = db.query(models.User).filter(models.User.name == user_name).first()
 
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile' and c.name != 'id']).filter(models.Map.owner_id == user.id).offset(skip).limit(limit).all()
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.owner_id == user.id).offset(skip).limit(limit).all()
 
 
 #Create new map entry

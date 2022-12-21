@@ -8,6 +8,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.js"></script> 
     <title>Dewrito Share</title>
 
     <!-- <link href="index.css" rel="stylesheet"> -->
@@ -58,15 +59,15 @@
 	      <div>
 	        <h5>Tag</h5>
                 <select class="form-select" aria-label="map tags" id="mapTags">
-                  <option selected>Slayer</option>
-                  <option value="1">Infection</option>
-                  <option value="2">Puzzel</option>
-                  <option value="3">CTF</option>
-		  <option value="4">Assault</option>
-		  <option value="5">Territories</option>
-		  <option value="6">Infection</option>
-		  <option value="7">Juggernaut</option>
-		  <option value="8">VIP</option>
+                  <option selected value="Slayer">Slayer</option>
+                  <option value="Infection">Infection</option>
+                  <option value="Puzzel">Puzzel</option>
+                  <option value="CTF">CTF</option>
+		  <option value="Assault">Assault</option>
+		  <option value="Territories">Territories</option>
+		  <option value="Infection">Infection</option>
+		  <option value="Juggernaut">Juggernaut</option>
+		  <option value="VIP">VIP</option>
                 </select>
 	      </div>
       	    </div>
@@ -76,6 +77,12 @@
       	    </div>
     	  </div>
   	</div>
+      </div>
+
+      <div id="status-container" class="container w-25 p-3">
+        <div class="row">
+          <div id="status-message"></div>
+        </div>
       </div>
 
       <div id="map-container" class="container">
@@ -95,9 +102,13 @@ token = getCookie("Authorization")
 
 function uploadMaps() {
     var data = new FormData();
+    var trHTML = '';
+    var tagData = '';
+    tagData = document.getElementById("mapTags");
+    tagData = tagData.value;
     data.append("files", document.getElementById("mapFile").files[0]);
     data.append("files", document.getElementById("variantFile").files[0]);
-    data.append("mapTags", document.getElementById("mapTags"));
+    data.append("mapTags", tagData);
     images = document.getElementById("formFileMultiple").files
 
     for (let i = 0; i < images.length; i++) {
@@ -107,10 +118,22 @@ function uploadMaps() {
     var xhr = new XMLHttpRequest();
     var bearer_token = "Bearer " + token;
 
-    xhr.withCredentials = true;
+    //xhr.withCredentials = true;
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
-          console.log(this.responseText);
+	  if (xhr.status == 200){
+	    trHTML += '<div class="alert alert-success" role="alert">';
+            trHTML += 'Success!';
+            trHTML += '</div>'
+            document.getElementById("status-message").innerHTML = trHTML;
+            $('#map-upload').modal('hide');
+	  } else if (xhr.status != 200){
+	    trHTML += '<div class="alert alert-danger" role="alert">';
+            trHTML += 'Upload failed!';
+            trHTML += '</div>'
+            document.getElementById("status-message").innerHTML = trHTML;
+            $('#map-upload').modal('hide');
+	  }
       }
     });
 
@@ -174,6 +197,7 @@ function loadCards() {
         trHTML += '<div class="card-body">';
 	trHTML += '<h4 class="card-title">'+object['mapName']+'</h4>';
         trHTML += '<h5 class="card-title">Author: '+object['mapAuthor']+'</h5>';
+	trHTML += '<h5 class="card-title">Type: '+object['mapTags']+'</h5>';
         trHTML += '</div>';
         trHTML += '<p class="card-text p-3">'+object['mapDescription']+'</p>';
         trHTML += '</ul>';
@@ -196,7 +220,6 @@ function setCookie(c_name, value, exdays) {
     exdate.setDate(exdate.getDate() + exdays);
     var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
     document.cookie = c_name + "=" + c_value + "; SameSite=None; " + "Secure;" + "path=/";
-    console.log(document.cookie)
 }
 
 function getCookie(cname) {

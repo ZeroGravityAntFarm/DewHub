@@ -36,6 +36,7 @@ class MapQuery(BaseModel):
     map_downloads: int | None = None
     mapBudgetCount:int | None = None
     variant_id:int | None = None
+    mapTags: str
 
 
     class Config:
@@ -75,6 +76,7 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     is_active: bool
+    prof_views: int
     maps: list[Map] = []
 
     class Config:
