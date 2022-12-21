@@ -176,7 +176,8 @@ def create_user_map(db: Session, mapTags: str, map: schemas.MapCreate, user_id: 
                         mapTotalObject=map.mapTotalObject,
                         mapFile=bytes(map.contents),
                         variant_id=variant_id,
-                        owner_id=user_id)
+                        owner_id=user_id,
+                        map_downloads=0)
     db.add(db_map)
     db.commit()
     db.refresh(db_map)

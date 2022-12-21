@@ -76,7 +76,6 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     is_active: bool
-    prof_views: int
     maps: list[Map] = []
 
     class Config:
