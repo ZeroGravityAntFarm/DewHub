@@ -18,22 +18,6 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/maps/{map_id}")
-def read_content(map_id: int = 0):
-    if map_id:
-        try:
-            content = listdir("/app/static/maps/" + str(map_id) + "/")
-
-        except Exception as e:
-            content = "/static/content/default/forge.jpg"
-
-        return content
-
-    if map_id == 0:
-        default = "/static/content/default/forge.jpg"
-
-        return default
-
 
 #Get all Maps
 @router.get("/maps/", response_model=list[schemas.MapQuery])

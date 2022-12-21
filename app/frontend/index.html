@@ -57,7 +57,7 @@
               </div>
 	      <div>
 	        <h5>Tag</h5>
-                <select class="form-select" aria-label="map tags">
+                <select class="form-select" aria-label="map tags" id="mapTags">
                   <option selected>Slayer</option>
                   <option value="1">Infection</option>
                   <option value="2">Puzzel</option>
@@ -72,7 +72,7 @@
       	    </div>
       	    <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Upload</button>
+              <button type="button" class="btn btn-primary" onclick="uploadMaps()">Upload</button>
       	    </div>
     	  </div>
   	</div>
@@ -92,6 +92,34 @@
 <script>
 
 token = getCookie("Authorization")
+
+function uploadMaps() {
+    var data = new FormData();
+    data.append("files", document.getElementById("mapFile").files[0]);
+    data.append("files", document.getElementById("variantFile").files[0]);
+    data.append("mapTags", document.getElementById("mapTags"));
+    images = document.getElementById("formFileMultiple").files
+
+    for (let i = 0; i < images.length; i++) {
+      data.append("files", images[i]);
+    }
+
+    var xhr = new XMLHttpRequest();
+    var bearer_token = "Bearer " + token;
+
+    xhr.withCredentials = true;
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+          console.log(this.responseText);
+      }
+    });
+
+    xhr.open("POST", "https://api.zgaf.io/api_v1/upload");
+    xhr.setRequestHeader("Authorization", bearer_token);
+    //xhr.setRequestHeader("Content-Type", "multipart/form-data");
+    xhr.send(data); 
+}
+
 function userLogin() {
   var trHTML = ''
   if (token) {
@@ -142,9 +170,9 @@ function loadCards() {
 
         trHTML += '<div class="col mb-3 mt-4">';
         trHTML += '<div class="card text-white bg-dark" >';
-        trHTML += '<img src="https://api.zgaf.io/static/maps/'+object['id']+'/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';">';
+	trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'"><img src="https://api.zgaf.io/static/maps/'+object['id']+'/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
         trHTML += '<div class="card-body">';
-        trHTML += '<h4 class="card-title">'+object['mapName']+'</h4>';
+	trHTML += '<h4 class="card-title">'+object['mapName']+'</h4>';
         trHTML += '<h5 class="card-title">Author: '+object['mapAuthor']+'</h5>';
         trHTML += '</div>';
         trHTML += '<p class="card-text p-3">'+object['mapDescription']+'</p>';
