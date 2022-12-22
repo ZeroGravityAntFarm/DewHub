@@ -19,7 +19,7 @@ def get_db():
         db.close()
 
 @router.post("/upload")
-def upload(mapTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+def upload(mapUserDesc: str = Form(...), mapTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     valid_variants = ['variant.zombiez', 'variant.ctf', 'variant.koth', 'variant.slayer', 'variant.assault', 'variant.vip', 'variant.jugg', 'variant.terries']
     map_images = []
 
@@ -44,6 +44,9 @@ def upload(mapTags: str = Form(...), files: List[UploadFile] = File(...), db: Se
 
         elif file.filename not in valid_variants or "sandbox.map":
             raise HTTPException(status_code=400, detail="Invalid file {}".format(file.filename))
+    
+    if mapUserDesc is None:
+        mapUserDesc = " "
 
     mapContents = mapFile.file.read()
     variantContents = variantFile.file.read()
@@ -69,7 +72,7 @@ def upload(mapTags: str = Form(...), files: List[UploadFile] = File(...), db: Se
         raise HTTPException(status_code=400, detail="Variant file empty")
 
     variant_id = controller.create_user_variant(db, variant=variantData,  user_id=user.id)
-    map_create = controller.create_user_map(db, map=mapData, mapTags=mapTags, user_id=user.id, variant_id=variant_id)
+    map_create = controller.create_user_map(db, map=mapData, mapTags=mapTags, user_id=user.id, variant_id=variant_id, mapUserDesc=mapUserDesc)
 
     if len(map_images) > 0:
         for idx, image in enumerate(map_images):

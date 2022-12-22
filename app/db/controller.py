@@ -91,9 +91,9 @@ def get_maps(db: Session, skip: int = 0, limit: int = 100):
 
 
 #Get map data
-def get_map(db: Session, map_name: str):
+def get_map(db: Session, map_id: int):
 
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.mapName == map_name).first()
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.id == map_id).first()
 
 
 #Delete single map
@@ -166,7 +166,7 @@ def get_user_maps(db: Session, user_name: str, skip: int = 0, limit: int = 100):
 
 
 #Create new map entry
-def create_user_map(db: Session, mapTags: str, map: schemas.MapCreate, user_id: int, variant_id: int):
+def create_user_map(db: Session, mapUserDesc: str, mapTags: str, map: schemas.MapCreate, user_id: int, variant_id: int):
     db_map = models.Map(mapName=map.mapName, 
                         mapAuthor=map.mapAuthor,
                         mapTags=mapTags,
@@ -175,6 +175,7 @@ def create_user_map(db: Session, mapTags: str, map: schemas.MapCreate, user_id: 
                         mapScnrObjectCount=map.mapScnrObjectCount,
                         mapTotalObject=map.mapTotalObject,
                         mapFile=bytes(map.contents),
+                        mapUserDesc=mapUserDesc,
                         variant_id=variant_id,
                         owner_id=user_id,
                         map_downloads=0)

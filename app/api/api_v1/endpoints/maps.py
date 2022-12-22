@@ -31,9 +31,9 @@ def read_maps(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Maps not found")
 
 #Get single map
-@router.get("/maps/{map_name}")
-def read_map(map_name: str = 0, db: Session = Depends(get_db)):
-    map = controller.get_map(db, map_name=map_name)
+@router.get("/maps/{map_id}")
+def read_map(map_id: int, db: Session = Depends(get_db)):
+    map = controller.get_map(db, map_id=map_id)
 
     if map:
         return map

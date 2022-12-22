@@ -33,6 +33,7 @@ class Map(Base):
     mapBudgetCount = Column(Integer, index=True)
     mapBaseMap = Column(String(128), index=True)
     mapFile = Column(LargeBinary)
+    mapUserDesc = Column(String(1200)) 
     map_downloads = Column(Integer, index=True)
     map_rating = Column(Integer, index=True)
     mapTags = Column(String(64))
