@@ -18,13 +18,13 @@
     
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Dewrito Share</a>
+          <a class="navbar-brand" href="/">Dewrito Share</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <input class="form-control me-2" id="search_bar" type="search" placeholder="Search" aria-label="Search">
+            <button type='button' class="btn btn-outline-success" onclick="searchMaps()">Search</button>
           </form>
           <div class="collapse navbar-collapse" id="navbarScroll">
             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
@@ -105,6 +105,52 @@
 <script>
 
 token = getCookie("Authorization")
+
+document.getElementById('search_bar').addEventListener('change',function(){
+    searchMaps();
+});
+
+function searchMaps(){
+  var trHTML = '';
+  const xhttp = new XMLHttpRequest();
+  var searchQuery = document.getElementById('search_bar').value;
+  console.log(searchQuery);
+  xhttp.open("GET", "//api.zgaf.io/api_v1/maps/search/" + searchQuery);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var trHTML = '';
+      const objects = JSON.parse(this.responseText);
+      for (let [i, object] of objects.entries()) {
+
+        if (i % 3 === 0){
+            trHTML += '</div>';
+            trHTML += '<div class="row top-buffer">';
+          }
+
+        trHTML += '<div class="col mb-3 mt-4">';
+        trHTML += '<div class="card text-white bg-dark" >';
+        trHTML += '<a href="https://fileshare.zgaf.io/map/?mapId='+object['id']+'"><img src="https://api.zgaf.io/static/maps/'+object['id']+'/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+        trHTML += '<div class="card-body">';
+        trHTML += '<h4 class="card-title">'+object['mapName']+'</h4>';
+        trHTML += '<h5 class="card-title">Author: '+object['mapAuthor']+'</h5>';
+        trHTML += '<h5 class="card-title">Type: '+object['mapTags']+'</h5>';
+        trHTML += '</div>';
+        trHTML += '<p class="card-text p-3">'+object['mapDescription']+'</p>';
+        trHTML += '</ul>';
+        trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/file/" class="btn btn-primary me-1">Map File</a>';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/variant/file/" class="btn btn-primary me-1">Variant File</a>';
+        trHTML += '</div>';
+        trHTML += '<div class="card-footer"><small class="text-muted">Downloads: '+object['map_downloads']+'</small></div>';
+        trHTML += '</div>';
+        trHTML += '</div>';
+
+      }
+    }
+    document.getElementById("map-cards").innerHTML = trHTML;
+  }
+}
 
 function uploadMaps() {
     var data = new FormData();
@@ -215,7 +261,7 @@ function loadCards() {
         trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
         trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/file/" class="btn btn-primary me-1">Map File</a>';
         trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/variant/file/" class="btn btn-primary me-1">Variant File</a>';
-        trHTML += '</div>'
+        trHTML += '</div>';
         trHTML += '<div class="card-footer"><small class="text-muted">Downloads: '+object['map_downloads']+'</small></div>';
         trHTML += '</div>';
         trHTML += '</div>';

@@ -4,6 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
@@ -56,6 +57,40 @@
 
 token = getCookie("Authorization")
 
+function deleteUser(userId) {
+   if (token) {
+     var xmlHttp = new XMLHttpRequest();
+     var trHTML = '';
+
+     xmlHttp.open('DELETE','https://api.zgaf.io/api_v1/users/'+userId, false)
+     bearer_token = "Bearer " + token
+     xmlHttp.setRequestHeader("Authorization", bearer_token);
+     xmlHttp.send();
+
+     if (xmlHttp.status == 200){
+       trHTML += '<div class="alert alert-success" role="alert">';
+       trHTML += 'Success!';
+       trHTML += '</div>';
+
+       document.getElementById("status-message").innerHTML = trHTML;
+       delayRedirect();
+     } else {
+       trHTML += '<div class="alert alert-danger" role="alert">';
+       trHTML += 'Failed to delete account!';
+       trHTML += '</div>';
+
+       document.getElementById("status-message").innerHTML = trHTML;
+     }
+
+   }
+}
+
+function delayRedirect() {
+  setTimeout(function() {
+    window.location.href = "https://fileshare.zgaf.io";
+  }, 2000); 
+}
+
 function loadUser() {
   var trHTML = ''
   if (token) {
@@ -99,6 +134,13 @@ function loadUser() {
                   trHTML += '<div class="ms-2 me-auto">'
                   trHTML += '<div class="fw-bold">Account Enabled</div>'
                   trHTML += ''+user["is_active"]+''
+                  trHTML += '</div>'
+                  trHTML += '</li>'
+		  trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">'
+                  trHTML += '<div class="ms-2 me-auto">'
+                  trHTML += '<div class="fw-bold">Account Controls</div>'
+                  trHTML += '<button type="button" class="btn btn-success me-1">Edit</button>'
+		  trHTML += '<button type="button" class="btn btn-danger" onclick="deleteUser('+user['id']+')">Delete</button>'
                   trHTML += '</div>'
                   trHTML += '</li>'
                   trHTML += '</ol>'

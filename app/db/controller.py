@@ -5,6 +5,7 @@ from internal.auth import verify_password, get_password_hash
 from datetime import datetime, timedelta
 from internal.auth import *
 from jose import jwt
+from sqlalchemy import or_
 
 #Authenticate a user
 def authenticate_user(db, username: str, password: str):
@@ -220,3 +221,10 @@ def create_user_variant(db: Session, variant: schemas.VariantCreate, user_id: in
     db.refresh(db_variant)
 
     return db_variant.id
+
+
+def search_maps(db: Session, search_text: str):
+    map_data = db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.mapName.contains(search_text) | models.Map.mapTags.contains(search_text) | models.Map.mapAuthor.contains(search_text) | models.Map.mapDescription.contains(search_text)).all()
+
+    if map_data:
+        return map_data

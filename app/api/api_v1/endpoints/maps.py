@@ -87,3 +87,12 @@ def read_map(map_name: str = 0, db: Session = Depends(get_db)):
 
     else:
         raise HTTPException(status_code=400, detail="Variant file not found")
+
+
+#Get single variant file
+@router.get("/maps/search/{search_text}")
+def search_maps(search_text: str = 0, db: Session = Depends(get_db)):
+    maps = controller.search_maps(db, search_text=search_text)
+
+    return maps
+
