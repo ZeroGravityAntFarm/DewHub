@@ -55,6 +55,15 @@ def get_user(db: Session, user_name: str):
     return user_data
 
 
+#Query user profile
+def get_userId(db: Session, user_id: int):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    user_data = db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email']).filter(models.User.id == user_id).first()
+
+    if user:
+      return user_data
+
+
 #Query user profile 
 def get_user_auth(db: Session, user_name: str):
     user = db.query(models.User).filter(models.User.name == user_name).first()
@@ -126,6 +135,18 @@ def delete_map(db: Session, map_id: int, user: str):
         return False, "Map not found"
     
 
+def delete_user(db: Session, user: str):
+    user = db.query(models.User).filter(models.User.id == user.id).first()
+
+    if user:
+        db.delete(user)
+        db.commit()
+
+        return True, "Deleted successfully"
+
+    else:
+
+        return False, "User not found"
 
 #Get map file
 def get_map_file(db: Session, map_name: str):
