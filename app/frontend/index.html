@@ -228,25 +228,25 @@ function userLogin() {
 
       if (xmlHttp.status == 200){
 	  trHTML += '<button type="button" data-bs-toggle="modal" data-bs-target="#map-upload" class="btn btn-outline-info me-1"><i class="bi bi-plus-square"></i></button>'
-          trHTML += '<a href="https://fileshare.zgaf.io/profile/index.html" class="btn btn-outline-primary me-1">'+user["name"]+'</a>'
-          trHTML += '<a href="https://fileshare.zgaf.io/index.html" onclick="logout();" class="btn btn-outline-danger me-1">Logout</a>'
+          trHTML += '<a href="/profile" class="btn btn-outline-primary me-1">'+user["name"]+'</a>'
+          trHTML += '<a href="/" onclick="logout();" class="btn btn-outline-danger me-1">Logout</a>'
 
       } else {
-          trHTML += '<a href="https://fileshare.zgaf.io/login/index.html" class="btn btn-outline-primary me-1">Login</a>'
-          trHTML += '<a href="https://fileshare.zgaf.io/register/index.html" class="btn btn-outline-primary me-1">Register</a>'
+          trHTML += '<a href="/login" class="btn btn-outline-primary me-1">Login</a>'
+          trHTML += '<a href="/register" class="btn btn-outline-primary me-1">Register</a>'
       }
       document.getElementById("user-prof").innerHTML = trHTML;
   } else {
 
-    trHTML += '<a href="https://fileshare.zgaf.io/login/index.html" class="btn btn-outline-primary me-1">Login</a>'
-    trHTML += '<a href="https://fileshare.zgaf.io/register/index.html" class="btn btn-outline-primary me-1">Register</a>'
+    trHTML += '<a href="/login" class="btn btn-outline-primary me-1">Login</a>'
+    trHTML += '<a href="/register" class="btn btn-outline-primary me-1">Register</a>'
     document.getElementById("user-prof").innerHTML = trHTML;
   }
 }
 
 function logout() {
     setCookie("Authorization", "", 1)
-    window.location.href = "https://fileshare.zgaf.io/index.html";
+    window.location.href = "/";
 }
 
 function loadCards() {
