@@ -21,7 +21,9 @@ def get_db():
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     
     email = parseaddr(user.email)
+
     if email[0] and email[1] == None:
+        raise HTTPException(status_code=400, detail="Invalid email address")
     
     if user.email.isspace():
         raise HTTPException(status_code=400, detail="Invalid email address")
@@ -42,10 +44,15 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return controller.create_user(db=db, user=user)
 
 
-@router.delete("/users/{user_id}", response_model=schemas.User)
+@router.delete("/users/{user_id}")
 def get_me(user: str = Depends(get_current_user), db: Session = Depends(get_db)):
-    controller.delete_user(db, user)
-    return "Deleted successfully!"
+    status, msg = controller.delete_user(db, user)
+    
+    if status:
+        return msg
+
+    if status == False:
+        return msg
 
 
 @router.get("/users/")
