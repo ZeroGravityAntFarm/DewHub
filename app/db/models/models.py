@@ -1,8 +1,8 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, LargeBinary
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, LargeBinary, DateTime
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.sql import func
 from db.session import Base
-
+import datetime
 
 class User(Base):
     __tablename__ = "users"
@@ -14,6 +14,8 @@ class User(Base):
     hashed_password = Column(String(128))
     is_active = Column(Boolean, default=True)
     prof_views = Column(Integer, index=True)
+    time_created = Column(DateTime(timezone=True), default=func.now())
+    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
     #Relationships
     maps = relationship("Map", back_populates="owner")
@@ -37,6 +39,8 @@ class Map(Base):
     map_downloads = Column(Integer, index=True)
     map_rating = Column(Integer, index=True)
     mapTags = Column(String(64))
+    time_created = Column(DateTime(timezone=True), default=func.now())
+    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
     #Relationships
     owner_id = Column(Integer, ForeignKey("users.id"))
@@ -55,6 +59,8 @@ class Variant(Base):
     variantDescription = Column(String(1200))
     variantFile = Column(LargeBinary)
     variantFileName = Column(String(32), index=True)
+    time_created = Column(DateTime(timezone=True), default=func.now())
+    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
     #Relationships
     owner_id = Column(Integer, ForeignKey("users.id"))

@@ -121,6 +121,21 @@ function searchMaps(){
     if (this.readyState == 4 && this.status == 200) {
       var trHTML = '';
       const objects = JSON.parse(this.responseText);
+      
+      if (objects == null) {
+        trHTML += '<div class="alert alert-warning" role="alert">';
+        trHTML += 'No results found';
+        trHTML += '</div>'
+        document.getElementById("status-message").innerHTML = trHTML;
+	
+	return
+	      ;
+      } else {
+        trHTML = '';
+	document.getElementById("status-message").innerHTML = trHTML;
+
+      }
+
       for (let [i, object] of objects.entries()) {
 
         if (i % 3 === 0){
@@ -190,6 +205,7 @@ function uploadMaps() {
             trHTML += '</div>'
             document.getElementById("status-message").innerHTML = trHTML;
             $('#map-upload').modal('hide');
+	    delayRedirect();
 	  }
       }
     });
@@ -294,6 +310,13 @@ function getCookie(cname) {
   }
   return "";
 }
+
+function delayRedirect() {
+  setTimeout(function() {
+    window.location.href = "/";
+  }, 2000);
+}
+
 
 userLogin();
 loadCards();
