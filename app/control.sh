@@ -16,7 +16,7 @@ start() {
             echo "Old container found, removing..."
             docker rm $name
         fi
-        docker run -d --name $name -p 127.0.0.1:$port:8001 -v $PWD/static:/app/static --env-file $secrets --label "traefik.http.routers.$name.rule=Host(\`$domain\`)" $name
+	docker run -d --name $name -p 127.0.0.1:$port:8001 -v $PWD/static:/app/static --env-file $secrets --label "traefik.http.routers.$name-http.entrypoints=websecure" --label "traefik.http.routers.$name-http.rule=Host(\`$domain\`)" --label "traefik.http.routers.$name-http.tls.certResolver=zgaf" --label "traefik.http.routers.$name-http.tls" $name
     fi
 }
 

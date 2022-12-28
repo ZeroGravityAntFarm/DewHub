@@ -154,8 +154,8 @@ function searchMaps(){
         trHTML += '<p class="card-text p-3">'+object['mapDescription']+'</p>';
         trHTML += '</ul>';
         trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-        trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/file/" class="btn btn-primary me-1">Map File</a>';
-        trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/variant/file/" class="btn btn-primary me-1">Variant File</a>';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/file" class="btn btn-primary me-1">Map File</a>';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/variant/file" class="btn btn-primary me-1">Variant File</a>';
         trHTML += '</div>';
         trHTML += '<div class="card-footer"><small class="text-muted">Downloads: '+object['map_downloads']+'</small></div>';
         trHTML += '</div>';
@@ -251,7 +251,7 @@ function logout() {
 
 function loadCards() {
   const xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "//api.zgaf.io/api_v1/maps/");
+  xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/");
   xhttp.send();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -275,8 +275,8 @@ function loadCards() {
         trHTML += '<p class="card-text p-3">'+object['mapDescription']+'</p>';
         trHTML += '</ul>';
         trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-        trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/file/" class="btn btn-primary me-1">Map File</a>';
-        trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/variant/file/" class="btn btn-primary me-1">Variant File</a>';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/file" class="btn btn-primary me-1">Map File</a>';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+object['mapName']+'/variant/file" class="btn btn-primary me-1">Variant File</a>';
         trHTML += '</div>';
         trHTML += '<div class="card-footer"><small class="text-muted">Downloads: '+object['map_downloads']+'</small></div>';
         trHTML += '</div>';

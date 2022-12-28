@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from db.models import models
 from db.schemas import schemas
 from internal.auth import verify_password, get_password_hash
@@ -224,7 +225,7 @@ def create_user_variant(db: Session, variant: schemas.VariantCreate, user_id: in
 
 
 def search_maps(db: Session, search_text: str):
-    map_data = db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.mapName.contains(search_text) | models.Map.mapTags.contains(search_text) | models.Map.mapAuthor.contains(search_text) | models.Map.mapDescription.contains(search_text)).all()
+    map_data = db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(func.lower(models.Map.mapName).contains(search_text.lower()) | func.lower(models.Map.mapTags).contains(search_text.lower()) | func.lower(models.Map.mapAuthor).contains(search_text.lower()) | func.lower(models.Map.mapDescription).contains(search_text.lower())).all()
 
     if map_data:
         return map_data
