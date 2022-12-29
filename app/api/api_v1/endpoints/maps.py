@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from db.schemas import schemas
 from db import controller
 from db.session import SessionLocal
 from internal.auth import get_current_user
 from sqlalchemy.orm import Session
 from os import listdir
+from internal.limiter import limiter 
 import json
 
 router = APIRouter()
@@ -21,7 +22,8 @@ def get_db():
 
 #Get all Maps
 @router.get("/maps/", response_model=list[schemas.MapQuery])
-def read_maps(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+@limiter.limit("60/minute")
+def read_maps(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     maps = controller.get_maps(db, skip=skip, limit=limit)
 
     if maps:
@@ -54,7 +56,8 @@ def read_map(map_id: int = 0, db: Session = Depends(get_db), user: str = Depends
 
 #Get single map file
 @router.get("/maps/{map_name}/file")
-def read_map(map_name: str = 0, db: Session = Depends(get_db)):
+@limiter.limit("60/minute")
+def read_map(request: Request, map_name: str = 0, db: Session = Depends(get_db)):
     map_file = controller.get_map_file(db, map_name=map_name)
 
     if map_file:
@@ -78,7 +81,8 @@ def read_map(map_name: str = 0, db: Session = Depends(get_db)):
 
 #Get single variant file
 @router.get("/maps/{map_name}/variant/file")
-def read_map(map_name: str = 0, db: Session = Depends(get_db)):
+@limiter.limit("60/minute")
+def read_map(request: Request, map_name: str = 0, db: Session = Depends(get_db)):
     variant = controller.get_variant_file(db, map_name=map_name)
 
     if variant:

@@ -1,4 +1,5 @@
 fastapi
+slowapi
 python-multipart
 sqlalchemy
 sqlalchemy-utils
