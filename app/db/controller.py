@@ -101,6 +101,12 @@ def get_maps(db: Session, skip: int = 0, limit: int = 100):
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).offset(skip).limit(limit).all()
 
 
+#Get all variants
+def get_variants(db: Session, skip: int = 0, limit: int = 100):
+
+    return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).offset(skip).limit(limit).all()
+
+
 #Get map data
 def get_map(db: Session, map_id: int):
 
@@ -229,3 +235,33 @@ def search_maps(db: Session, search_text: str):
 
     if map_data:
         return map_data
+
+def get_vote(db: Session, map_id: int):
+    mapUpVotes = db.query(*[c for c in models.Vote.__table__.c if c.name != 'id']).filter_by(mapId=map_id).filter_by(vote=True).count()
+    mapDownVotes = db.query(*[c for c in models.Vote.__table__.c if c.name != 'id']).filter_by(mapId=map_id).filter_by(vote=False).count()
+
+    if not mapUpVotes:
+        mapUpVotes = 0
+
+    if not mapDownVotes:
+        mapDownVotes = 0
+
+    return mapUpVotes, mapDownVotes
+
+
+def create_vote(db: Session, map_id: int, userId: int, vote: bool):
+    voteExists = db.query(*[c for c in models.Vote.__table__.c if c.name != 'id']).filter_by(mapId=map_id).filter_by(userId=userId).first() is not None
+
+    if not voteExists:
+        voteObject = models.Vote(userId=userId,
+                           mapId=map_id,
+                           vote=vote)
+        db.add(voteObject)
+        db.commit()
+        db.refresh(voteObject)
+
+        return True, voteObject
+    
+    return False, "You can only vote once!"
+
+

@@ -32,6 +32,18 @@ def read_maps(request: Request, skip: int = 0, limit: int = 100, db: Session = D
     else:
         raise HTTPException(status_code=400, detail="Maps not found")
 
+#Get all variants
+@router.get("/variants/")
+@limiter.limit("60/minute")
+def read_variants(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    variants = controller.get_variants(db, skip=skip, limit=limit)
+
+    if variants:
+        return variants
+
+    else:
+        raise HTTPException(status_code=400, detail="Variants not found")
+
 #Get single map
 @router.get("/maps/{map_id}")
 def read_map(map_id: int, db: Session = Depends(get_db)):

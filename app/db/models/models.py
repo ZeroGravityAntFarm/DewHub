@@ -66,3 +66,13 @@ class Variant(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
     maps = relationship("Map", back_populates="variant")
     owner = relationship("User", back_populates="variants")
+
+
+class Vote(Base):
+    __tablename__  = "voting"
+
+    id = Column(Integer, primary_key=True, index=True)
+    userId = Column(Integer, ForeignKey("users.id"))
+    mapId = Column(Integer, ForeignKey("maps.id"))
+    vote = Column(Boolean)
+

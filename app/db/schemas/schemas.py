@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 
 #Map models
@@ -38,10 +39,20 @@ class MapQuery(BaseModel):
     mapBudgetCount:int | None = None
     variant_id:int | None = None
     mapTags: str
-
+    time_created: datetime = None
 
     class Config:
         orm_mode = True
+
+class VariantQuery(BaseModel):
+    id: int
+    variantName: str
+    variantDescription: str | None = None
+    variantAuthor: str
+    time_created: str | None = None
+    time_updated: str | None = None
+    owner_id: int
+    variantFileName: str
 
 
 #Variant models
