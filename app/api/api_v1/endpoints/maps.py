@@ -44,6 +44,42 @@ def read_variants(request: Request, skip: int = 0, limit: int = 100, db: Session
     else:
         raise HTTPException(status_code=400, detail="Variants not found")
 
+#Get all Maps Newest first
+@router.get("/maps/newest", response_model=list[schemas.MapQuery])
+@limiter.limit("60/minute")
+def read_maps_new(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    maps = controller.get_newest(db, skip=skip, limit=limit)
+
+    if maps:
+        return maps
+
+    else:
+        raise HTTPException(status_code=400, detail="Maps not found")
+
+#Get all Maps Newest first
+@router.get("/maps/downloaded", response_model=list[schemas.MapQuery])
+@limiter.limit("60/minute")
+def read_maps_downloaded(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    maps = controller.get_most_downloaded(db, skip=skip, limit=limit)
+
+    if maps:
+        return maps
+
+    else:
+        raise HTTPException(status_code=400, detail="Maps not found")
+
+#Get all Maps Newest first
+@router.get("/maps/oldest", response_model=list[schemas.MapQuery])
+@limiter.limit("60/minute")
+def read_maps_oldest(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    maps = controller.get_oldest(db, skip=skip, limit=limit)
+
+    if maps:
+        return maps
+
+    else:
+        raise HTTPException(status_code=400, detail="Maps not found")
+
 #Get single map
 @router.get("/maps/{map_id}")
 def read_map(map_id: int, db: Session = Depends(get_db)):

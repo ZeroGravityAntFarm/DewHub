@@ -6,7 +6,7 @@ from internal.auth import verify_password, get_password_hash
 from datetime import datetime, timedelta
 from internal.auth import *
 from jose import jwt
-from sqlalchemy import or_
+from sqlalchemy import or_, desc, asc
 
 #Authenticate a user
 def authenticate_user(db, username: str, password: str):
@@ -97,20 +97,32 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 #Get all maps
 def get_maps(db: Session, skip: int = 0, limit: int = 100):
-
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).offset(skip).limit(limit).all()
 
 
 #Get all variants
 def get_variants(db: Session, skip: int = 0, limit: int = 100):
-
     return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).offset(skip).limit(limit).all()
 
 
 #Get map data
 def get_map(db: Session, map_id: int):
-
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.id == map_id).first()
+
+
+#Get all maps by newest first
+def get_newest(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(desc(models.Map.time_created)).offset(skip).limit(limit).all()
+
+
+#Get all maps by newest first
+def get_most_downloaded(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(desc(models.Map.map_downloads)).offset(skip).limit(limit).all()
+
+
+#Get all maps by newest first
+def get_oldest(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(asc(models.Map.time_created)).offset(skip).limit(limit).all()
 
 
 #Delete single map

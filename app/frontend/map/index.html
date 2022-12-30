@@ -13,7 +13,21 @@
     <!-- <link href="index.css" rel="stylesheet"> -->
   </head>
   <body>
-
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+         <div class=" container-fluid">
+            <a class=" navbar-brand" href="/">ZGAF Fileshare</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarScroll">
+               <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+               </ul>
+               <form class="d-flex">
+                  <div id="user-prof"></div>
+               </form>
+            </div>
+         </div>
+      </nav>
     <div id="map-container" class="container w-75 p-3">
       <div class="row">
         <div id="map-info"></div>
@@ -106,7 +120,8 @@ function getMap(mapId){
       trHTML += '<li class="list-group-item bg-dark text-white">Tags: '+mapData["mapTags"]+'</li>';
       trHTML += '</ul>';
       trHTML += '<div class="card-body">';
-      trHTML += '<a href="/" class="card-link">Home</a>';
+      trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+mapData['mapName']+'/file" class="btn btn-primary me-1">Map File</a>';
+      trHTML += '<a href="https://api.zgaf.io/api_v1/maps/'+mapData['mapName']+'/variant/file" class="btn btn-primary me-1">Variant File</a>';
       trHTML += '</div>';
       trHTML += '</div>';
       console.log(mapData)
