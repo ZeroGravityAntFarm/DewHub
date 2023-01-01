@@ -44,6 +44,18 @@ def read_variants(request: Request, skip: int = 0, limit: int = 100, db: Session
     else:
         raise HTTPException(status_code=400, detail="Variants not found")
 
+#Get variant by id
+@router.get("/variants/{variant_id}")
+def read_variant(variant_id: int, db: Session = Depends(get_db)):
+    variants = controller.get_variant_id(db, variant_id=variant_id)
+
+    if variants:
+        return variants
+
+    else:
+        raise HTTPException(status_code=400, detail="Variants not found")
+
+
 #Get all Maps Newest first
 @router.get("/maps/newest", response_model=list[schemas.MapQuery])
 @limiter.limit("60/minute")

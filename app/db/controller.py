@@ -104,6 +104,9 @@ def get_maps(db: Session, skip: int = 0, limit: int = 100):
 def get_variants(db: Session, skip: int = 0, limit: int = 100):
     return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).offset(skip).limit(limit).all()
 
+#Get all variants
+def get_variant_id(db: Session, variant_id: int):
+    return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).filter(models.Variant.id == variant_id).first()
 
 #Get map data
 def get_map(db: Session, map_id: int):
