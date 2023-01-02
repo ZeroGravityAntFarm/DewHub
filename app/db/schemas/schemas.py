@@ -52,6 +52,7 @@ class VariantQuery(BaseModel):
     time_created: str | None = None
     time_updated: str | None = None
     owner_id: int
+    downloads: int
     variantFileName: str
 
 

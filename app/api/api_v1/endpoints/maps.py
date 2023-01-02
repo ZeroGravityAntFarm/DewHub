@@ -154,6 +154,20 @@ def read_map(request: Request, map_name: str = 0, db: Session = Depends(get_db))
 
 
 #Get single variant file
+@router.get("/variants/{var_id}/file")
+@limiter.limit("60/minute")
+def read_map(request: Request, var_id: int, db: Session = Depends(get_db)):
+    variant = controller.get_variant_id_file(db, var_id=var_id)
+
+    if variant:
+        headers = {'Content-Disposition': 'attachment; filename=' + variant.variantFileName}
+        return Response(variant.variantFile, headers=headers, media_type='application/octet-stream')
+
+    else:
+        raise HTTPException(status_code=400, detail="Variant file not found")
+
+
+#Get single variant file
 @router.get("/maps/search/{search_text}")
 def search_maps(search_text: str = 0, db: Session = Depends(get_db)):
     maps = controller.search_maps(db, search_text=search_text)

@@ -61,6 +61,7 @@ class Variant(Base):
     variantFileName = Column(String(32), index=True)
     time_created = Column(DateTime(timezone=True), default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+    downloads = Column(Integer)
 
     #Relationships
     owner_id = Column(Integer, ForeignKey("users.id"))

@@ -201,6 +201,21 @@ def get_variant_file(db: Session, map_name: str):
     return db.query(models.Variant).filter(models.Variant.id == map_query.variant_id).first()
 
 
+#Get variant file
+def get_variant_id_file(db: Session, var_id: int):
+    variant = db.query(models.Variant).filter(models.Variant.id == var_id).first()
+
+    if variant:
+        if variant.downloads != None:
+            variant.downloads += 1
+
+        else:
+            variant.downloads = 1
+        db.commit()
+
+    return variant
+
+
 #Get all maps for a specific user 
 def get_user_maps(db: Session, user_name: str, skip: int = 0, limit: int = 100):
     #Lookup ID of requested user
@@ -237,6 +252,7 @@ def create_user_variant(db: Session, variant: schemas.VariantCreate, user_id: in
                         variantDescription=variant.variantDescription,
                         variantFile=bytes(variant.contents),
                         variantFileName=variant.variantFile,
+                        downloads=0,
                         owner_id=user_id)
     db.add(db_variant)
     db.commit()
