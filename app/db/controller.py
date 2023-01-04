@@ -157,7 +157,7 @@ def delete_map(db: Session, map_id: int, user: str):
     else:
         return False, "Map not found"
     
-
+#Delete user account (but not maps)
 def delete_user(db: Session, user: str):
     user = db.query(models.User).filter(models.User.id == user.id).first()
 
@@ -198,7 +198,17 @@ def get_variant(db: Session, map_name: str):
 def get_variant_file(db: Session, map_name: str):
     map_query = db.query(models.Map).filter(models.Map.mapName == map_name).first()
 
-    return db.query(models.Variant).filter(models.Variant.id == map_query.variant_id).first()
+    variant = db.query(models.Variant).filter(models.Variant.id == map_query.variant_id).first()
+
+    if variant:
+        if variant.downloads != None:
+            variant.downloads += 1
+
+        else:
+            variant.downloads = 1
+        db.commit()
+
+    return variant
 
 
 #Get variant file
@@ -261,12 +271,30 @@ def create_user_variant(db: Session, variant: schemas.VariantCreate, user_id: in
     return db_variant.id
 
 
+#Create new prefab
+def create_prefab(db: Session, prefab: schemas.PreFabCreate, user_id: int):
+    prefab = models.Prefab(prefabName=prefab.prefabName,
+                    prefabAuthor=prefab.prefabAuthor,
+                    prefabDescription=prefabDescription,
+                    prefabFile=prefabFile,
+                    downloads=0,
+                    owner_id=user_id)
+
+    db.add(prefab)
+    db.commit()
+    db.refresh(prefab)
+
+    return prefab
+
+
+#Case insensitive search for map name, author, or description
 def search_maps(db: Session, search_text: str):
     map_data = db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(func.lower(models.Map.mapName).contains(search_text.lower()) | func.lower(models.Map.mapTags).contains(search_text.lower()) | func.lower(models.Map.mapAuthor).contains(search_text.lower()) | func.lower(models.Map.mapDescription).contains(search_text.lower())).all()
 
     if map_data:
         return map_data
 
+#Returns map downvotes and upvotes
 def get_vote(db: Session, map_id: int):
     mapUpVotes = db.query(*[c for c in models.Vote.__table__.c if c.name != 'id']).filter_by(mapId=map_id).filter_by(vote=True).count()
     mapDownVotes = db.query(*[c for c in models.Vote.__table__.c if c.name != 'id']).filter_by(mapId=map_id).filter_by(vote=False).count()
@@ -280,6 +308,7 @@ def get_vote(db: Session, map_id: int):
     return mapUpVotes, mapDownVotes
 
 
+#Creates a downvote or upvote
 def create_vote(db: Session, map_id: int, userId: int, vote: bool):
     voteExists = db.query(*[c for c in models.Vote.__table__.c if c.name != 'id']).filter_by(mapId=map_id).filter_by(userId=userId).first() is not None
 

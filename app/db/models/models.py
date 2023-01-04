@@ -20,7 +20,7 @@ class User(Base):
     #Relationships
     maps = relationship("Map", back_populates="owner")
     variants = relationship("Variant", back_populates="owner")
-
+    prefabs = relationship("PreFab", back_populates="owner")
 
 class Map(Base):
     __tablename__ = "maps"
@@ -67,6 +67,21 @@ class Variant(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
     maps = relationship("Map", back_populates="variant")
     owner = relationship("User", back_populates="variants")
+
+class PreFab(Base):
+    __tablename__ = "prefabs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    prefabName = Column(String(128), index=True)
+    prefabAuthor = Column(String(64), index=True)
+    prefabDescription = Column(String(128), index=True)
+    prefabFile = Column(LargeBinary)
+    time_created = Column(DateTime(timezone=True), default=func.now())
+    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+
+    #Relationships
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User", back_populates="prefabs")
 
 
 class Vote(Base):

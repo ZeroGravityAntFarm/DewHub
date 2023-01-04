@@ -18,7 +18,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/upload")
+@router.post("/upload/map")
 def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     valid_variants = ['variant.oddball', 'variant.zombiez', 'variant.ctf', 'variant.koth', 'variant.slayer', 'variant.assault', 'variant.vip', 'variant.jugg', 'variant.terries']
     map_images = []
@@ -78,5 +78,47 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
                 f.write(image.file.read())
                 f.close()
                 image.file.close()    
+
+    return HTTPException(status_code=200, detail="Success!")
+
+
+@router.post("/upload/prefab")
+def upload(prefbDesc: str = Form(" "), preTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    valid_extension = ".prefab"
+    pre_images = []
+
+    if not user:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    if len(files) > 7:
+        raise HTTPException(status_code=400, detail="Too many files! Expected map, variant, and 5 Images.")
+
+    if len(files) < 2:
+        raise HTTPException(status_code=400, detail="Missing files.")
+
+    for file in files:
+        if file.filename.endswith(valid_extension):
+            preFile = file
+
+        elif file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+            pre_images.append(file)
+
+        else:
+            raise HTTPException(status_code=400, detail="Invalid file {}".format(file.filename))
+
+    preContents = preFile.file.read()
+
+    #Cleanup
+    preFile.file.close()
+
+    prefab_create = controller.create_prefab(db, preContents=preContents, preTags=preTags, user_id=user.id, prefbDesc=prefbDesc)
+
+    if len(pre_images) > 0:
+        for idx, image in enumerate(pre_images):
+            Path("/app/static/prefabs/" + str(prefab_create.id) + "/").mkdir(parents=True, exist_ok=True)
+            with open("/app/static/prefabs/" + str(prefab_create.id) + "/" + str(idx), "wb") as f:
+                f.write(image.file.read())
+                f.close()
+                image.file.close()
 
     return HTTPException(status_code=200, detail="Success!")

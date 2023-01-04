@@ -94,6 +94,15 @@ class User(UserBase):
     class Config:
         orm_mode = True
 
+class PrefBase(BaseModel):
+    prefabName: str
+    prefabDescription: str
+    prefabAuthor: str
+    prefabFile: bytes
+
+class PreFabCreate(PrefBase):
+    pass
+
 #Auth token
 class Token(BaseModel):
     access_token: str
