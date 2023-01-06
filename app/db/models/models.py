@@ -76,6 +76,9 @@ class PreFab(Base):
     prefabAuthor = Column(String(64), index=True)
     prefabDescription = Column(String(128), index=True)
     prefabFile = Column(LargeBinary)
+    prefabFileName = Column(String(128))
+    prefabTags = Column(String(128), index=True)
+    downloads = Column(Integer)
     time_created = Column(DateTime(timezone=True), default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 

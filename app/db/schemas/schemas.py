@@ -103,6 +103,11 @@ class PrefBase(BaseModel):
 class PreFabCreate(PrefBase):
     pass
 
+class PrefabQuery(PrefBase):
+    downloads: int
+    prefabTags: str
+    
+
 #Auth token
 class Token(BaseModel):
     access_token: str

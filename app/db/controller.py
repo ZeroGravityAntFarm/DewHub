@@ -171,6 +171,47 @@ def delete_user(db: Session, user: str):
 
         return False, "User not found"
 
+#Delete single prefab
+def delete_prefab(db: Session, prefab_id: int, user: str):
+    #Create a prefab object so we can find and delete
+    prefab = db.query(models.PreFab).filter(models.PreFab.id == prefab_id and models.PreFab.owner_id == user.id).first()
+
+    if prefab:
+        if user:
+            #Verify authenticated user is owner of requested map 
+            if user.id == prefab.owner_id:
+                #Delete map and variant rows
+                db.delete(prefab)
+
+                #Commit our changes to the database
+                db.commit()
+
+                return True, "Deleted successfully"
+
+            else:
+                return False, "Unauthorized"
+
+        else:
+            return False, "User not found"
+
+    else:
+        return False, "Prefab not found"
+
+#Get prefab file
+def get_prefab_file(db: Session, prefab_id: int):
+    prefab = db.query(models.PreFab).filter(models.PreFab.id == prefab_id).first()
+
+    #This is bad and will run on every download. --v
+    if prefab:
+        if prefab.downloads != None:
+            prefab.downloads += 1
+        #This condition will never be met again after the first download. 
+        else:
+            prefab.downloads = 1
+        db.commit()
+
+    return prefab
+
 #Get map file
 def get_map_file(db: Session, map_id: int):
     map = db.query(models.Map).filter(models.Map.id == map_id).first()
@@ -194,7 +235,7 @@ def get_variant(db: Session, map_name: str):
     return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).filter(models.Variant.id == map_query.variant_id).first()
 
 
-#Get variant file
+#Get variant file from map id
 def get_variant_file(db: Session, map_id: int):
     map_query = db.query(models.Map).filter(models.Map.id == map_id).first()
 
@@ -206,6 +247,7 @@ def get_variant_file(db: Session, map_id: int):
 
         else:
             variant.downloads = 1
+
         db.commit()
 
     return variant
@@ -221,6 +263,7 @@ def get_variant_id_file(db: Session, var_id: int):
 
         else:
             variant.downloads = 1
+
         db.commit()
 
     return variant
@@ -272,11 +315,13 @@ def create_user_variant(db: Session, variant: schemas.VariantCreate, user_id: in
 
 
 #Create new prefab
-def create_prefab(db: Session, prefab: schemas.PreFabCreate, user_id: int):
-    prefab = models.Prefab(prefabName=prefab.prefabName,
+def create_prefab(db: Session, prefab: schemas.PreFabCreate, user_id: int, prefabDesc: str, prefabTags: str):
+    prefab = models.PreFab(prefabName=prefab.prefabName,
                     prefabAuthor=prefab.prefabAuthor,
-                    prefabDescription=prefabDescription,
-                    prefabFile=prefabFile,
+                    prefabDescription=prefabDesc,
+                    prefabFile=bytes(prefab.contents),
+                    prefabFileName=prefab.prefabFile,
+                    prefabTags=prefabTags,
                     downloads=0,
                     owner_id=user_id)
 
@@ -287,12 +332,39 @@ def create_prefab(db: Session, prefab: schemas.PreFabCreate, user_id: int):
     return prefab
 
 
+#Get all prefabs
+def get_prefabs(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(*[c for c in models.PreFab.__table__.c if c.name != 'prefabFile']).offset(skip).limit(limit).all()
+
+
+#Get prefab data
+def get_prefab(db: Session, prefab_id: int):
+    return db.query(*[c for c in models.PreFab.__table__.c if c.name != 'prefabFile']).filter(models.PreFab.id == prefab_id).first()
+
+
+#Get variant file
+def get_prefab_file(db: Session, prefab_id: int):
+    prefab = db.query(models.PreFab).filter(models.PreFab.id == prefab_id).first()
+
+    if prefab:
+        if prefab.downloads != None:
+            prefab.downloads += 1
+
+        else:
+            prefab.downloads = 1
+
+        db.commit()
+
+    return prefab
+
+
 #Case insensitive search for map name, author, or description
 def search_maps(db: Session, search_text: str):
     map_data = db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(func.lower(models.Map.mapName).contains(search_text.lower()) | func.lower(models.Map.mapTags).contains(search_text.lower()) | func.lower(models.Map.mapAuthor).contains(search_text.lower()) | func.lower(models.Map.mapDescription).contains(search_text.lower())).all()
 
     if map_data:
         return map_data
+
 
 #Returns map downvotes and upvotes
 def get_vote(db: Session, map_id: int):

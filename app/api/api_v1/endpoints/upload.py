@@ -27,7 +27,7 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
         raise HTTPException(status_code=403, detail="Unauthorized")
 
     if len(files) > 7:
-        raise HTTPException(status_code=400, detail="Too many files! Expected map, variant, and 5 Images.")
+        raise HTTPException(status_code=400, detail="Too many files! Expected map, variant, and up to 5 Images.")
 
     if len(files) < 2:
         raise HTTPException(status_code=400, detail="Missing files.")
@@ -83,38 +83,47 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
 
 
 @router.post("/upload/prefab")
-def upload(prefbDesc: str = Form(" "), preTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     valid_extension = ".prefab"
-    pre_images = []
+    prefab_images = []
 
     if not user:
         raise HTTPException(status_code=403, detail="Unauthorized")
 
-    if len(files) > 7:
-        raise HTTPException(status_code=400, detail="Too many files! Expected map, variant, and 5 Images.")
+    if len(files) > 6:
+        raise HTTPException(status_code=400, detail="Too many files! Expected prefab and up to 5 Images.")
 
     if len(files) < 2:
         raise HTTPException(status_code=400, detail="Missing files.")
 
     for file in files:
         if file.filename.endswith(valid_extension):
-            preFile = file
+            prefabFile = file
 
         elif file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
-            pre_images.append(file)
+            prefab_images.append(file)
 
         else:
             raise HTTPException(status_code=400, detail="Invalid file {}".format(file.filename))
 
-    preContents = preFile.file.read()
+    prefabContents = prefabFile.file.read()
 
     #Cleanup
-    preFile.file.close()
+    prefabFile.file.close()
 
-    prefab_create = controller.create_prefab(db, preContents=preContents, preTags=preTags, user_id=user.id, prefbDesc=prefbDesc)
+    #All your bytes are belong to me
+    prefabData = prefabReader(prefabFile.filename, prefabContents)
 
-    if len(pre_images) > 0:
-        for idx, image in enumerate(pre_images):
+    #Check for baddies
+    if prefabData == 1:
+        raise HTTPException(status_code=400, detail="Unexpected file size")
+
+    #Yeet prefab to database
+    prefab_create = controller.create_prefab(db, prefab=prefabData, prefabTags=prefabTags, user_id=user.id, prefabDesc=prefabDesc)
+
+    #Yeet images to file system
+    if len(prefab_images) > 0:
+        for idx, image in enumerate(prefab_images):
             Path("/app/static/prefabs/" + str(prefab_create.id) + "/").mkdir(parents=True, exist_ok=True)
             with open("/app/static/prefabs/" + str(prefab_create.id) + "/" + str(idx), "wb") as f:
                 f.write(image.file.read())
