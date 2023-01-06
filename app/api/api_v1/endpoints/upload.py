@@ -84,8 +84,11 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
 
 @router.post("/upload/prefab")
 def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
-    valid_extension = ".prefab"
+    prefab_extension = ".prefab"
+    zip_extension = ".zip"
     prefab_images = []
+    prefabFile = None
+    zipFile = None
 
     if not user:
         raise HTTPException(status_code=403, detail="Unauthorized")
@@ -97,8 +100,11 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
         raise HTTPException(status_code=400, detail="Missing files.")
 
     for file in files:
-        if file.filename.endswith(valid_extension):
+        if file.filename.endswith(prefab_extension):
             prefabFile = file
+        
+        elif file.filename.endswith(zip_extension):
+            zipFile = file
 
         elif file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
             prefab_images.append(file)
@@ -106,28 +112,61 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
         else:
             raise HTTPException(status_code=400, detail="Invalid file {}".format(file.filename))
 
-    prefabContents = prefabFile.file.read()
+    #Do if prefab
+    if prefabFile:
+        prefabContents = prefabFile.file.read()
 
-    #Cleanup
-    prefabFile.file.close()
+        #Cleanup
+        prefabFile.file.close()
 
-    #All your bytes are belong to me
-    prefabData = prefabReader(prefabFile.filename, prefabContents)
+        #All your bytes are belong to me
+        prefabData = prefabReader(prefabFile.filename, prefabContents)
 
-    #Check for baddies
-    if prefabData == 1:
-        raise HTTPException(status_code=400, detail="Unexpected file size")
+        #Check for baddies
+        if prefabData == 1:
+            raise HTTPException(status_code=400, detail="Unexpected file size")
 
-    #Yeet prefab to database
-    prefab_create = controller.create_prefab(db, prefab=prefabData, prefabTags=prefabTags, user_id=user.id, prefabDesc=prefabDesc)
+        #Yeet prefab to database
+        prefab_create = controller.create_prefab(db, prefab=prefabData, prefabTags=prefabTags, user_id=user.id, prefabDesc=prefabDesc)
 
-    #Yeet images to file system
-    if len(prefab_images) > 0:
-        for idx, image in enumerate(prefab_images):
-            Path("/app/static/prefabs/" + str(prefab_create.id) + "/").mkdir(parents=True, exist_ok=True)
-            with open("/app/static/prefabs/" + str(prefab_create.id) + "/" + str(idx), "wb") as f:
-                f.write(image.file.read())
-                f.close()
-                image.file.close()
+        #Yeet images to file system
+        if len(prefab_images) > 0:
+            for idx, image in enumerate(prefab_images):
+                Path("/app/static/prefabs/" + str(prefab_create.id) + "/").mkdir(parents=True, exist_ok=True)
+                with open("/app/static/prefabs/" + str(prefab_create.id) + "/" + str(idx), "wb") as f:
+                    f.write(image.file.read())
+                    f.close()
+                    image.file.close()
 
-    return HTTPException(status_code=200, detail="Success!")
+        return HTTPException(status_code=200, detail="Success!")
+    
+    #Do if zip
+    elif zipFile:
+
+        #Lets us create an object like one we would have got from our dewrito file parser
+        class prefabData:
+            pass
+
+        #Object instantiation
+        prefabData = prefabData()
+
+        #Build out our prefab object
+        prefabData.prefabName = zipFile.filename.strip(".zip")
+        prefabData.prefabDescription = ""
+        prefabData.prefabAuthor = user.name
+        prefabData.prefabFile = zipFile.filename
+        prefabData.contents = zipFile.file.read()
+
+        #Yeet prefab zip to database
+        prefab_create = controller.create_prefab(db, prefab=prefabData, prefabTags=prefabTags, user_id=user.id, prefabDesc=prefabDesc)
+
+        #Yeet images to file system
+        if len(prefab_images) > 0:
+            for idx, image in enumerate(prefab_images):
+                Path("/app/static/prefabs/" + str(prefab_create.id) + "/").mkdir(parents=True, exist_ok=True)
+                with open("/app/static/prefabs/" + str(prefab_create.id) + "/" + str(idx), "wb") as f:
+                    f.write(image.file.read())
+                    f.close()
+                    image.file.close()
+
+        return HTTPException(status_code=200, detail="Success!")

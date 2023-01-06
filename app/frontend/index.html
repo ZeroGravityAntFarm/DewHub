@@ -164,7 +164,7 @@
             </div>
             <div class="modal-body">
                <div class="mb-3">
-                  <label for="formFile" class="form-label">Prefab File (*.prefab)</label>
+                  <label for="formFile" class="form-label">Prefab File (.zip or .prefab)</label>
                   <input class="form-control" type="file" id="prefabFile">
                </div>
                <div class="mb-3">
@@ -350,6 +350,7 @@
                trHTML += '</div>'
                document.getElementById("map-container").innerHTML = trHTML;
                $('#prefab-upload').modal('hide');
+               delayRedirect();
 
             } else if (xhr.status != 200) {
                trHTML += '<div class="alert alert-danger" role="alert">';
@@ -357,6 +358,7 @@
                trHTML += '</div>'
                document.getElementById("map-container").innerHTML = trHTML;
                $('#prefab-upload').modal('hide');
+               delayRedirect();
             }
          }
       });

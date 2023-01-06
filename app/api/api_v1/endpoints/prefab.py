@@ -62,7 +62,7 @@ def prefab_file(request: Request, prefab_id: int, db: Session = Depends(get_db))
     prefab_file = controller.get_prefab_file(db, prefab_id=prefab_id)
 
     if prefab_file:
-        headers = {'Content-Disposition': 'attachment; filename="{}.prefab"'.format(prefab_file.prefabName)}
+        headers = {'Content-Disposition': 'attachment; filename="{}"'.format(prefab_file.prefabFileName)}
         return Response(prefab_file.prefabFile, headers=headers, media_type='application/octet-stream')
 
     else:
