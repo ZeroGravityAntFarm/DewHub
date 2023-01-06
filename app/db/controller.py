@@ -172,8 +172,8 @@ def delete_user(db: Session, user: str):
         return False, "User not found"
 
 #Get map file
-def get_map_file(db: Session, map_name: str):
-    map = db.query(models.Map).filter(models.Map.mapName == map_name).first()
+def get_map_file(db: Session, map_id: int):
+    map = db.query(models.Map).filter(models.Map.id == map_id).first()
 
     #This is bad and will run on every download. --v
     if map:
@@ -195,8 +195,8 @@ def get_variant(db: Session, map_name: str):
 
 
 #Get variant file
-def get_variant_file(db: Session, map_name: str):
-    map_query = db.query(models.Map).filter(models.Map.mapName == map_name).first()
+def get_variant_file(db: Session, map_id: int):
+    map_query = db.query(models.Map).filter(models.Map.id == map_id).first()
 
     variant = db.query(models.Variant).filter(models.Variant.id == map_query.variant_id).first()
 

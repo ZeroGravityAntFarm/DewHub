@@ -115,10 +115,10 @@ def read_map(map_id: int = 0, db: Session = Depends(get_db), user: str = Depends
         raise HTTPException(status_code=400, detail=msg)
 
 #Get single map file
-@router.get("/maps/{map_name}/file")
+@router.get("/maps/{map_id}/file")
 @limiter.limit("60/minute")
-def read_map(request: Request, map_name: str = 0, db: Session = Depends(get_db)):
-    map_file = controller.get_map_file(db, map_name=map_name)
+def read_map(request: Request, map_id: int, db: Session = Depends(get_db)):
+    map_file = controller.get_map_file(db, map_id=map_id)
 
     if map_file:
         headers = {'Content-Disposition': 'attachment; filename="sandbox.map"'}
@@ -140,10 +140,10 @@ def read_map(map_name: str = 0, db: Session = Depends(get_db)):
 
 
 #Get single variant file
-@router.get("/maps/{map_name}/variant/file")
+@router.get("/maps/{map_id}/variant/file")
 @limiter.limit("60/minute")
-def read_map(request: Request, map_name: str = 0, db: Session = Depends(get_db)):
-    variant = controller.get_variant_file(db, map_name=map_name)
+def read_map(request: Request, map_id: int, db: Session = Depends(get_db)):
+    variant = controller.get_variant_file(db, map_id=map_id)
 
     if variant:
         headers = {'Content-Disposition': 'attachment; filename=' + variant.variantFileName}
