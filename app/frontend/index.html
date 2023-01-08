@@ -104,6 +104,17 @@
                      </ul>
                   </li>
                </ul>
+	       <div class="pb-4">
+                    <a href="https://api.zgaf.io/docs" class="d-flex align-items-center text-white text-decoration-none">
+                        <span class="d-none d-sm-inline mx-1 text-muted" style="vertical-align:bottom;">API</span>
+                    </a>
+		    <a href="#" class="d-flex align-items-center text-white text-decoration-none" style="display:inline-block;">
+                        <span class="d-none d-sm-inline mx-1 text-muted">About</span>
+                    </a>
+		    <a href="https://zgaf.io" class="d-flex align-items-center text-blue text-decoration-none" style="display:inline-block;">
+                        <span class="d-none d-sm-inline mx-1 text-muted">zgaf.io</span>
+                    </a>
+                </div>
             </div>
          </div>
          <div class="col py-5">
@@ -153,6 +164,8 @@
                      <option value="Juggernaut">Juggernaut</option>
                      <option value="VIP">VIP</option>
                      <option value="Race">Race</option>
+		     <option value="Enhanced">Enhanced</option>
+		     <option value="5.1.1">5.1.1</option>
                   </select>
                </div>
             </div>
@@ -215,7 +228,7 @@
 <script>
    token = getCookie("Authorization")
 
-   document.getElementById('search_bar').addEventListener('change', function () {
+   document.getElementById('search_bar').addEventListener('keypress', function () {
       searchMaps();
    });
 
