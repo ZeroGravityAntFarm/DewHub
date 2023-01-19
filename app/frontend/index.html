@@ -43,7 +43,7 @@
    </nav>
    <div class="container-fluid">
       <div class="row flex-nowrap">
-         <div class=" col-auto col-md-4 col-xl-1 px-sm-2 px-0 bg-dark">
+         <div class="position-fixed col-auto col-md-4 col-xl-1 px-sm-2 px-0 bg-dark">
             <div class=" d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                   <li class="nav-item">
@@ -76,7 +76,7 @@
                   <li>
                      <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                         <i class="fs-4 bi-gear"></i> <span class="ms-1 d-none d-sm-inline">Variants</span></a>
-                     <ul class="collapse show nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                     <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                         <li class="w-100">
                            <a href="/" onclick="loadVCards();return false;" class="nav-link px-0 link-secondary"> <span
                                  class="d-none d-sm-inline">All</span></a>
@@ -104,16 +104,19 @@
                      </ul>
                   </li>
                </ul>
-	       <div class="pb-4">
+	       <div class="pb-4 text-center">
                     <a href="https://api.zgaf.io/docs" class="d-flex align-items-center text-white text-decoration-none">
                         <span class="d-none d-sm-inline mx-1 text-muted" style="vertical-align:bottom;">API</span>
                     </a>
-		    <a href="#" class="d-flex align-items-center text-white text-decoration-none" style="display:inline-block;">
+		    <a href="/" class="d-flex align-items-center text-white text-decoration-none" style="display:inline-block;">
                         <span class="d-none d-sm-inline mx-1 text-muted">About</span>
                     </a>
 		    <a href="https://zgaf.io" class="d-flex align-items-center text-blue text-decoration-none" style="display:inline-block;">
                         <span class="d-none d-sm-inline mx-1 text-muted">zgaf.io</span>
                     </a>
+		    
+		    <a href="https://discord.gg/PxPNNteChR" data-bs-toggle="collapse" STYLE="font-size:12.0pt" class="nav-link px-0 text-muted align-middle">
+                        <i class="fs-4 bi-discord"></i> <span class="ms-1 d-none d-sm-inline"></span></a>
                 </div>
             </div>
          </div>
@@ -165,7 +168,7 @@
                      <option value="VIP">VIP</option>
                      <option value="Race">Race</option>
 		     <option value="Enhanced">Enhanced</option>
-		     <option value="5.1.1">5.1.1</option>
+		     <option value="0.5.1">0.5.1</option>
                   </select>
                </div>
             </div>
@@ -257,7 +260,7 @@
 
             }
 
-            for (let [i, object] of objects.entries()) {
+            for (let [i, object] of objects["items"].entries()) {
 
                var udate = new Date(object["time_created"]);
                var timeAgo = timeSince(udate);
@@ -320,12 +323,16 @@
                trHTML += '</div>'
                document.getElementById("map-container").innerHTML = trHTML;
                $('#map-upload').modal('hide');
+	       
+	       delayRedirect();
             } else if (xhr.status != 200) {
                trHTML += '<div class="alert alert-danger" role="alert">';
                trHTML += 'Upload failed!';
                trHTML += '</div>'
                document.getElementById("map-container").innerHTML = trHTML;
                $('#map-upload').modal('hide');
+
+	       delayRedirect();
             }
          }
       });
@@ -457,8 +464,8 @@
       xhttp.onreadystatechange = function () {
          if (this.readyState == 4 && this.status == 200) {
             var trHTML = '';
-            const objects = JSON.parse(this.responseText);
-            for (let [i, object] of objects.entries()) {
+            const data = JSON.parse(this.responseText);
+            for (let [i, object] of data["items"].entries()) {
 
                if (i % 3 === 0) {
                   trHTML += '</div>';
@@ -490,6 +497,14 @@
                trHTML += '</div>';
 
             }
+	    trHTML += '<nav aria-label="Page navigation example">';
+            trHTML += '<ul class="pagination">';
+            trHTML += '<li class="page-item"><a class="page-link" href="#">Previous</a></li>';
+            trHTML += '<li class="page-item"><a class="page-link" href="#">1</a></li>';
+	    trHTML += '<li class="page-item"><a class="page-link" href="#">2</a></li>';
+	    trHTML += '<li class="page-item"><a class="page-link" href="#">Next</a></li>';
+	    trHTML += '</ul>';
+            trHTML += '</nav>';
          }
          document.getElementById("map-cards").innerHTML = trHTML;
       }
@@ -503,7 +518,7 @@
          if (this.readyState == 4 && this.status == 200) {
             var trHTML = '';
             const objects = JSON.parse(this.responseText);
-            for (let [i, object] of objects.entries()) {
+            for (let [i, object] of objects["items"].entries()) {
 
                if (i % 3 === 0) {
                   trHTML += '</div>';
@@ -540,13 +555,13 @@
 
    function loadPCards() {
       const xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "https://api.zgaf.io/api_v1/prefabs/");
+      xhttp.open("GET", "https://api.zgaf.io/api_v1/prefabs");
       xhttp.send();
       xhttp.onreadystatechange = function () {
          if (this.readyState == 4 && this.status == 200) {
             var trHTML = '';
             const objects = JSON.parse(this.responseText);
-            for (let [i, object] of objects.entries()) {
+            for (let [i, object] of objects["items"].entries()) {
 
                if (i % 3 === 0) {
                   trHTML += '</div>';
@@ -587,7 +602,7 @@
          if (this.readyState == 4 && this.status == 200) {
             var trHTML = '';
             const objects = JSON.parse(this.responseText);
-            for (let [i, object] of objects.entries()) {
+            for (let [i, object] of objects["items"].entries()) {
 
                if (i % 3 === 0) {
                   trHTML += '</div>';
@@ -630,7 +645,7 @@
          if (this.readyState == 4 && this.status == 200) {
             var trHTML = '';
             const objects = JSON.parse(this.responseText);
-            for (let [i, object] of objects.entries()) {
+            for (let [i, object] of objects["items"].entries()) {
 
                if (i % 3 === 0) {
                   trHTML += '</div>';
@@ -673,7 +688,7 @@
          if (this.readyState == 4 && this.status == 200) {
             var trHTML = '';
             const objects = JSON.parse(this.responseText);
-            for (let [i, object] of objects.entries()) {
+            for (let [i, object] of objects["items"].entries()) {
 
                if (i % 3 === 0) {
                   trHTML += '</div>';

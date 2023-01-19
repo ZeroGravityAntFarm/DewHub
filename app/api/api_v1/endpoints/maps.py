@@ -58,7 +58,7 @@ def read_variant(variant_id: int, db: Session = Depends(get_db)):
 
 
 #Get all Maps Newest first
-@router.get("/maps/newest", response_model=list[schemas.MapQuery])
+@router.get("/maps/newest", response_model=Page[schemas.MapQuery])
 @limiter.limit("60/minute")
 def read_maps_new(request: Request, params: Params = Depends(), db: Session = Depends(get_db)):
     maps = controller.get_newest(db)
@@ -70,7 +70,7 @@ def read_maps_new(request: Request, params: Params = Depends(), db: Session = De
         raise HTTPException(status_code=400, detail="Maps not found")
 
 #Get all Maps Most Downloads first
-@router.get("/maps/downloaded", response_model=list[schemas.MapQuery])
+@router.get("/maps/downloaded", response_model=Page[schemas.MapQuery])
 @limiter.limit("60/minute")
 def read_maps_downloaded(request: Request, params: Params = Depends(), db: Session = Depends(get_db)):
     maps = controller.get_most_downloaded(db)
@@ -82,7 +82,7 @@ def read_maps_downloaded(request: Request, params: Params = Depends(), db: Sessi
         raise HTTPException(status_code=400, detail="Maps not found")
 
 #Get all Maps Oldest first
-@router.get("/maps/oldest", response_model=list[schemas.MapQuery])
+@router.get("/maps/oldest", response_model=Page[schemas.MapQuery])
 @limiter.limit("60/minute")
 def read_maps_oldest(request: Request, params: Params = Depends(), db: Session = Depends(get_db)):
     maps = controller.get_oldest(db)
