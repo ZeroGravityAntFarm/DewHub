@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from internal.limiter import limiter
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from fastapi_pagination import add_pagination
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -15,6 +16,7 @@ app.include_router(api_router)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+add_pagination(app)
 
 app.add_middleware(
     CORSMiddleware,

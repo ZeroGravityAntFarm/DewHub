@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, Request
+from fastapi_pagination import paginate, Params
 from db.schemas import schemas
 from db import controller
 from db.session import SessionLocal
@@ -21,11 +22,11 @@ def get_db():
 #Get all Prefabs
 @router.get("/prefabs")
 @limiter.limit("60/minute")
-def read_prefabs(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    prefabs = controller.get_prefabs(db, skip=skip, limit=limit)
+def read_prefabs(request: Request,  params: Params = Depends(), db: Session = Depends(get_db)):
+    prefabs = controller.get_prefabs(db)
 
     if prefabs:
-        return prefabs
+        return paginate(prefabs, params)
 
     else:
         raise HTTPException(status_code=400, detail="Prefabs not found")

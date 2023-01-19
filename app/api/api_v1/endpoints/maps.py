@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, Request
+from fastapi_pagination import paginate, Page, Params
 from db.schemas import schemas
 from db import controller
 from db.session import SessionLocal
@@ -21,13 +22,13 @@ def get_db():
 
 
 #Get all Maps
-@router.get("/maps/", response_model=list[schemas.MapQuery])
+@router.get("/maps/", response_model=Page[schemas.MapQuery])
 @limiter.limit("60/minute")
-def read_maps(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    maps = controller.get_maps(db, skip=skip, limit=limit)
+def read_maps(request: Request, params: Params = Depends(), db: Session = Depends(get_db)):
+    maps = controller.get_maps(db)
 
     if maps:
-        return maps
+        return paginate(maps, params)
 
     else:
         raise HTTPException(status_code=400, detail="Maps not found")
@@ -35,11 +36,11 @@ def read_maps(request: Request, skip: int = 0, limit: int = 100, db: Session = D
 #Get all variants
 @router.get("/variants/")
 @limiter.limit("60/minute")
-def read_variants(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    variants = controller.get_variants(db, skip=skip, limit=limit)
+def read_variants(request: Request, params: Params = Depends(), db: Session = Depends(get_db)):
+    variants = controller.get_variants(db)
 
     if variants:
-        return variants
+        return paginate(variants, params)
 
     else:
         raise HTTPException(status_code=400, detail="Variants not found")
@@ -59,35 +60,35 @@ def read_variant(variant_id: int, db: Session = Depends(get_db)):
 #Get all Maps Newest first
 @router.get("/maps/newest", response_model=list[schemas.MapQuery])
 @limiter.limit("60/minute")
-def read_maps_new(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    maps = controller.get_newest(db, skip=skip, limit=limit)
+def read_maps_new(request: Request, params: Params = Depends(), db: Session = Depends(get_db)):
+    maps = controller.get_newest(db)
 
     if maps:
-        return maps
+        return paginate(maps, params)
 
     else:
         raise HTTPException(status_code=400, detail="Maps not found")
 
-#Get all Maps Newest first
+#Get all Maps Most Downloads first
 @router.get("/maps/downloaded", response_model=list[schemas.MapQuery])
 @limiter.limit("60/minute")
-def read_maps_downloaded(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    maps = controller.get_most_downloaded(db, skip=skip, limit=limit)
+def read_maps_downloaded(request: Request, params: Params = Depends(), db: Session = Depends(get_db)):
+    maps = controller.get_most_downloaded(db)
 
     if maps:
-        return maps
+        return paginate(maps, params)
 
     else:
         raise HTTPException(status_code=400, detail="Maps not found")
 
-#Get all Maps Newest first
+#Get all Maps Oldest first
 @router.get("/maps/oldest", response_model=list[schemas.MapQuery])
 @limiter.limit("60/minute")
-def read_maps_oldest(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    maps = controller.get_oldest(db, skip=skip, limit=limit)
+def read_maps_oldest(request: Request, params: Params = Depends(), db: Session = Depends(get_db)):
+    maps = controller.get_oldest(db)
 
     if maps:
-        return maps
+        return paginate(maps, params)
 
     else:
         raise HTTPException(status_code=400, detail="Maps not found")
@@ -139,7 +140,7 @@ def read_map(map_name: str = 0, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Variant file not found")
 
 
-#Get single variant file
+#Get single map variant file
 @router.get("/maps/{map_id}/variant/file")
 @limiter.limit("60/minute")
 def read_map(request: Request, map_id: int, db: Session = Depends(get_db)):
@@ -167,10 +168,10 @@ def read_map(request: Request, var_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Variant file not found")
 
 
-#Get single variant file
+#Search Maps
 @router.get("/maps/search/{search_text}")
-def search_maps(search_text: str = 0, db: Session = Depends(get_db)):
+def search_maps(search_text: str = 0,  params: Params = Depends(), db: Session = Depends(get_db)):
     maps = controller.search_maps(db, search_text=search_text)
 
-    return maps
+    return paginate(maps, params)
 

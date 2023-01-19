@@ -8,6 +8,7 @@ from internal.auth import *
 from jose import jwt
 from sqlalchemy import or_, desc, asc
 
+
 #Authenticate a user
 def authenticate_user(db, username: str, password: str):
     user = get_user_auth(db, username)
@@ -96,13 +97,13 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 
 #Get all maps
-def get_maps(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).offset(skip).limit(limit).all()
+def get_maps(db: Session):
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).all()
 
 
 #Get all variants
-def get_variants(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).offset(skip).limit(limit).all()
+def get_variants(db: Session):
+    return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).all()
 
 #Get all variants
 def get_variant_id(db: Session, variant_id: int):
@@ -114,18 +115,18 @@ def get_map(db: Session, map_id: int):
 
 
 #Get all maps by newest first
-def get_newest(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(desc(models.Map.time_created)).offset(skip).limit(limit).all()
+def get_newest(db: Session):
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(desc(models.Map.time_created)).all()
 
 
 #Get all maps by newest first
-def get_most_downloaded(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(desc(models.Map.map_downloads)).offset(skip).limit(limit).all()
+def get_most_downloaded(db: Session):
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(desc(models.Map.map_downloads)).all()
 
 
 #Get all maps by newest first
-def get_oldest(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(asc(models.Map.time_created)).offset(skip).limit(limit).all()
+def get_oldest(db: Session):
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(asc(models.Map.time_created)).all()
 
 
 #Delete single map
@@ -157,6 +158,7 @@ def delete_map(db: Session, map_id: int, user: str):
     else:
         return False, "Map not found"
     
+
 #Delete user account (but not maps)
 def delete_user(db: Session, user: str):
     user = db.query(models.User).filter(models.User.id == user.id).first()
@@ -168,8 +170,8 @@ def delete_user(db: Session, user: str):
         return True, "Deleted successfully"
 
     else:
-
         return False, "User not found"
+
 
 #Delete single prefab
 def delete_prefab(db: Session, prefab_id: int, user: str):
@@ -197,6 +199,7 @@ def delete_prefab(db: Session, prefab_id: int, user: str):
     else:
         return False, "Prefab not found"
 
+
 #Get prefab file
 def get_prefab_file(db: Session, prefab_id: int):
     prefab = db.query(models.PreFab).filter(models.PreFab.id == prefab_id).first()
@@ -205,12 +208,14 @@ def get_prefab_file(db: Session, prefab_id: int):
     if prefab:
         if prefab.downloads != None:
             prefab.downloads += 1
+
         #This condition will never be met again after the first download. 
         else:
             prefab.downloads = 1
         db.commit()
 
     return prefab
+
 
 #Get map file
 def get_map_file(db: Session, map_id: int):
@@ -220,6 +225,7 @@ def get_map_file(db: Session, map_id: int):
     if map:
         if map.map_downloads != None:
             map.map_downloads += 1
+
         #This condition will never be met again after the first download. 
         else:
             map.map_downloads = 1
@@ -395,5 +401,3 @@ def create_vote(db: Session, map_id: int, userId: int, vote: bool):
         return True, voteObject
     
     return False, "You can only vote once!"
-
-

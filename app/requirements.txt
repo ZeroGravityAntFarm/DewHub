@@ -1,5 +1,6 @@
 fastapi
 slowapi
+fastapi-pagination
 python-multipart
 sqlalchemy
 sqlalchemy-utils
