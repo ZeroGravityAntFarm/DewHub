@@ -235,8 +235,8 @@ def get_map_file(db: Session, map_id: int):
 
 
 #Get variant data
-def get_variant(db: Session, map_name: str):
-    map_query = db.query(models.Map).filter(models.Map.mapName == map_name).first()
+def get_variant(db: Session, map_id: int):
+    map_query = db.query(models.Map).filter(models.Map.id == map_id).first()
 
     return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).filter(models.Variant.id == map_query.variant_id).first()
 
