@@ -5,6 +5,11 @@
    <!-- Required meta tags -->
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta content="Eldewrito Fileshare" property="og:title" />';
+   <meta content="A fileshare for Eldewrito powered by zgaf.io" property="og:description" />';
+   <meta content="https://fileshare.zgaf.io" property="og:url" />';
+   <meta content="https://fileshare.zgaf.io/content/halo.jpg" property="og:image" />';
+   <meta content="#43B581" data-react-helmet="true" name="theme-color" />';
    <!-- Bootstrap CSS -->
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
@@ -45,12 +50,8 @@
       <div class="row flex-nowrap">
          <div class="position-fixed col-auto col-md-4 col-xl-1 px-sm-2 px-0 bg-dark">
             <div class=" d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-               <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                  <li class="nav-item">
-                     <a href="#" class="nav-link align-middle px-0">
-                        <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
-                     </a>
-                  </li>
+               <ul class="nav nav-pills flex-column mb-sm-auto mb-0 mt-4 align-items-center align-items-sm-start"
+                  id="menu">
                   <li>
                      <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                         <i class="fs-4 bi-map"></i> <span class="ms-1 d-none d-sm-inline">Maps</span> </a>
@@ -170,6 +171,7 @@
                      <option value="Juggernaut">Juggernaut</option>
                      <option value="VIP">VIP</option>
                      <option value="Race">Race</option>
+                     <option value="Race">Mini Games</option>
                      <option value="Enhanced">Enhanced</option>
                      <option value="0.5.1">0.5.1</option>
                   </select>
@@ -461,6 +463,7 @@
    }
 
    function loadCards(page = 1) {
+      scroll(0, 0);
       const xhttp = new XMLHttpRequest();
       xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/?page=" + page + "&size=25");
       xhttp.send();
@@ -520,17 +523,17 @@
                nextpage = data["page"];
             }
 
-            trHTML += '<li class="page-item bg-dark"><a class="page-link" href="javascript:loadCards(' + prevpage + ');">Previous</a></li>';
+            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + prevpage + ');">Previous</a></li>';
 
             for (let i = 1; i <= pages; i++) {
                if (data["page"] === i) {
-                  trHTML += '<li class="page-item active"><a class="page-link" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
                } else {
-                  trHTML += '<li class="page-item bg-dark"><a class="page-link" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
                }
             }
 
-            trHTML += '<li class="page-item bg-dark"><a class="page-link" href="javascript:loadCards(' + nextpage + ');">Next</a></li>';
+            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + nextpage + ');">Next</a></li>';
             trHTML += '</ul>';
             trHTML += '</nav>';
          }
