@@ -167,11 +167,11 @@
                      <option value="CTF">CTF</option>
                      <option value="Assault">Assault</option>
                      <option value="Territories">Territories</option>
-                     <option value="Infection">Infection</option>
+                     <option value="Oddball">Oddball</option>
                      <option value="Juggernaut">Juggernaut</option>
                      <option value="VIP">VIP</option>
                      <option value="Race">Race</option>
-                     <option value="Race">Mini Games</option>
+                     <option value="Mini Games">Mini Games</option>
                      <option value="Enhanced">Enhanced</option>
                      <option value="0.5.1">0.5.1</option>
                   </select>
@@ -483,7 +483,7 @@
 
                trHTML += '<div class="col mb-3 mt-4">';
                trHTML += '<div class="card text-white bg-dark" >';
-               trHTML += '<a href="https://fileshare.zgaf.io/map/?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+               trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                trHTML += '<div class="card-body">';
                trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
                trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';

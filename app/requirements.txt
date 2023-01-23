@@ -12,3 +12,4 @@ bcrypt
 python-jose
 passlib[bcrypt]
 uvicorn[standard]
+jinja2

@@ -7,7 +7,10 @@ from internal.auth import get_current_user
 from sqlalchemy.orm import Session
 from os import listdir
 from internal.limiter import limiter 
-import json
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
 
 router = APIRouter()
 
@@ -20,6 +23,14 @@ def get_db():
     finally:
         db.close()
 
+
+templates = Jinja2Templates(directory="templates")
+
+@router.get("/mapview", response_class=HTMLResponse)
+async def return_map(request: Request, mapId: int, db: Session = Depends(get_db)):
+    map = controller.get_map(db, map_id=mapId)
+
+    return templates.TemplateResponse("index.html", {"request": request, "mapName": map.mapName, "id": map.id, "mapDescription": map.mapDescription})
 
 #Get all Maps
 @router.get("/maps/", response_model=Page[schemas.MapQuery])
