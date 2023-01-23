@@ -23,6 +23,9 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
     valid_variants = ['variant.oddball', 'variant.zombiez', 'variant.ctf', 'variant.koth', 'variant.slayer', 'variant.assault', 'variant.vip', 'variant.jugg', 'variant.terries']
     map_images = []
 
+    if len(mapUserDesc) > 1200:
+        raise HTTPException(status_code=400, detail="Description too long.")
+
     if not user:
         raise HTTPException(status_code=403, detail="Unauthorized")
 
@@ -39,7 +42,7 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
         elif file.filename in valid_variants:
             variantFile = file
 
-        elif file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+        elif file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.webp')):
             map_images.append(file)
 
         elif file.filename not in valid_variants or "sandbox.map":

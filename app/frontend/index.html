@@ -109,18 +109,16 @@
                   <a href="https://api.zgaf.io/docs" class="d-flex align-items-center text-white text-decoration-none">
                      <span class="d-none d-sm-inline mx-1 text-muted" style="vertical-align:bottom;">API</span>
                   </a>
-                  <a href="/" class="d-flex align-items-center text-white text-decoration-none"
+                  <a href="/about" class="d-flex align-items-center text-white text-decoration-none"
                      style="display:inline-block;">
                      <span class="d-none d-sm-inline mx-1 text-muted">About</span>
                   </a>
-                  <a href="https://zgaf.io" class="d-flex align-items-center text-blue text-decoration-none"
-                     style="display:inline-block;">
-                     <span class="d-none d-sm-inline mx-1 text-muted">zgaf.io</span>
+                  <a href="https://stats.uptimerobot.com/j6NNxFjN9x" class="nav-link px-0 text-muted align-middle">
+                     <i class="fs-4 bi-activity"></i>
                   </a>
-
-                  <a href="https://discord.gg/PxPNNteChR" data-bs-toggle="collapse" STYLE="font-size:12.0pt"
-                     class="nav-link px-0 text-muted align-middle">
-                     <i class="fs-4 bi-discord"></i> <span class="ms-1 d-none d-sm-inline"></span></a>
+                  <a href="https://discord.gg/PxPNNteChR" class="nav-link px-0 text-muted align-middle">
+                     <i class="fs-4 bi-discord"></i>
+                  </a>
                </div>
             </div>
          </div>
@@ -332,12 +330,10 @@
                delayRedirect();
             } else if (xhr.status != 200) {
                trHTML += '<div class="alert alert-danger" role="alert">';
-               trHTML += 'Upload failed!';
+               trHTML += '' + this.responseText + '';
                trHTML += '</div>'
                document.getElementById("map-container").innerHTML = trHTML;
                $('#map-upload').modal('hide');
-
-               delayRedirect();
             }
          }
       });
@@ -383,11 +379,10 @@
 
             } else if (xhr.status != 200) {
                trHTML += '<div class="alert alert-danger" role="alert">';
-               trHTML += 'Upload failed!';
+               trHTML += '' + this.responseText + '';
                trHTML += '</div>'
                document.getElementById("map-container").innerHTML = trHTML;
                $('#prefab-upload').modal('hide');
-               delayRedirect();
             }
          }
       });
