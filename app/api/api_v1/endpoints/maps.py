@@ -23,7 +23,7 @@ def get_db():
     finally:
         db.close()
 
-
+#Set our Jinja template dir
 templates = Jinja2Templates(directory="templates")
 
 #Returns dynamically built view for maps. Only way to get meta tags working (that I know of).
@@ -32,6 +32,17 @@ async def return_map(request: Request, mapId: int, db: Session = Depends(get_db)
     map = controller.get_map(db, map_id=mapId)
 
     return templates.TemplateResponse("map/index.html", {"request": request, "mapName": map.mapName, "id": map.id, "mapDescription": map.mapDescription})
+
+
+#Returns dynamically built view for variants. Only way to get meta tags working (that I know of).
+@router.get("/variantview", response_class=HTMLResponse)
+async def return_map(request: Request, varId: int, db: Session = Depends(get_db)):
+    variant = controller.get_variant_id(db, variant_id=varId)
+
+    #Variant images are not stored via id but by variant type name. This way we only have to store as many images are there are variant types. To get the type we just split the filename.
+    variantImage = variant.variantFileName.split('.')
+
+    return templates.TemplateResponse("variant/index.html", {"request": request, "variantImage": variantImage[1], "variantName": variant.variantName, "id": variant.id, "variantDescription": variant.variantDescription})
 
 
 #Get all Maps
