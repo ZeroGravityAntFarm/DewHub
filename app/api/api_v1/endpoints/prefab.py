@@ -6,6 +6,9 @@ from db.session import SessionLocal
 from internal.auth import get_current_user
 from sqlalchemy.orm import Session
 from internal.limiter import limiter 
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 
@@ -17,6 +20,16 @@ def get_db():
 
     finally:
         db.close()
+
+#Set our Jinja template dir
+templates = Jinja2Templates(directory="templates")
+
+#Returns dynamically built view for prefabs. Only way to get meta tags working (that I know of).
+@router.get("/prefabview", response_class=HTMLResponse)
+async def return_prefabview(request: Request, prefabId: int, db: Session = Depends(get_db)):
+    prefab = controller.get_prefab(db, prefab_id=prefabId)
+
+    return templates.TemplateResponse("prefab/index.html", {"request": request, "prefabName": prefab.prefabName, "id": prefab.id, "prefabDescription": prefab.prefabDescription})
 
 
 #Get all Prefabs

@@ -599,7 +599,7 @@
 
                trHTML += '<div class="col mb-3 mt-4">';
                trHTML += '<div class="card text-white bg-dark" >';
-               trHTML += '<a href="https://fileshare.zgaf.io/prefab?prefabId=' + object['id'] + '"><img src="https://api.zgaf.io/static/prefabs/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+               trHTML += '<a href="https://api.zgaf.io/api_v1/prefabview?prefabId=' + object['id'] + '"><img src="https://api.zgaf.io/static/prefabs/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                trHTML += '<div class="card-body">';
                trHTML += '<h4 class="card-title">' + object['prefabName'] + '</h4>';
                trHTML += '<h5 class="card-title">Author: ' + object['prefabAuthor'] + '</h5>';

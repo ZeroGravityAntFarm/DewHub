@@ -26,11 +26,13 @@ def get_db():
 
 templates = Jinja2Templates(directory="templates")
 
+#Returns dynamically built view for maps. Only way to get meta tags working (that I know of).
 @router.get("/mapview", response_class=HTMLResponse)
 async def return_map(request: Request, mapId: int, db: Session = Depends(get_db)):
     map = controller.get_map(db, map_id=mapId)
 
-    return templates.TemplateResponse("index.html", {"request": request, "mapName": map.mapName, "id": map.id, "mapDescription": map.mapDescription})
+    return templates.TemplateResponse("map/index.html", {"request": request, "mapName": map.mapName, "id": map.id, "mapDescription": map.mapDescription})
+
 
 #Get all Maps
 @router.get("/maps/", response_model=Page[schemas.MapQuery])
