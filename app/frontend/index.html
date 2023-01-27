@@ -238,32 +238,33 @@
       searchMaps();
    });
 
-   function searchMaps() {
+   function searchMaps(page = 1) {
+      scroll(0, 0);
       var trHTML = '';
       const xhttp = new XMLHttpRequest();
       var searchQuery = document.getElementById('search_bar').value;
       console.log(searchQuery);
-      xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/search/" + searchQuery);
+      xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/search/" + searchQuery + "?page=" + page + "&size=21");
       xhttp.send();
       xhttp.onreadystatechange = function () {
          if (this.readyState == 4 && this.status == 200) {
-            const objects = JSON.parse(this.responseText);
+            const data = JSON.parse(this.responseText);
 
-            if (objects == null || objects == undefined) {
+            if (data == null || data == undefined) {
                trHTML += '<div class="alert alert-warning" role="alert">';
                trHTML += 'No results found';
                trHTML += '</div>'
                document.getElementById("map-cards").innerHTML = trHTML;
 
                return
-                  ;
+
             } else {
                trHTML = '';
                document.getElementById("map-cards").innerHTML = trHTML;
 
             }
 
-            for (let [i, object] of objects["items"].entries()) {
+            for (let [i, object] of data["items"].entries()) {
 
                var udate = new Date(object["time_created"]);
                var timeAgo = timeSince(udate);
@@ -289,6 +290,40 @@
                trHTML += '</div>'
 
             }
+
+            trHTML += '<nav aria-label="Map Navigation">';
+            trHTML += '<ul class="pagination">';
+
+            //Calculate the number of pages
+            pages = Math.ceil(data["total"] / data["size"]);
+
+            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
+            if (data["page"] > 1) {
+               prevpage = data["page"] - 1;
+            } else {
+               prevpage = data["page"];
+            }
+
+            //Do same for next page
+            if (data["page"] < pages) {
+               nextpage = data["page"] + 1;
+            } else {
+               nextpage = data["page"];
+            }
+
+            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + prevpage + ');">Previous</a></li>';
+
+            for (let i = 1; i <= pages; i++) {
+               if (data["page"] === i) {
+                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:searchMaps(' + i + ');">' + i + '</a></li>';
+               } else {
+                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + i + ');">' + i + '</a></li>';
+               }
+            }
+
+            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + nextpage + ');">Next</a></li>';
+            trHTML += '</ul>';
+            trHTML += '</nav>';
          }
          document.getElementById("map-cards").innerHTML = trHTML;
       }
