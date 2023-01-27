@@ -460,7 +460,7 @@
    function loadCards(page = 1) {
       scroll(0, 0);
       const xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/?page=" + page + "&size=25");
+      xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/?page=" + page + "&size=21");
       xhttp.send();
       xhttp.onreadystatechange = function () {
          if (this.readyState == 4 && this.status == 200) {
@@ -620,15 +620,16 @@
       }
    }
 
-   function loadNewest() {
+   function loadNewest(page = 1) {
+      scroll(0, 0);
       const xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/newest");
+      xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/newest?page=" + page + "&size=21");
       xhttp.send();
       xhttp.onreadystatechange = function () {
          if (this.readyState == 4 && this.status == 200) {
             var trHTML = '';
-            const objects = JSON.parse(this.responseText);
-            for (let [i, object] of objects["items"].entries()) {
+            const data = JSON.parse(this.responseText);
+            for (let [i, object] of data["items"].entries()) {
 
                if (i % 3 === 0) {
                   trHTML += '</div>';
@@ -656,22 +657,56 @@
                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> 0</small><small class="text-muted bi-hand-thumbs-down"> 0</small></div>';
                trHTML += '</div>';
                trHTML += '</div>';
-
             }
+
+            trHTML += '<nav aria-label="Map Navigation">';
+            trHTML += '<ul class="pagination">';
+
+            //Calculate the number of pages
+            pages = Math.ceil(data["total"] / data["size"]);
+
+            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
+            if (data["page"] > 1) {
+               prevpage = data["page"] - 1;
+            } else {
+               prevpage = data["page"];
+            }
+
+            //Do same for next page
+            if (data["page"] < pages) {
+               nextpage = data["page"] + 1;
+            } else {
+               nextpage = data["page"];
+            }
+
+            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + prevpage + ');">Previous</a></li>';
+
+            for (let i = 1; i <= pages; i++) {
+               if (data["page"] === i) {
+                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+               } else {
+                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+               }
+            }
+
+            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + nextpage + ');">Next</a></li>';
+            trHTML += '</ul>';
+            trHTML += '</nav>';
          }
          document.getElementById("map-cards").innerHTML = trHTML;
       }
    }
 
-   function loadOldest() {
+   function loadOldest(page = 1) {
+      scroll(0, 0);
       const xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/oldest");
+      xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/oldest?page=" + page + "&size=21");
       xhttp.send();
       xhttp.onreadystatechange = function () {
          if (this.readyState == 4 && this.status == 200) {
             var trHTML = '';
-            const objects = JSON.parse(this.responseText);
-            for (let [i, object] of objects["items"].entries()) {
+            const data = JSON.parse(this.responseText);
+            for (let [i, object] of data["items"].entries()) {
 
                if (i % 3 === 0) {
                   trHTML += '</div>';
@@ -701,20 +736,54 @@
                trHTML += '</div>';
 
             }
+            trHTML += '<nav aria-label="Map Navigation">';
+            trHTML += '<ul class="pagination">';
+
+            //Calculate the number of pages
+            pages = Math.ceil(data["total"] / data["size"]);
+
+            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
+            if (data["page"] > 1) {
+               prevpage = data["page"] - 1;
+            } else {
+               prevpage = data["page"];
+            }
+
+            //Do same for next page
+            if (data["page"] < pages) {
+               nextpage = data["page"] + 1;
+            } else {
+               nextpage = data["page"];
+            }
+
+            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + prevpage + ');">Previous</a></li>';
+
+            for (let i = 1; i <= pages; i++) {
+               if (data["page"] === i) {
+                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+               } else {
+                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+               }
+            }
+
+            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + nextpage + ');">Next</a></li>';
+            trHTML += '</ul>';
+            trHTML += '</nav>';
          }
          document.getElementById("map-cards").innerHTML = trHTML;
       }
    }
 
-   function loadDownloaded() {
+   function loadDownloaded(page = 1) {
+      scroll(0, 0);
       const xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/downloaded");
+      xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/downloaded?page=" + page + "&size=21");
       xhttp.send();
       xhttp.onreadystatechange = function () {
          if (this.readyState == 4 && this.status == 200) {
             var trHTML = '';
-            const objects = JSON.parse(this.responseText);
-            for (let [i, object] of objects["items"].entries()) {
+            const data = JSON.parse(this.responseText);
+            for (let [i, object] of data["items"].entries()) {
 
                if (i % 3 === 0) {
                   trHTML += '</div>';
@@ -744,6 +813,39 @@
                trHTML += '</div>';
 
             }
+            trHTML += '<nav aria-label="Map Navigation">';
+            trHTML += '<ul class="pagination">';
+
+            //Calculate the number of pages
+            pages = Math.ceil(data["total"] / data["size"]);
+
+            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
+            if (data["page"] > 1) {
+               prevpage = data["page"] - 1;
+            } else {
+               prevpage = data["page"];
+            }
+
+            //Do same for next page
+            if (data["page"] < pages) {
+               nextpage = data["page"] + 1;
+            } else {
+               nextpage = data["page"];
+            }
+
+            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + prevpage + ');">Previous</a></li>';
+
+            for (let i = 1; i <= pages; i++) {
+               if (data["page"] === i) {
+                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+               } else {
+                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+               }
+            }
+
+            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + nextpage + ');">Next</a></li>';
+            trHTML += '</ul>';
+            trHTML += '</nav>';
          }
          document.getElementById("map-cards").innerHTML = trHTML;
       }
