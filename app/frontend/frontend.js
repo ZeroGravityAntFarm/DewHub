@@ -4,6 +4,76 @@ document.getElementById('search_bar').addEventListener('keypress', function () {
     searchMaps();
 });
 
+function generatePagination(pages, current, type)
+{
+    var last = pages;
+    var delta = 2;
+    var left = current - delta;
+    var right = current + delta + 1;
+    var trHTML = "";
+
+    if (current > 1) 
+    {
+        prevpage = current - 1;
+    } 
+    else 
+    {
+        prevpage = current;
+    }
+
+    if (current < pages) 
+    {
+        nextpage = current + 1;
+    } 
+    else 
+    {
+        nextpage = current;
+    }
+
+    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:'+type+'(' + prevpage + ');">Previous</a></li>';
+
+    for (let i = 1; i <= last; i++) {
+        if (i == left && left > delta - 1) {
+            if (current == i) {
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:'+type+'(' + 1 + ');">' + 1 + '</a></li>';
+            }
+            else {
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:'+type+'(' + 1 + ');">' + 1 + '</a></li>';
+            }
+
+            if (left != delta) {
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+            }
+        }
+
+        if (i >= left && i < right) {
+            if (current == i) {
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:'+type+'(' + i + ');">' + i + '</a></li>';
+            }
+            else {
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:'+type+'(' + i + ');">' + i + '</a></li>';
+            }
+        }
+
+        if (i == right) {
+            if (right != last) {
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+            }
+
+            if (current == i) {
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:'+type+'(' + last + ');">' + last + '</a></li>';
+            }
+            else {
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:'+type+'(' + last + ');">' + last + '</a></li>';
+            }
+        }
+    }
+
+    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:'+type+'(' + nextpage + ');">Next</a></li>';
+
+    return trHTML;
+}
+
 function searchMaps(page = 1) {
     scroll(0, 0);
     var trHTML = '';
@@ -64,65 +134,8 @@ function searchMaps(page = 1) {
             pages = Math.ceil(data["total"] / data["size"]);
             current = data["page"];
 
-            var last = pages;
-            var delta = 2;
-            var left = current - delta;
-            var right = current + delta + 1;
+            trHTML += generatePagination(pages, current, "searchMaps");
 
-            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
-            if (data["page"] > 1) {
-                prevpage = data["page"] - 1;
-            } else {
-                prevpage = data["page"];
-            }
-
-            //Do same for next page
-            if (data["page"] < pages) {
-                nextpage = data["page"] + 1;
-            } else {
-                nextpage = data["page"];
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + prevpage + ');">Previous</a></li>';
-
-            for (let i = 1; i <= last; i++) {
-                if (i == left && left > delta - 1) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:searchMaps(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-
-                    if (left != delta) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-                }
-
-                if (i >= left && i < right) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:searchMaps(' + i + ');">' + i + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + i + ');">' + i + '</a></li>';
-                    }
-                }
-
-                if (i == right) {
-                    if (right != last) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:searchMaps(' + last + ');">' + last + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + last + ');">' + last + '</a></li>';
-                    }
-                }
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + nextpage + ');">Next</a></li>';
             trHTML += '</ul>';
             trHTML += '</nav>';
         }
@@ -341,65 +354,8 @@ function loadCards(page = 1) {
             pages = Math.ceil(data["total"] / data["size"]);
             current = data["page"];
 
-            var last = pages;
-            var delta = 2;
-            var left = current - delta;
-            var right = current + delta + 1;
-
-            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
-            if (data["page"] > 1) {
-                prevpage = data["page"] - 1;
-            } else {
-                prevpage = data["page"];
-            }
-
-            //Do same for next page
-            if (data["page"] < pages) {
-                nextpage = data["page"] + 1;
-            } else {
-                nextpage = data["page"];
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + prevpage + ');">Previous</a></li>';
-
-            for (let i = 1; i <= last; i++) {
-                if (i == left && left > delta - 1) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-
-                    if (left != delta) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-                }
-
-                if (i >= left && i < right) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
-                    }
-                }
-
-                if (i == right) {
-                    if (right != last) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + last + ');">' + last + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + last + ');">' + last + '</a></li>';
-                    }
-                }
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + nextpage + ');">Next</a></li>';
+            trHTML += generatePagination(pages, current, "loadCards");
+            
             trHTML += '</ul>';
             trHTML += '</nav>';
         }
@@ -453,65 +409,8 @@ function loadVCards(page = 1) {
             pages = Math.ceil(data["total"] / data["size"]);
             current = data["page"];
 
-            var last = pages;
-            var delta = 2;
-            var left = current - delta;
-            var right = current + delta + 1;
+            trHTML += generatePagination(pages, current, "loadVCards");
 
-            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
-            if (data["page"] > 1) {
-                prevpage = data["page"] - 1;
-            } else {
-                prevpage = data["page"];
-            }
-
-            //Do same for next page
-            if (data["page"] < pages) {
-                nextpage = data["page"] + 1;
-            } else {
-                nextpage = data["page"];
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadVCards(' + prevpage + ');">Previous</a></li>';
-
-            for (let i = 1; i <= last; i++) {
-                if (i == left && left > delta - 1) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadVCards(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadVCards(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-
-                    if (left != delta) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-                }
-
-                if (i >= left && i < right) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadVCards(' + i + ');">' + i + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadVCards(' + i + ');">' + i + '</a></li>';
-                    }
-                }
-
-                if (i == right) {
-                    if (right != last) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadVCards(' + last + ');">' + last + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadVCards(' + last + ');">' + last + '</a></li>';
-                    }
-                }
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadVCards(' + nextpage + ');">Next</a></li>';
             trHTML += '</ul>';
             trHTML += '</nav>';
         }
@@ -564,65 +463,8 @@ function loadPCards(page = 1) {
             pages = Math.ceil(data["total"] / data["size"]);
             current = data["page"];
 
-            var last = pages;
-            var delta = 2;
-            var left = current - delta;
-            var right = current + delta + 1;
+            trHTML += generatePagination(pages, current, "loadPCards");
 
-            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
-            if (data["page"] > 1) {
-                prevpage = data["page"] - 1;
-            } else {
-                prevpage = data["page"];
-            }
-
-            //Do same for next page
-            if (data["page"] < pages) {
-                nextpage = data["page"] + 1;
-            } else {
-                nextpage = data["page"];
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadPCards(' + prevpage + ');">Previous</a></li>';
-
-            for (let i = 1; i <= last; i++) {
-                if (i == left && left > delta - 1) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadPCards(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadPCards(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-
-                    if (left != delta) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-                }
-
-                if (i >= left && i < right) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadPCards(' + i + ');">' + i + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadPCards(' + i + ');">' + i + '</a></li>';
-                    }
-                }
-
-                if (i == right) {
-                    if (right != last) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadPCards(' + last + ');">' + last + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadPCards(' + last + ');">' + last + '</a></li>';
-                    }
-                }
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadPCards(' + nextpage + ');">Next</a></li>';
             trHTML += '</ul>';
             trHTML += '</nav>';
         }
@@ -676,65 +518,8 @@ function loadNewest(page = 1) {
             pages = Math.ceil(data["total"] / data["size"]);
             current = data["page"];
 
-            var last = pages;
-            var delta = 2;
-            var left = current - delta;
-            var right = current + delta + 1;
+            trHTML += generatePagination(pages, current, "loadNewest");
 
-            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
-            if (data["page"] > 1) {
-                prevpage = data["page"] - 1;
-            } else {
-                prevpage = data["page"];
-            }
-
-            //Do same for next page
-            if (data["page"] < pages) {
-                nextpage = data["page"] + 1;
-            } else {
-                nextpage = data["page"];
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadNewest(' + prevpage + ');">Previous</a></li>';
-
-            for (let i = 1; i <= last; i++) {
-                if (i == left && left > delta - 1) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadNewest(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadNewest(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-
-                    if (left != delta) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-                }
-
-                if (i >= left && i < right) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadNewest(' + i + ');">' + i + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadNewest(' + i + ');">' + i + '</a></li>';
-                    }
-                }
-
-                if (i == right) {
-                    if (right != last) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadNewest(' + last + ');">' + last + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadNewest(' + last + ');">' + last + '</a></li>';
-                    }
-                }
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadNewest(' + nextpage + ');">Next</a></li>';
             trHTML += '</ul>';
             trHTML += '</nav>';
         }
@@ -788,65 +573,8 @@ function loadOldest(page = 1) {
             pages = Math.ceil(data["total"] / data["size"]);
             current = data["page"];
 
-            var last = pages;
-            var delta = 2;
-            var left = current - delta;
-            var right = current + delta + 1;
+            trHTML += generatePagination(pages, current, "loadOldest");
 
-            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
-            if (data["page"] > 1) {
-                prevpage = data["page"] - 1;
-            } else {
-                prevpage = data["page"];
-            }
-
-            //Do same for next page
-            if (data["page"] < pages) {
-                nextpage = data["page"] + 1;
-            } else {
-                nextpage = data["page"];
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadOldest(' + prevpage + ');">Previous</a></li>';
-
-            for (let i = 1; i <= last; i++) {
-                if (i == left && left > delta - 1) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadOldest(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadOldest(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-
-                    if (left != delta) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-                }
-
-                if (i >= left && i < right) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadOldest(' + i + ');">' + i + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadOldest(' + i + ');">' + i + '</a></li>';
-                    }
-                }
-
-                if (i == right) {
-                    if (right != last) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadOldest(' + last + ');">' + last + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadOldest(' + last + ');">' + last + '</a></li>';
-                    }
-                }
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadOldest(' + nextpage + ');">Next</a></li>';
             trHTML += '</ul>';
             trHTML += '</nav>';
         }
@@ -900,65 +628,8 @@ function loadDownloaded(page = 1) {
             pages = Math.ceil(data["total"] / data["size"]);
             current = data["page"];
 
-            var last = pages;
-            var delta = 2;
-            var left = current - delta;
-            var right = current + delta + 1;
+            trHTML += generatePagination(pages, current, "loadDownloaded");
 
-            //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
-            if (data["page"] > 1) {
-                prevpage = data["page"] - 1;
-            } else {
-                prevpage = data["page"];
-            }
-
-            //Do same for next page
-            if (data["page"] < pages) {
-                nextpage = data["page"] + 1;
-            } else {
-                nextpage = data["page"];
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + prevpage + ');">Previous</a></li>';
-
-            for (let i = 1; i <= last; i++) {
-                if (i == left && left > delta - 1) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + 1 + ');">' + 1 + '</a></li>';
-                    }
-
-                    if (left != delta) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-                }
-
-                if (i >= left && i < right) {
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + i + ');">' + i + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + i + ');">' + i + '</a></li>';
-                    }
-                }
-
-                if (i == right) {
-                    if (right != last) {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
-                    }
-
-                    if (current == i) {
-                        trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + last + ');">' + last + '</a></li>';
-                    }
-                    else {
-                        trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + last + ');">' + last + '</a></li>';
-                    }
-                }
-            }
-
-            trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + nextpage + ');">Next</a></li>';
             trHTML += '</ul>';
             trHTML += '</nav>';
         }
