@@ -4,41 +4,36 @@ document.getElementById('search_bar').addEventListener('keypress', function () {
     searchMaps();
 });
 
-function generatePagination(pages, current, type)
-{
+function generatePagination(pages, current, type) {
     var last = pages;
     var delta = 2;
     var left = current - delta;
     var right = current + delta + 1;
     var trHTML = "";
 
-    if (current > 1) 
-    {
+    if (current > 1) {
         prevpage = current - 1;
-    } 
-    else 
-    {
+    }
+    else {
         prevpage = current;
     }
 
-    if (current < pages) 
-    {
+    if (current < pages) {
         nextpage = current + 1;
-    } 
-    else 
-    {
+    }
+    else {
         nextpage = current;
     }
 
-    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:'+type+'(' + prevpage + ');">Previous</a></li>';
+    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + prevpage + ');">Previous</a></li>';
 
     for (let i = 1; i <= last; i++) {
         if (i == left && left > delta - 1) {
             if (current == i) {
-                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:'+type+'(' + 1 + ');">' + 1 + '</a></li>';
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + 1 + ');">' + 1 + '</a></li>';
             }
             else {
-                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:'+type+'(' + 1 + ');">' + 1 + '</a></li>';
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + 1 + ');">' + 1 + '</a></li>';
             }
 
             if (left != delta) {
@@ -48,10 +43,10 @@ function generatePagination(pages, current, type)
 
         if (i >= left && i < right) {
             if (current == i) {
-                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:'+type+'(' + i + ');">' + i + '</a></li>';
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + i + ');">' + i + '</a></li>';
             }
             else {
-                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:'+type+'(' + i + ');">' + i + '</a></li>';
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + i + ');">' + i + '</a></li>';
             }
         }
 
@@ -61,15 +56,15 @@ function generatePagination(pages, current, type)
             }
 
             if (current == i) {
-                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:'+type+'(' + last + ');">' + last + '</a></li>';
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + last + ');">' + last + '</a></li>';
             }
             else {
-                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:'+type+'(' + last + ');">' + last + '</a></li>';
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + last + ');">' + last + '</a></li>';
             }
         }
     }
 
-    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:'+type+'(' + nextpage + ');">Next</a></li>';
+    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + nextpage + ');">Next</a></li>';
 
     return trHTML;
 }
