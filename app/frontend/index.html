@@ -296,6 +296,12 @@
 
             //Calculate the number of pages
             pages = Math.ceil(data["total"] / data["size"]);
+            current = data["page"];
+
+            var last = pages;
+            var delta = 2;
+            var left = current - delta;
+            var right = current + delta + 1;
 
             //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
             if (data["page"] > 1) {
@@ -313,11 +319,40 @@
 
             trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + prevpage + ');">Previous</a></li>';
 
-            for (let i = 1; i <= pages; i++) {
-               if (data["page"] === i) {
-                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:searchMaps(' + i + ');">' + i + '</a></li>';
-               } else {
-                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + i + ');">' + i + '</a></li>';
+            for (let i = 1; i <= last; i++) {
+               if (i == left && left > delta - 1) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:searchMaps(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+
+                  if (left != delta) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+               }
+
+               if (i >= left && i < right) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:searchMaps(' + i + ');">' + i + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + i + ');">' + i + '</a></li>';
+                  }
+               }
+
+               if (i == right) {
+                  if (right != last) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:searchMaps(' + last + ');">' + last + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:searchMaps(' + last + ');">' + last + '</a></li>';
+                  }
                }
             }
 
@@ -538,6 +573,12 @@
 
             //Calculate the number of pages
             pages = Math.ceil(data["total"] / data["size"]);
+            current = data["page"];
+
+            var last = pages;
+            var delta = 2;
+            var left = current - delta;
+            var right = current + delta + 1;
 
             //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
             if (data["page"] > 1) {
@@ -555,11 +596,40 @@
 
             trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + prevpage + ');">Previous</a></li>';
 
-            for (let i = 1; i <= pages; i++) {
-               if (data["page"] === i) {
-                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
-               } else {
-                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+            for (let i = 1; i <= last; i++) {
+               if (i == left && left > delta - 1) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+
+                  if (left != delta) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+               }
+
+               if (i >= left && i < right) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + i + ');">' + i + '</a></li>';
+                  }
+               }
+
+               if (i == right) {
+                  if (right != last) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadCards(' + last + ');">' + last + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadCards(' + last + ');">' + last + '</a></li>';
+                  }
                }
             }
 
@@ -615,6 +685,12 @@
 
             //Calculate the number of pages
             pages = Math.ceil(data["total"] / data["size"]);
+            current = data["page"];
+
+            var last = pages;
+            var delta = 2;
+            var left = current - delta;
+            var right = current + delta + 1;
 
             //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
             if (data["page"] > 1) {
@@ -632,11 +708,40 @@
 
             trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadVCards(' + prevpage + ');">Previous</a></li>';
 
-            for (let i = 1; i <= pages; i++) {
-               if (data["page"] === i) {
-                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadVCards(' + i + ');">' + i + '</a></li>';
-               } else {
-                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadVCards(' + i + ');">' + i + '</a></li>';
+            for (let i = 1; i <= last; i++) {
+               if (i == left && left > delta - 1) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadVCards(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadVCards(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+
+                  if (left != delta) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+               }
+
+               if (i >= left && i < right) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadVCards(' + i + ');">' + i + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadVCards(' + i + ');">' + i + '</a></li>';
+                  }
+               }
+
+               if (i == right) {
+                  if (right != last) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadVCards(' + last + ');">' + last + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadVCards(' + last + ');">' + last + '</a></li>';
+                  }
                }
             }
 
@@ -691,6 +796,12 @@
 
             //Calculate the number of pages
             pages = Math.ceil(data["total"] / data["size"]);
+            current = data["page"];
+
+            var last = pages;
+            var delta = 2;
+            var left = current - delta;
+            var right = current + delta + 1;
 
             //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
             if (data["page"] > 1) {
@@ -708,11 +819,40 @@
 
             trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadPCards(' + prevpage + ');">Previous</a></li>';
 
-            for (let i = 1; i <= pages; i++) {
-               if (data["page"] === i) {
-                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadPCards(' + i + ');">' + i + '</a></li>';
-               } else {
-                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadPCards(' + i + ');">' + i + '</a></li>';
+            for (let i = 1; i <= last; i++) {
+               if (i == left && left > delta - 1) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadPCards(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadPCards(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+
+                  if (left != delta) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+               }
+
+               if (i >= left && i < right) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadPCards(' + i + ');">' + i + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadPCards(' + i + ');">' + i + '</a></li>';
+                  }
+               }
+
+               if (i == right) {
+                  if (right != last) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadPCards(' + last + ');">' + last + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadPCards(' + last + ');">' + last + '</a></li>';
+                  }
                }
             }
 
@@ -768,6 +908,12 @@
 
             //Calculate the number of pages
             pages = Math.ceil(data["total"] / data["size"]);
+            current = data["page"];
+
+            var last = pages;
+            var delta = 2;
+            var left = current - delta;
+            var right = current + delta + 1;
 
             //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
             if (data["page"] > 1) {
@@ -785,11 +931,40 @@
 
             trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadNewest(' + prevpage + ');">Previous</a></li>';
 
-            for (let i = 1; i <= pages; i++) {
-               if (data["page"] === i) {
-                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadNewest(' + i + ');">' + i + '</a></li>';
-               } else {
-                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadNewest(' + i + ');">' + i + '</a></li>';
+            for (let i = 1; i <= last; i++) {
+               if (i == left && left > delta - 1) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadNewest(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadNewest(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+
+                  if (left != delta) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+               }
+
+               if (i >= left && i < right) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadNewest(' + i + ');">' + i + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadNewest(' + i + ');">' + i + '</a></li>';
+                  }
+               }
+
+               if (i == right) {
+                  if (right != last) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadNewest(' + last + ');">' + last + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadNewest(' + last + ');">' + last + '</a></li>';
+                  }
                }
             }
 
@@ -845,6 +1020,12 @@
 
             //Calculate the number of pages
             pages = Math.ceil(data["total"] / data["size"]);
+            current = data["page"];
+
+            var last = pages;
+            var delta = 2;
+            var left = current - delta;
+            var right = current + delta + 1;
 
             //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
             if (data["page"] > 1) {
@@ -862,11 +1043,40 @@
 
             trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadOldest(' + prevpage + ');">Previous</a></li>';
 
-            for (let i = 1; i <= pages; i++) {
-               if (data["page"] === i) {
-                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadOldest(' + i + ');">' + i + '</a></li>';
-               } else {
-                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadOldest(' + i + ');">' + i + '</a></li>';
+            for (let i = 1; i <= last; i++) {
+               if (i == left && left > delta - 1) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadOldest(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadOldest(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+
+                  if (left != delta) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+               }
+
+               if (i >= left && i < right) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadOldest(' + i + ');">' + i + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadOldest(' + i + ');">' + i + '</a></li>';
+                  }
+               }
+
+               if (i == right) {
+                  if (right != last) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadOldest(' + last + ');">' + last + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadOldest(' + last + ');">' + last + '</a></li>';
+                  }
                }
             }
 
@@ -922,6 +1132,12 @@
 
             //Calculate the number of pages
             pages = Math.ceil(data["total"] / data["size"]);
+            current = data["page"];
+
+            var last = pages;
+            var delta = 2;
+            var left = current - delta;
+            var right = current + delta + 1;
 
             //If our current page is greater than 1, previous page is less than the page we're on. Else leave it the same as current page. 
             if (data["page"] > 1) {
@@ -939,11 +1155,40 @@
 
             trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + prevpage + ');">Previous</a></li>';
 
-            for (let i = 1; i <= pages; i++) {
-               if (data["page"] === i) {
-                  trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + i + ');">' + i + '</a></li>';
-               } else {
-                  trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + i + ');">' + i + '</a></li>';
+            for (let i = 1; i <= last; i++) {
+               if (i == left && left > delta - 1) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + 1 + ');">' + 1 + '</a></li>';
+                  }
+
+                  if (left != delta) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+               }
+
+               if (i >= left && i < right) {
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + i + ');">' + i + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + i + ');">' + i + '</a></li>';
+                  }
+               }
+
+               if (i == right) {
+                  if (right != last) {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+                  }
+
+                  if (current == i) {
+                     trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + last + ');">' + last + '</a></li>';
+                  }
+                  else {
+                     trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:loadDownloaded(' + last + ');">' + last + '</a></li>';
+                  }
                }
             }
 
