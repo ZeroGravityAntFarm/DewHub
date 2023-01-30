@@ -46,7 +46,7 @@ async def return_map(request: Request, varId: int, db: Session = Depends(get_db)
 
 
 #Get all Maps
-@router.get("/maps/", response_model=Page[schemas.MapQuery])
+@router.get("/maps/")
 @limiter.limit("60/minute")
 def read_maps(request: Request, params: Params = Depends(), db: Session = Depends(get_db)):
     maps = controller.get_maps(db)

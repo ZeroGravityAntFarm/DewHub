@@ -114,7 +114,7 @@ function searchMaps(page = 1) {
                 trHTML += '<p class="card-text"><small class="text-muted">Uploaded ' + timeAgo + ' ago</small></p>'
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/file" class="btn btn-primary me-1">Map File</a>'
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>'
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> 0</small><small class="text-muted bi-hand-thumbs-down"> 0</small></div>'
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> ' + object["upvote"] + '</small><small class="text-muted bi-hand-thumbs-down"> ' + object["upvote"] + '</small></div>'
                 trHTML += '</div>'
                 trHTML += '</div>'
                 trHTML += '</div>'
@@ -337,7 +337,7 @@ function loadCards(page = 1) {
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/file" class="btn btn-primary me-1">Map File</a>';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> 0</small><small class="text-muted bi-hand-thumbs-down"> 0</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up">' + object["upvote"] + '</small><small class="text-muted bi-hand-thumbs-down">' + object["downvote"] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
             }
@@ -392,7 +392,7 @@ function loadVCards(page = 1) {
                 trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/variants/' + object['id'] + '/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> 0</small><small class="text-muted bi-hand-thumbs-down"> 0</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['downloads'] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
 
@@ -445,7 +445,7 @@ function loadPCards(page = 1) {
                 trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/prefabs/' + object['id'] + '/file" class="btn btn-primary me-1">Prefab File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> 0</small><small class="text-muted bi-hand-thumbs-down"> 0</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['downloads'] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
 
@@ -501,7 +501,7 @@ function loadNewest(page = 1) {
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/file" class="btn btn-primary me-1">Map File</a>';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> 0</small><small class="text-muted bi-hand-thumbs-down"> 0</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> ' + object["upvote"] + '</small><small class="text-muted bi-hand-thumbs-down"> ' + object["downvote"] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
             }
@@ -556,7 +556,7 @@ function loadOldest(page = 1) {
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/file" class="btn btn-primary me-1">Map File</a>';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> 0</small><small class="text-muted bi-hand-thumbs-down"> 0</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> ' + object["upvote"] + '</small><small class="text-muted bi-hand-thumbs-down"> ' + object["downvote"] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
 
@@ -611,7 +611,7 @@ function loadDownloaded(page = 1) {
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/file" class="btn btn-primary me-1">Map File</a>';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> 0</small><small class="text-muted bi-hand-thumbs-down"> 0</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> ' + object["upvote"] + '</small><small class="text-muted bi-hand-thumbs-down"> ' + object["downvote"] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
 

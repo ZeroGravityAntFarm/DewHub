@@ -31,9 +31,6 @@ def create_vote(map_id: int, vote: int, user: str = Depends(get_current_user), d
 
     if not map_id:
         raise HTTPException(status_code=400, detail="Missing map ID")
-
-    if not vote:
-        raise HTTPException(status_code=400, detail="Missing vote")
     
     if vote == 1:
         vote = True

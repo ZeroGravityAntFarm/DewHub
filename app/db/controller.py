@@ -98,16 +98,21 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 #Get all maps
 def get_maps(db: Session):
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).all()
+
+        return db.execute('SELECT mapdata.id, mapdata."mapName", mapdata."mapDescription", mapdata."mapAuthor", mapdata."mapId", mapdata."mapScnrObjectCount", mapdata."mapTotalObject", mapdata."mapBudgetCount", mapdata."mapBaseMap", mapdata."map_downloads", mapdata."map_rating", mapdata."mapTags", mapdata."owner_id", mapdata."variant_id", mapdata."mapUserDesc", mapdata."time_created", mapdata."time_updated", mapdata."upvote", mapdata."downvote" FROM mapdata').all()
+
+    #return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).all()
 
 
 #Get all variants
 def get_variants(db: Session):
     return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).all()
 
+
 #Get all variants
 def get_variant_id(db: Session, variant_id: int):
     return db.query(*[c for c in models.Variant.__table__.c if c.name != 'variantFile']).filter(models.Variant.id == variant_id).first()
+
 
 #Get map data
 def get_map(db: Session, map_id: int):
