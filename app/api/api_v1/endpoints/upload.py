@@ -6,6 +6,7 @@ from typing import List
 from internal.auth import get_current_user
 from internal.dewreader import *
 import os
+import re
 from pathlib import Path 
 import shutil
 
@@ -17,6 +18,10 @@ def get_db():
         yield db
     finally:
         db.close()
+
+def removeHtml(text):
+    clean = re.compile('<.*?>')
+    return re.sub(clean, '', text)
 
 @router.post("/upload/map")
 def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
@@ -55,6 +60,9 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
     mapFile.file.close()
     variantFile.file.close()
 
+    #Scrub user input of dirty strings
+    mapUserDesc = removeHtml(mapUserDesc)
+
     #Extract map and variant file meta data
     mapData = mapReader(mapFile.filename, mapContents)
     variantData = variantReader(variantFile.filename, variantContents)
@@ -92,6 +100,9 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
     prefab_images = []
     prefabFile = None
     zipFile = None
+
+    #Remove dirty strings from user input
+    prefabDesc = removeHtml(prefabDesc)
 
     if not user:
         raise HTTPException(status_code=403, detail="Unauthorized")
