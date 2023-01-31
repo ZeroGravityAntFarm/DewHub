@@ -11,23 +11,37 @@ map-container {
     margin-top: 25%;
 }
 
-td {
-    line-height: 3rem;
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  padding: 48px 0 0;
 }
 
-.avatar {
-    vertical-align: middle;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+@media (max-width: 767.98px) {
+  .sidebar {
+    top: 5rem;
+  }
 }
 
-.fit-cover {
-    object-fit: cover;
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-@media (min-width: 768px) {
-    .fit-cover {
-        position: absolute;
-    }
+.navbar-brand {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  font-size: 1rem;
+}
+
+.navbar .navbar-toggler {
+  top: 0.5rem;
+  right: 0.25rem;
 }
