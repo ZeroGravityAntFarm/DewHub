@@ -176,8 +176,8 @@ function getMapAuth(mapId) {
             trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + mapData['id'] + '/file" class="btn btn-primary me-1">Map File</a>';
             trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + mapData['id'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
             trHTML += '<div class="float-end">';
-            trHTML += '<button type="button" class="btn btn-success me-1" onclick="sendVote(1, '+ mapData["id"] +')">Upvote</button>';
-            trHTML += '<button type="button" class="btn btn-danger me-1" onclick="sendVote(0, '+ mapData["id"] +')">Downvote</button>';
+            trHTML += '<button type="button" class="btn btn-success me-1" onclick="sendVote(1, '+ mapData["id"] +');return false;">Upvote</button>';
+            trHTML += '<button type="button" class="btn btn-danger me-1" onclick="sendVote(0, '+ mapData["id"] +');return false;">Downvote</button>';
             trHTML += '</div>';
             trHTML += '</div>';
             trHTML += '</div>';
@@ -216,19 +216,25 @@ function userLogin() {
 
 
 function sendVote(vote, mapId){
+    trHTML = '';
     var xhr = new XMLHttpRequest();
-    var bearer_token = "Bearer" + token;
+    var bearer_token = "Bearer " + token;
+
+    console.log("Sending vote");
+    console.log(vote);
+    console.log(mapId);
+    console.log(bearer_token);
 
     xhr.addEventListener("readystatechange", function () {
         if (this.readyState === 4) {
             if (xhr.status == 200) {
-                trHTML += '<div class="alert alert-success" role="alert">';
-                trHTML += 'Success!';
+                trHTML += '<div class="alert alert-success text-center" role="alert">';
+                trHTML += '' + this.responseText + '';
                 trHTML += '</div>'
                 document.getElementById("status-container").innerHTML = trHTML;
 
             } else if (xhr.status != 200) {
-                trHTML += '<div class="alert alert-danger" role="alert">';
+                trHTML += '<div class="alert alert-danger text-center" role="alert">';
                 trHTML += '' + this.responseText + '';
                 trHTML += '</div>'
                 document.getElementById("status-container").innerHTML = trHTML;
@@ -238,6 +244,7 @@ function sendVote(vote, mapId){
 
     xhr.open("POST", "https://api.zgaf.io/api_v1/vote/" + mapId + "/" + vote);
     xhr.setRequestHeader("Authorization", bearer_token);
+    xhr.send();
 }
 
 

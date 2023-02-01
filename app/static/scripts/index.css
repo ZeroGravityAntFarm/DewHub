@@ -1,0 +1,23 @@
+body {
+    font-size: 1.25rem;
+    background-image: url("https://fileshare.zgaf.io/content/halo.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+map-container {
+    margin-top: 25%;
+}
+
+td {
+    line-height: 3rem;
+}
+
+.avatar {
+    vertical-align: middle;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}

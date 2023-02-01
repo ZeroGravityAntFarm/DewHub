@@ -303,6 +303,7 @@ def create_user_map(db: Session, mapUserDesc: str, mapTags: str, map: schemas.Ma
                         owner_id=user_id,
                         map_downloads=0)
     db.add(db_map)
+    db.execute("REFRESH MATERIALIZED VIEW mapdata")
     db.commit()
     db.refresh(db_map)
 
@@ -400,6 +401,7 @@ def create_vote(db: Session, map_id: int, userId: int, vote: bool):
                            mapId=map_id,
                            vote=vote)
         db.add(voteObject)
+        db.execute("REFRESH MATERIALIZED VIEW mapdata")
         db.commit()
         db.refresh(voteObject)
 
