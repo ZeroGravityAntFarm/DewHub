@@ -88,13 +88,15 @@
         const varData = JSON.parse(xmlHttp.responseText);
         var imageType = varData["variantFileName"].split(".")
         user = getUser(varData["owner_id"]);
+	var vtype = varData["variantFileName"];
+	vtype = vtype.substring(vtype.indexOf(".") + 1);
 
         trHTML += '';
         trHTML += '<div class="card text-white bg-dark mb-3">';
         trHTML += '<img src="https://api.zgaf.io/static/content/variants/' + imageType[1] + '.png" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';">';
         trHTML += '<div class="card-body">';
         trHTML += '<h3 class="card-title">' + varData["variantName"] + '</h3>';
-        trHTML += '<p class="card-text">' + varData["variantType"] + '</p>';
+        trHTML += '<p class="card-text">Type: ' + vtype + '</p>';
         trHTML += '</div>';
         trHTML += '<ul class="list-group list-group-flush">';
         trHTML += '<li class="list-group-item bg-dark text-white">Uploaded By: ' + user["name"] + '</li>';
