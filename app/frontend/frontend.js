@@ -100,25 +100,25 @@ function searchMaps(page = 1) {
                 var udate = new Date(object["time_created"]);
                 var timeAgo = timeSince(udate);
 
-                trHTML += '<div class="card mb-3 text-white bg-dark">'
-                trHTML += '<div class="row g-0">'
-                trHTML += '<div class="col-md-4">'
-                trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img h-100" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>'
-                trHTML += '</div>'
-                trHTML += '<div class="col-md-8">'
-                trHTML += '<div class="card-body">'
-                trHTML += '<h3 class="card-title">' + object['mapName'] + '</h3>'
-                trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>'
-                trHTML += '<h5 class="card-title">Type: ' + object['mapTags'] + '</h5>'
-                trHTML += '<p class="card-text">' + object['mapDescription'] + '</p>'
-                trHTML += '<p class="card-text"><small class="text-muted">Uploaded ' + timeAgo + ' ago</small></p>'
-                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/file" class="btn btn-primary me-1">Map File</a>'
-                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>'
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> ' + object["upvote"] + '</small><small class="text-muted bi-hand-thumbs-down"> ' + object["upvote"] + '</small></div>'
-                trHTML += '</div>'
-                trHTML += '</div>'
-                trHTML += '</div>'
-                trHTML += '</div>'
+                trHTML += '<div class="card mb-3 text-white bg-dark">';
+                trHTML += '<div class="row g-0">';
+                trHTML += '<div class="col-md-4">';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img h-100" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+                trHTML += '</div>';
+                trHTML += '<div class="col-md-8">';
+                trHTML += '<div class="card-body">';
+                trHTML += '<h3 class="card-title">' + object['mapName'] + '</h3>';
+                trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';
+                trHTML += '<h5 class="card-title">Type: ' + object['mapTags'] + '</h5>';
+                trHTML += '<p class="card-text">' + object['mapDescription'] + '</p>';
+                trHTML += '<p class="card-text"><small class="text-muted">Uploaded ' + timeAgo + ' ago</small></p>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/file" class="btn btn-primary me-1">Map File</a>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small></div>';
+                trHTML += '</div>';
+                trHTML += '</div>';
+                trHTML += '</div>';
+                trHTML += '</div>';
 
             }
 
@@ -337,7 +337,7 @@ function loadCards(page = 1) {
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/file" class="btn btn-primary me-1">Map File</a>';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up">' + object["upvote"] + '</small><small class="text-muted bi-hand-thumbs-down">' + object["downvote"] + '</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
             }
@@ -501,7 +501,7 @@ function loadNewest(page = 1) {
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/file" class="btn btn-primary me-1">Map File</a>';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> ' + object["upvote"] + '</small><small class="text-muted bi-hand-thumbs-down"> ' + object["downvote"] + '</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
             }
@@ -556,7 +556,7 @@ function loadOldest(page = 1) {
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/file" class="btn btn-primary me-1">Map File</a>';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> ' + object["upvote"] + '</small><small class="text-muted bi-hand-thumbs-down"> ' + object["downvote"] + '</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
 
@@ -611,7 +611,7 @@ function loadDownloaded(page = 1) {
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/file" class="btn btn-primary me-1">Map File</a>';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small><small class="text-muted p-2 bi-hand-thumbs-up"> ' + object["upvote"] + '</small><small class="text-muted bi-hand-thumbs-down"> ' + object["downvote"] + '</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
 
