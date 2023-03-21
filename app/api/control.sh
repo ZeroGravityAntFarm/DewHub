@@ -20,6 +20,7 @@ start() {
     fi
 }
 
+#Run app with output 
 debug() {
     if [ ! "$(docker ps -q -f name=$name)" ]; then
         if [ "$(docker ps -aq -f status=exited -f name=$name)" ]; then
