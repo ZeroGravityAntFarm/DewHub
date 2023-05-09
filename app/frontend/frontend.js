@@ -278,6 +278,7 @@ function userLogin() {
         const user = JSON.parse(xmlHttp.responseText);
 
         if (xmlHttp.status == 200) {
+            trHTML += '<button type="button" data-bs-toggle="modal" data-bs-target="#mod-upload" class="btn btn-outline-info me-1"><i class="bi bi-wrench"></i></button>'
             trHTML += '<button type="button" data-bs-toggle="modal" data-bs-target="#prefab-upload" class="btn btn-outline-info me-1"><i class="bi bi-grid"></i></button>'
             trHTML += '<button type="button" data-bs-toggle="modal" data-bs-target="#map-upload" class="btn btn-outline-info me-1"><i class="bi bi-map"></i></button>'
             trHTML += '<a href="/profile" class="btn btn-outline-primary me-1">' + user["name"] + '</a>'
