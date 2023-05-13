@@ -96,6 +96,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
+
 #Get all maps
 def get_maps(db: Session):
 
@@ -308,6 +309,36 @@ def create_user_map(db: Session, mapUserDesc: str, mapTags: str, map: schemas.Ma
     db.refresh(db_map)
 
     return db_map
+
+
+#Get all mods for a specific user 
+def get_user_mods(db: Session, user_name: str, skip: int = 0, limit: int = 100):
+    #Lookup ID of requested user
+    user = db.query(models.User).filter(models.User.name == user_name).first()
+
+    return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).filter(models.Mod.owner_id == user.id).offset(skip).limit(limit).all()
+
+
+#Create new mod entry
+def create_user_mod(db: Session, modDescription: str, modTags: str, mod: schemas.ModCreate, user_id: int):
+    db_mod = models.Mod(modName=mod.modName, 
+                        modAuthor=mod.modAuthor,
+                        modTags=modTags,
+                        modDescription=modDescription,
+                        modId=mod.modId,
+                        modFile=bytes(mod.contents),
+                        owner_id=user_id,
+                        mod_downloads=0)
+    db.add(db_mod)
+    db.commit()
+    db.refresh(db_mod)
+
+    return db_mod
+
+
+#Get all mods
+def get_mods(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).offset(skip).limit(limit).all()
 
 
 #Create new variant entry

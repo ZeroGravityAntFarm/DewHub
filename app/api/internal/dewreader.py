@@ -174,3 +174,33 @@ class prefabReader(object):
 
             #Cleanup
             f.close()
+
+class modReader(object):
+    modDescription = None
+    modAuthor = None
+    modId = None
+
+    def __init__(self, modfile, contents):
+        self.modFile = modfile
+        self.modName = os.path.splitext(modfile)[0]
+        self.contents = contents
+        self.read()
+    
+    def read(self):
+        #Create a file object from our byte stream
+        with open(self.modFile, "w+b") as f:
+            f.write(self.contents)
+
+            #Verify the file size (Prefabs can be an unknown size but not zero)
+            size = f.tell()
+
+            #Check that we have at least some data        
+            if size < 32:
+                return 1
+
+            #Arbitrary limit size I set for mods at 1gb
+            elif size > 1000000000:
+                return 2
+
+            #Cleanup
+            f.close()

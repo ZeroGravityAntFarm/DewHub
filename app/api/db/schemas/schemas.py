@@ -44,6 +44,22 @@ class MapQuery(BaseModel):
     class Config:
         orm_mode = True
 
+class Mod(BaseModel):
+    id: int
+    modName: str
+    modDescription: str | None = None
+    modAuthor: str
+    mod_downloads: int | None = None
+    modTags: str | None = None
+    time_created: datetime = None
+
+#Inherits from Mod
+class ModCreate(Mod):
+    modId: int | None = None
+    modTags: str  | None = None
+    modDescription: str | None = None
+    pass
+
 class VariantQuery(BaseModel):
     id: int
     variantName: str

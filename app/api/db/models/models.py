@@ -19,6 +19,7 @@ class User(Base):
 
     #Relationships
     maps = relationship("Map", back_populates="owner")
+    mods = relationship("Mod", back_populates="owner")
     variants = relationship("Variant", back_populates="owner")
     prefabs = relationship("PreFab", back_populates="owner")
 
@@ -48,6 +49,22 @@ class Map(Base):
     owner = relationship("User", back_populates="maps")
     variant = relationship("Variant", back_populates="maps", cascade="all, delete")
 
+class Mod(Base):
+    __tablename__ = "mods"
+
+    id = Column(Integer, primary_key=True, index=True)
+    modName = Column(String(128), index=True)
+    modDescription = Column(String(1200))
+    modAuthor = Column(String(128), index=True)
+    modFile = Column(LargeBinary)
+    mod_downloads = Column(Integer, index=True)
+    modTags = Column(String(64))
+    time_created = Column(DateTime(timezone=True), default=func.now())
+    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+
+    #Relationships
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User", back_populates="mods")
 
 class Variant(Base):
     __tablename__ = "variants"

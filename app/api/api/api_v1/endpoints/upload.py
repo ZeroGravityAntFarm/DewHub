@@ -184,3 +184,60 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
                     image.file.close()
 
         return HTTPException(status_code=200, detail="Success!")
+
+
+@router.post("/upload/mod")
+def upload(modDescription: str = Form(" "), modTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    mod_images = []
+    valid_files = [".pak"]
+
+    if len(modDescription) > 1200:
+        raise HTTPException(status_code=400, detail="Description too long.")
+
+    if not user:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    if len(files) > 7:
+        raise HTTPException(status_code=400, detail="Too many files! Expected mod, and up to 5 Images.")
+
+    if len(files) < 2:
+        raise HTTPException(status_code=400, detail="Missing files.")
+
+    for file in files:
+        if file.filename.lower().endswith(('.pak')):
+            modFile = file
+
+        elif file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.webp')):
+            mod_images.append(file)
+
+        elif file.filename not in valid_files:
+            raise HTTPException(status_code=400, detail="Invalid file {}".format(file.filename))
+
+    modContents = modFile.file.read()
+
+    #Cleanup
+    modFile.file.close()
+
+    #Scrub user input of dirty strings
+    modDescription = removeHtml(modDescription)
+
+    #Extract mod file data
+    modData = modReader(modFile.filename, modContents)
+
+    if modData == 2:
+        raise HTTPException(status_code=400, detail="Mod file too big.")
+    
+    if modData == 1:
+        raise HTTPException(status_code=400, detail="Mod file empty")
+
+    mod_create = controller.create_user_mod(db, mod=modData, modTags=modTags, user_id=user.id, modDescription=modDescription)
+
+    if len(mod_images) > 0:
+        for idx, image in enumerate(mod_images):
+            Path("/app/static/mods/" + str(mod_create.id) + "/").mkdir(parents=True, exist_ok=True)
+            with open("/app/static/mods/" + str(mod_create.id) + "/" + str(idx), "wb") as f:
+                f.write(image.file.read())
+                f.close()
+                image.file.close()    
+
+    return HTTPException(status_code=200, detail="Success!")
