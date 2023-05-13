@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Form, HTTPException, File, UploadFile, Depends
+from PIL import Image
+import io
 from db import controller
 from db.session import SessionLocal
 from sqlalchemy.orm import Session
 from typing import List
 from internal.auth import get_current_user
 from internal.dewreader import *
-import os
 import re
 from pathlib import Path 
-import shutil
 
 router = APIRouter()
 
@@ -88,7 +88,13 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
             with open("/app/static/maps/" + str(map_create.id) + "/" + str(idx), "wb") as f:
                 f.write(image.file.read())
                 f.close()
-                image.file.close()    
+                image.file.close()
+
+            #Create thumbnail for each image using PIL
+            image = Image.open(image)
+            image.thumbnail((450, 300))
+            image.save("/app/static/maps/thumbnails/" + str(idx))
+             
 
     return HTTPException(status_code=200, detail="Success!")
 
@@ -151,6 +157,11 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
                     f.write(image.file.read())
                     f.close()
                     image.file.close()
+                
+                #Create thumbnail for each image using PIL
+                image = Image.open(image)
+                image.thumbnail((450, 300))
+                image.save("/app/static/maps/thumbnails/" + str(idx))
 
         return HTTPException(status_code=200, detail="Success!")
     
@@ -182,6 +193,11 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
                     f.write(image.file.read())
                     f.close()
                     image.file.close()
+                
+                #Create thumbnail for each image using PIL
+                image = Image.open(image)
+                image.thumbnail((450, 300))
+                image.save("/app/static/maps/thumbnails/" + str(idx))
 
         return HTTPException(status_code=200, detail="Success!")
 
@@ -238,6 +254,11 @@ def upload(modDescription: str = Form(" "), modTags: str = Form(...), files: Lis
             with open("/app/static/mods/" + str(mod_create.id) + "/" + str(idx), "wb") as f:
                 f.write(image.file.read())
                 f.close()
-                image.file.close()    
+                image.file.close()
+
+            #Create thumbnail for each image using PIL
+            image = Image.open(image)
+            image.thumbnail((450, 300))
+            image.save("/app/static/maps/thumbnails/" + str(idx))    
 
     return HTTPException(status_code=200, detail="Success!")
