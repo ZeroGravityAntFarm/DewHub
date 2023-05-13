@@ -341,6 +341,55 @@ def get_mods(db: Session, skip: int = 0, limit: int = 100):
     return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).offset(skip).limit(limit).all()
 
 
+#Get single mod
+def get_mod(db: Session, mod_id: int):
+    return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).filter(models.Mod.id == mod_id).first()
+
+
+#Delete single mod
+def delete_mod(db: Session, mod_id: int, user: str):
+    #Create a mod object so we can find and delete
+    mod = db.query(models.Mod).filter(models.Mod.id == mod_id and models.Mod.owner_id == user.id).first()
+
+    if mod:
+        if user:
+            #Verify authenticated user is owner of requested mod 
+            if user.id == mod.owner_id:
+
+                #Delete map and variant rows
+                db.delete(mod)
+
+                #Commit our changes to the database
+                db.commit()
+
+                return True, "Deleted successfully"
+
+            else:
+                return False, "Unauthorized"
+
+        else:
+            return False, "User not found"
+
+    else:
+        return False, "Mod not found"
+
+
+#Get mod file
+def get_mod_file(db: Session, mod_id: int):
+    mod = db.query(models.Mod).filter(models.Mod.id == mod_id).first()
+
+    if mod:
+        if mod.downloads != None:
+            mod.downloads += 1
+
+        else:
+            mod.downloads = 1
+
+        db.commit()
+
+    return mod
+
+
 #Create new variant entry
 def create_user_variant(db: Session, variant: schemas.VariantCreate, user_id: int):
     db_variant = models.Variant(variantName=variant.variantName, 

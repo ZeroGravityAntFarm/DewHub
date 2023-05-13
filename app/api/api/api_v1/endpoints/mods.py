@@ -27,7 +27,7 @@ templates = Jinja2Templates(directory="templates")
 #Returns dynamically built view for mods. Only way to get meta tags working (that I know of).
 @router.get("/modview", response_class=HTMLResponse)
 async def return_modview(request: Request, modId: int, db: Session = Depends(get_db)):
-    mod = controller.get_mod(db, mod_id=modId)
+    mod = controller.get_mods(db, mod_id=modId)
 
     return templates.TemplateResponse("mod/index.html", {"request": request, "modName": mod.modName, "id": mod.id, "modDescription": mod.modDescription})
 
