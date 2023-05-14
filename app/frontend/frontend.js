@@ -517,6 +517,60 @@ function loadPCards(page = 1) {
     }
 }
 
+function loadMCards(page = 1) {
+    scroll(0, 0);
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "https://api.zgaf.io/api_v1/mods?page=" + page + "&size=21");
+    xhttp.send();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var trHTML = '';
+            const data = JSON.parse(this.responseText);
+            for (let [i, object] of data["items"].entries()) {
+
+                if (i % 3 === 0) {
+                    trHTML += '</div>';
+                    trHTML += '<div class="row top-buffer">';
+                }
+
+                var udate = new Date(object["time_created"]);
+                var timeAgo = timeSince(udate);
+
+                trHTML += '<div class="col mb-3 mt-4">';
+                trHTML += '<div class="card text-white bg-dark" >';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/modview?modId=' + object['id'] + '"><img src="https://api.zgaf.io/static/mods/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+                trHTML += '<div class="card-body">';
+                trHTML += '<h4 class="card-title">' + object['modName'] + '</h4>';
+                trHTML += '<h5 class="card-title">Author: ' + object['modAuthor'] + '</h5>';
+                trHTML += '<h5 class="card-title">Uploaded ' + timeAgo + ' ago</h5>';
+                trHTML += '</div>';
+                trHTML += '<p class="card-text p-3">' + object['modDescription'] + '</p>';
+                trHTML += '</ul>';
+                trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/mods/' + object['id'] + '/file" class="btn btn-primary me-1">Mod File</a>';
+                trHTML += '</div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['downloads'] + '</small></div>';
+                trHTML += '</div>';
+                trHTML += '</div>';
+
+            }
+
+            trHTML += '<nav aria-label="Mod Navigation">';
+            trHTML += '<ul class="pagination">';
+
+            //Calculate the number of pages
+            pages = Math.ceil(data["total"] / data["size"]);
+            current = data["page"];
+
+            trHTML += generatePagination(pages, current, "loadPCards");
+
+            trHTML += '</ul>';
+            trHTML += '</nav>';
+        }
+        document.getElementById("map-cards").innerHTML = trHTML;
+    }
+}
+
 function loadNewest(page = 1) {
     scroll(0, 0);
     const xhttp = new XMLHttpRequest();
