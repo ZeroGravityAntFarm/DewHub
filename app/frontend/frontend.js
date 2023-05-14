@@ -188,6 +188,55 @@ function uploadMaps() {
     xhr.send(data);
 }
 
+function uploadMods() {
+    var data = new FormData();
+    var trHTML = '';
+    var tagData = '';
+    tagData = document.getElementById("modTags");
+    tagData = tagData.value;
+    modDesc = document.getElementById("modDescription")
+    modDesc = modDesc.value;
+
+    data.append("files", document.getElementById("modFile").files[0]);
+    data.append("modTags", tagData);
+    data.append("modDescription", modDesc);
+
+    images = document.getElementById("formFileMultiple").files
+
+    for (let i = 0; i < images.length; i++) {
+        data.append("files", images[i]);
+    }
+
+    var xhr = new XMLHttpRequest();
+    var bearer_token = "Bearer " + token;
+
+    //xhr.withCredentials = true;
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            if (xhr.status == 200) {
+                trHTML += '<div class="alert alert-success" role="alert">';
+                trHTML += 'Success!';
+                trHTML += '</div>'
+                document.getElementById("map-container").innerHTML = trHTML;
+                $('#mod-upload').modal('hide');
+
+                delayRedirect();
+            } else if (xhr.status != 200) {
+                trHTML += '<div class="alert alert-danger" role="alert">';
+                trHTML += '' + this.responseText + '';
+                trHTML += '</div>'
+                document.getElementById("map-container").innerHTML = trHTML;
+                $('#mod-upload').modal('hide');
+            }
+        }
+    });
+
+    xhr.open("POST", "https://api.zgaf.io/api_v1/upload/mod");
+    xhr.setRequestHeader("Authorization", bearer_token);
+    //xhr.setRequestHeader("Content-Type", "multipart/form-data");
+    xhr.send(data);
+}
+
 function uploadPrefab() {
     var data = new FormData();
     var trHTML = '';

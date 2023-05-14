@@ -63,7 +63,7 @@
                         <!--<li>
                            <a href="/" onclick="loadDownloaded();return false;" class="nav-link px-3 link-secondary">
                               <span class="d-sm-inline">Top Rated</span></a>
-			</li>-->
+			               </li>-->
                         <li>
                            <a href="/" onclick="loadOldest();return false;" class="nav-link px-3 link-secondary"> <span
                                  class="d-sm-inline">Oldest</span></a>
@@ -224,6 +224,51 @@
             <div class="modal-footer">
                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                <button type="button" class="btn btn-primary" onclick="uploadPrefab()">Upload</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="modal" tabindex="-1" id="mod-upload">
+      <div class="modal-dialog modal-lg">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">Mod Upload</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <div class="mb-3">
+                  <label for="formFile" class="form-label">Mod File (.pak)</label>
+                  <input class="form-control" type="file" id="mapFile">
+               </div>
+               <div class="mb-3">
+                  <label for="formFileMultiple" class="form-label">Mod Images (limit 5)</label>
+                  <input class="form-control" type="file" id="formFileMultiple" multiple>
+               </div>
+               <div class="mb-3">
+                  <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
+                  <textarea class="form-control" id="modDescription" rows="3"></textarea>
+               </div>
+               <div>
+                  <h5>Tag</h5>
+                  <select class="form-select" aria-label="mod tags" id="modTags">
+                     <option value="vehicle">vehicle</option>
+                     <option value="armor">armor</option>
+                     <option value="weapon">weapon</option>
+                     <option value="campaign">campaign</option>
+                     <option value="mode">mode</option>
+                     <option value="ability">ability</option>
+                     <option value="map">map</option>
+                     <option value="ai">ai</option>
+                     <option value="0.7">0.7</option>
+                     <option value="0.6.1">0.6.1</option>
+                     <option value="0.6">0.6</option>
+                     <option value="0.5.1">0.5.1</option>
+                  </select>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+               <button type="button" class="btn btn-primary" onclick="uploadMods()">Upload</button>
             </div>
          </div>
       </div>
