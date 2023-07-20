@@ -34,6 +34,7 @@ build() {
 reload() {
     docker kill -s HUP $name
 }
+
 case "$1" in
     start)
        start

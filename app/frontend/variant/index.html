@@ -71,7 +71,7 @@
     xmlHttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         const varData = JSON.parse(xmlHttp.responseText);
-	var imageType = varData["variantFileName"].split(".")
+        var imageType = varData["variantFileName"].split(".")
         user = getUser(varData["owner_id"]);
 
         trHTML += '';
@@ -83,7 +83,7 @@
         trHTML += '</div>';
         trHTML += '<ul class="list-group list-group-flush">';
         trHTML += '<li class="list-group-item bg-dark text-white">Uploaded By: ' + user["name"] + '</li>';
-	trHTML += '<li class="list-group-item bg-dark text-white">About: ' + varData["variantDescription"] + '</li>';
+        trHTML += '<li class="list-group-item bg-dark text-white">About: ' + varData["variantDescription"] + '</li>';
         trHTML += '<li class="list-group-item bg-dark text-white">Author: ' + varData["variantAuthor"] + '</li>';
         trHTML += '<li class="list-group-item bg-dark text-white">Downloads: ' + varData["downloads"] + '</li>';
         trHTML += '<li class="list-group-item bg-dark text-white">Uploaded: ' + varData["time_created"] + '</li>';

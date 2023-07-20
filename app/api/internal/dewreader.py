@@ -198,8 +198,8 @@ class modReader(object):
             if size < 32:
                 return 1
 
-            #Arbitrary limit size I set for mods at 1gb
-            elif size > 1000000000:
+            #Arbitrary limit size I set for mods at 4gb
+            elif size > 4294967296:
                 return 2
 
             #Cleanup

@@ -547,7 +547,7 @@ function loadMCards(page = 1) {
                 trHTML += '<p class="card-text p-3">' + object['modDescription'] + '</p>';
                 trHTML += '</ul>';
                 trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-                trHTML += '<a href="https://api.zgaf.io/api_v1/mods/' + object['id'] + '/file" class="btn btn-primary me-1">Mod File</a>';
+                trHTML += '<a href="https://api.zgaf.io/static/mods/' + object['id'] + '/file" class="btn btn-primary me-1">Mod File</a>';
                 trHTML += '</div>';
                 trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['downloads'] + '</small></div>';
                 trHTML += '</div>';

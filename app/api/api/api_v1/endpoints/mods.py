@@ -76,7 +76,7 @@ def mod_file(request: Request, mod_id: int, db: Session = Depends(get_db)):
     mod_file = controller.get_mod_file(db, mod_id=mod_id)
 
     if mod_file:
-        headers = {'Content-Disposition': 'attachment; filename="{}"'.format(mod_file.modFileName)}
+        headers = {'Content-Disposition': 'attachment; filename="{}"'.format(mod_file.modName+".pak")}
         return Response(mod_file.modFile, headers=headers, media_type='application/octet-stream')
 
     else:

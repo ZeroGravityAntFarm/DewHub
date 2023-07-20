@@ -74,7 +74,7 @@
         user = getUser(prefabData["owner_id"]);
 
 
-	trHTML += '<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">';
+        trHTML += '<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">';
         trHTML += '<div class="carousel-indicators">';
         trHTML += '<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>';
         trHTML += '<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>';
@@ -116,11 +116,11 @@
         trHTML += '</div>';
         trHTML += '<ul class="list-group list-group-flush">';
         trHTML += '<li class="list-group-item bg-dark text-white">Uploaded By: ' + user["name"] + '</li>';
-	trHTML += '<li class="list-group-item bg-dark text-white">About: ' + prefabData["prefabDescription"] + '</li>';
-	trHTML += '<li class="list-group-item bg-dark text-white">Author: ' + prefabData["prefabAuthor"] + '</li>';
+        trHTML += '<li class="list-group-item bg-dark text-white">About: ' + prefabData["prefabDescription"] + '</li>';
+        trHTML += '<li class="list-group-item bg-dark text-white">Author: ' + prefabData["prefabAuthor"] + '</li>';
         trHTML += '<li class="list-group-item bg-dark text-white">Downloads: ' + prefabData["downloads"] + '</li>';
         trHTML += '<li class="list-group-item bg-dark text-white">Filename: \"' + prefabData["prefabFileName"] + '\"</li>';
-	trHTML += '<li class="list-group-item bg-dark text-white">Tags: ' + prefabData["prefabTags"] + '</li>';
+        trHTML += '<li class="list-group-item bg-dark text-white">Tags: ' + prefabData["prefabTags"] + '</li>';
         trHTML += '<li class="list-group-item bg-dark text-white">Uploaded: ' + prefabData["time_created"] + '</li>';
         trHTML += '<li class="list-group-item bg-dark text-white">ID: ' + prefabData["id"] + '</li>';
         trHTML += '</ul>';

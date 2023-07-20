@@ -50,6 +50,7 @@ class Mod(BaseModel):
     modDescription: str | None = None
     modAuthor: str
     mod_downloads: int | None = None
+    modFileName: str
     modTags: str | None = None
     time_created: datetime = None
 
@@ -58,6 +59,7 @@ class ModCreate(Mod):
     modId: int | None = None
     modTags: str  | None = None
     modDescription: str | None = None
+    modFileName: str
     pass
 
 class VariantQuery(BaseModel):

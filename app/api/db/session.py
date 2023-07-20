@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database
 
-db_host = ""
+db_host = "dewshare-db"
 db_port = "5432"
 db_database = "postgres"
 db_user = ""

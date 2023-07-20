@@ -246,8 +246,16 @@ def upload(modDescription: str = Form(" "), modTags: str = Form(...), files: Lis
     if modData == 1:
         raise HTTPException(status_code=400, detail="Mod file empty")
 
-    mod_create = controller.create_user_mod(db, mod=modData, modTags=modTags, user_id=user.id, modDescription=modDescription)
+    mod_create = controller.create_user_mod(db, modTags=modTags, mod=modData, user_id=user.id, modDescription=modDescription)
 
+    #Pak files could be larger than bytea size limit so we puts them on the disk instead
+    Path("/app/static/mods/pak/" + str(mod_create.id) + "/").mkdir(parents=True, exist_ok=True)
+    with open("/app/static/mods/pak/" + str(mod_create.id) + "/" + str(modFile.filename), "wb") as f:
+                f.write(modContents)
+                f.close()
+                modFile.file.close()
+
+    #Put mod file images on disk
     if len(mod_images) > 0:
         for idx, image in enumerate(mod_images):
             Path("/app/static/mods/" + str(mod_create.id) + "/").mkdir(parents=True, exist_ok=True)
@@ -255,10 +263,5 @@ def upload(modDescription: str = Form(" "), modTags: str = Form(...), files: Lis
                 f.write(image.file.read())
                 f.close()
                 image.file.close()
-
-            #Create thumbnail for each image using PIL
-            image = Image.open(image)
-            image.thumbnail((450, 300))
-            image.save("/app/static/maps/thumbnails/" + str(idx))    
 
     return HTTPException(status_code=200, detail="Success!")

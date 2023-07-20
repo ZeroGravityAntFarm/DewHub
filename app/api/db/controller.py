@@ -324,9 +324,9 @@ def create_user_mod(db: Session, modDescription: str, modTags: str, mod: schemas
     db_mod = models.Mod(modName=mod.modName, 
                         modAuthor=mod.modAuthor,
                         modTags=modTags,
+                        modFileName=mod.modFile,
                         modDescription=modDescription,
                         modId=mod.modId,
-                        modFile=bytes(mod.contents),
                         owner_id=user_id,
                         mod_downloads=0)
     db.add(db_mod)
@@ -379,11 +379,11 @@ def get_mod_file(db: Session, mod_id: int):
     mod = db.query(models.Mod).filter(models.Mod.id == mod_id).first()
 
     if mod:
-        if mod.downloads != None:
-            mod.downloads += 1
+        if mod.mod_downloads != None:
+            mod.mod_downloads += 1
 
         else:
-            mod.downloads = 1
+            mod.mod_downloads = 1
 
         db.commit()
 
