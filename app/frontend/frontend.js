@@ -201,7 +201,7 @@ function uploadMods() {
     data.append("modTags", tagData);
     data.append("modDescription", modDesc);
 
-    images = document.getElementById("formFileMultiple").files
+    images = document.getElementById("modFileMultiple").files
 
     for (let i = 0; i < images.length; i++) {
         data.append("files", images[i]);
@@ -221,6 +221,7 @@ function uploadMods() {
                 $('#mod-upload').modal('hide');
 
                 delayRedirect();
+                
             } else if (xhr.status != 200) {
                 trHTML += '<div class="alert alert-danger" role="alert">';
                 trHTML += '' + this.responseText + '';
@@ -547,9 +548,9 @@ function loadMCards(page = 1) {
                 trHTML += '<p class="card-text p-3">' + object['modDescription'] + '</p>';
                 trHTML += '</ul>';
                 trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-                trHTML += '<a href="https://api.zgaf.io/static/mods/' + object['id'] + '/file" class="btn btn-primary me-1">Mod File</a>';
+                trHTML += '<a href="https://api.zgaf.io/static/mods/pak/' + object['id'] + '/' + object['modFileName'] + '" class="btn btn-primary me-1">Mod File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['downloads'] + '</small></div>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['mod_downloads'] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
 
