@@ -325,7 +325,8 @@ def create_user_mod(db: Session, modDescription: str, modTags: str, mod: schemas
                         modAuthor=mod.modAuthor,
                         modTags=modTags,
                         modFileName=mod.modFile,
-                        modDescription=modDescription,
+                        modFileSize=mod.modFileSize,
+                        modDescription=mod.modDescription,
                         modId=mod.modId,
                         owner_id=user_id,
                         mod_downloads=0)

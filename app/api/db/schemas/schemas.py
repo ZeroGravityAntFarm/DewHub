@@ -50,6 +50,7 @@ class Mod(BaseModel):
     modDescription: str | None = None
     modAuthor: str
     mod_downloads: int | None = None
+    modFileSize: int
     modFileName: str
     modTags: str | None = None
     time_created: datetime = None

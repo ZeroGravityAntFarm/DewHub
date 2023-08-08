@@ -57,6 +57,7 @@ class Mod(Base):
     modDescription = Column(String(1200))
     modAuthor = Column(String(128), index=True)
     modFileName = Column(String(128), index=True)
+    modFileSize = Column(Integer, index=True)
     modId = Column(Integer, index=True)
     mod_downloads = Column(Integer, index=True)
     modTags = Column(String(64))

@@ -73,15 +73,14 @@ function getMod(modId) {
             trHTML += '</div>';
             trHTML += '<ul class="list-group list-group-flush">';
             trHTML += '<li class="list-group-item bg-dark text-white">Uploaded By: ' + user["name"] + '</li>';
-            trHTML += '<li class="list-group-item bg-dark text-white">Author: ' + modData["modAuthor"] + '</li>';
-            trHTML += '<li class="list-group-item bg-dark text-white">About: ' + modData["modUserDesc"] + '</li>';
-            trHTML += '<li class="list-group-item bg-dark text-white">Downloads: ' + modData["mod_downloads"] + '</li>';
+            //trHTML += '<li class="list-group-item bg-dark text-white">About: ' + modData["modDescription"] + '</li>';
+            trHTML += '<li class="list-group-item bg-dark text-white">File Size: ' + humanFileSize(modData["modFileSize"]) + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">Uploaded: ' + timeAgo + ' ago</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">ID: ' + modData["id"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">Tags: ' + modData["modTags"] + '</li>';
             trHTML += '</ul>';
             trHTML += '<div class="card-body">';
-            trHTML += '<a href="https://api.zgaf.io/api_v1/mods/' + modData['id'] + '/file" class="btn btn-primary me-1">Mod File</a>';
+            trHTML += '<a href="https://api.zgaf.io/static/mods/pak/' + modData['id'] + '/' + modData['modFileName'] + '" class="btn btn-primary me-1">Mod File</a>';
             trHTML += '</div>';
             trHTML += '</div>';
 
@@ -120,5 +119,28 @@ function timeSince(date) {
     }
     return Math.floor(seconds) + " seconds";
 }
+
+function humanFileSize(bytes, si=false, dp=1) {
+    const thresh = si ? 1000 : 1024;
+  
+    if (Math.abs(bytes) < thresh) {
+      return bytes + ' B';
+    }
+  
+    const units = si 
+      ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] 
+      : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+    let u = -1;
+    const r = 10**dp;
+  
+    do {
+      bytes /= thresh;
+      ++u;
+    } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+  
+  
+    return bytes.toFixed(dp) + ' ' + units[u];
+  }
+
 
 getMod(modId);

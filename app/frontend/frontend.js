@@ -536,13 +536,14 @@ function loadMCards(page = 1) {
 
                 var udate = new Date(object["time_created"]);
                 var timeAgo = timeSince(udate);
+                user = getUser(object["owner_id"]);
 
                 trHTML += '<div class="col mb-3 mt-4">';
                 trHTML += '<div class="card text-white bg-dark" >';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/modview?modId=' + object['id'] + '"><img src="https://api.zgaf.io/static/mods/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['modName'] + '</h4>';
-                trHTML += '<h5 class="card-title">Author: ' + object['modAuthor'] + '</h5>';
+                trHTML += '<h5 class="card-title">Uploaded By: ' + user["name"] + '</h5>';
                 trHTML += '<h5 class="card-title">Uploaded ' + timeAgo + ' ago</h5>';
                 trHTML += '</div>';
                 trHTML += '<p class="card-text p-3">' + object['modDescription'] + '</p>';
@@ -550,7 +551,7 @@ function loadMCards(page = 1) {
                 trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
                 trHTML += '<a href="https://api.zgaf.io/static/mods/pak/' + object['id'] + '/' + object['modFileName'] + '" class="btn btn-primary me-1">Mod File</a>';
                 trHTML += '</div>';
-                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['mod_downloads'] + '</small></div>';
+                //trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['mod_downloads'] + '</small></div>';
                 trHTML += '</div>';
                 trHTML += '</div>';
 
@@ -766,6 +767,14 @@ function delayRedirect() {
     }, 2000);
 }
 
+function getUser(userId) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", "https://api.zgaf.io/api_v1/users/" + userId, false);
+    xmlHttp.send();
+    const user = JSON.parse(xmlHttp.response);
+
+    return user
+}
 
 userLogin();
 loadCards();

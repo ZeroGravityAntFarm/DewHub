@@ -179,6 +179,7 @@ class modReader(object):
     modDescription = None
     modAuthor = None
     modId = None
+    modFileSize = None
 
     def __init__(self, modfile, contents):
         self.modFile = modfile
@@ -186,13 +187,24 @@ class modReader(object):
         self.contents = contents
         self.read()
     
+    def byte2ascii(self, hval):
+        ascii_object = hval.decode("utf-8").replace(u"\u0000", "")
+
+        return ascii_object
+
+    def byte2int(self, hval):
+        int_object = int.from_bytes(hval, "little")
+
+        return int_object
+
     def read(self):
         #Create a file object from our byte stream
         with open(self.modFile, "w+b") as f:
             f.write(self.contents)
 
-            #Verify the file size (Prefabs can be an unknown size but not zero)
+            #Verify the file size (Mods can be an unknown size but not zero)
             size = f.tell()
+            self.modFileSize = size
 
             #Check that we have at least some data        
             if size < 32:
@@ -201,6 +213,15 @@ class modReader(object):
             #Arbitrary limit size I set for mods at 4gb
             elif size > 4294967296:
                 return 2
+
+            #Mod name
+            f.seek(0x4AC, 0)
+            self.modName = self.byte2ascii(f.read(96))
+            self.modName.encode('ascii', 'ignore')
+
+            #Mod description
+            f.seek(0x50c, 0)
+            self.modDescription = self.byte2ascii(f.read(512))
 
             #Cleanup
             f.close()
