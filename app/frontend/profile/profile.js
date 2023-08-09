@@ -83,7 +83,7 @@ function loadUser() {
                     trHTML += '<div class="ms-2 me-auto">'
                     trHTML += '<div class="fw-bold">Account Controls</div>'
                     trHTML += '<button type="button" class="btn btn-success me-1">Edit</button>'
-                    trHTML += '<button type="button" class="btn btn-danger" onclick="deleteUser(' + user['id'] + ')">Delete</button>'
+                    trHTML += '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteprofile" data-bs-userId="' + user['id'] +  '" >Delete</button>';
                     trHTML += '</div>'
                     trHTML += '</li>'
                     trHTML += '</ol>'
@@ -124,7 +124,7 @@ function loadUser() {
 
             trHTML += '<div class="col mb-3 mt-4">';
             trHTML += '<div class="card text-white bg-dark" >';
-            trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+            trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
             trHTML += '<div class="card-body">';
             trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
             trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';
@@ -133,10 +133,14 @@ function loadUser() {
             trHTML += '</ul>';
             trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
             trHTML += '<a href="" class="btn btn-success me-1">Edit</a>';
-            trHTML += '<button type="button" class="btn btn-danger" onclick="deleteMap(' + object['id'] + ')">Delete</button>';
+            //trHTML += '<button type="button" class="btn btn-danger" onclick="deleteMap(' + object['id'] + ')">Delete</button>';
+            trHTML += '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletemap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '" >Delete</button>';
             trHTML += '</div>';
             trHTML += '<div class="card-footer"><small class="text-muted">Downloads: ' + object['map_downloads'] + '</small></div>';
             trHTML += '</div>';
+            trHTML += '<script>';
+            trHTML += '';
+            trHTML += '</script>';
             trHTML += '</div>';
 
         }
@@ -153,7 +157,6 @@ function loadUser() {
 }
 
 
-
 function loadUserMaps(userName) {
 
     const xhttp = new XMLHttpRequest();
@@ -167,6 +170,7 @@ function loadUserMaps(userName) {
 
 
 function deleteMap(mapId) {
+    console.log(mapId);
     const xhttp = new XMLHttpRequest();
     token = getCookie("Authorization");
     var trHTML = '';
@@ -208,10 +212,12 @@ function getCookie(cname) {
     return "";
 }
 
+
 function delayRedirect() {
     setTimeout(function () {
         window.location.href = "https://fileshare.zgaf.io/index.html";
     }, 500);
 }
+
 
 loadUser()
