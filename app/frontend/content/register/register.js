@@ -41,7 +41,7 @@ form.onsubmit = function (event) {
 
             } else {
                 trHTML += '<div class="alert alert-danger" role="alert">';
-                trHTML += 'Could not access API (Contact Buck)';
+                trHTML += 'Could not access API ';
                 trHTML += '</div>'
                 document.getElementById("status-message").innerHTML = trHTML;
 
