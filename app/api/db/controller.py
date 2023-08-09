@@ -119,6 +119,18 @@ def get_variant_id(db: Session, variant_id: int):
 def get_map(db: Session, map_id: int):
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.id == map_id).first()
 
+#Update map
+def update_map(db: Session, map_id: int, user: str, mapUserDesc: str, mapTags: str, mapName: str):
+    map = db.query(models.Map).filter(models.Map.id == map_id and models.Map.owner_id == user.id).first()
+
+    map.mapName = mapName 
+    map.mapTags = mapTags
+    map.mapUserDesc = mapUserDesc
+    
+    db.commit()
+
+    return map
+
 
 #Get all maps by newest first
 def get_newest(db: Session):

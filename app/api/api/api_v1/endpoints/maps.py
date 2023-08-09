@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, Request
+from fastapi import APIRouter, Depends, HTTPException, Response, Request, Form
 from fastapi_pagination import paginate, Page, Params
 from db.schemas import schemas
 from db import controller
@@ -199,3 +199,14 @@ def search_maps(search_text: str = 0,  params: Params = Depends(), db: Session =
 
     return paginate(maps, params)
 
+
+#Patch Single Map
+@router.patch("/maps/{map_id}")
+def patch_map(map_id: int, mapUserDesc: str = Form(" "), mapTags: str = Form(...), db: Session = Depends(get_db), mapName: str = Form(...), user: str = Depends(get_current_user)):
+    map = controller.update_map(db, map_id=map_id, mapUserDesc=mapUserDesc, mapTags=mapTags, mapName=mapName, user=user)
+
+    if map:
+        return HTTPException(status_code=200, detail="Map update successfully")
+    
+    else:
+        raise HTTPException(status_code=400, detail="Could not update map")
