@@ -75,13 +75,11 @@ def get_user_auth(db: Session, user_name: str):
 
 #Get all users
 def get_users(db: Session, skip: int = 0, limit: int = 100):
-
     return db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email']).offset(skip).limit(limit).all()
 
 
 #Query user by email
 def get_user_by_email(db: Session, email: str):
-
     return db.query(models.User).filter(models.User.email == email).first()
 
 
@@ -96,12 +94,29 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
+#Update user data
+def update_user(db: Session, user: str, userName: str, userEmail: str):
+    user = db.query(models.User).filter(models.User.id == user.id).first()
+    user.name = userName
+    user.email = userEmail
+    db.commit()
+
+    return user
+
+
+#Update user password
+def update_user_password(db: Session, userPassword: int, user: str):
+    user = db.query(models.User).filter(models.User.id == user.id).first()
+    hashed_password = pwd_context.hash(userPassword)
+    user.hashed_password = hashed_password
+    db.commit()
+
+    return user
+
 
 #Get all maps
 def get_maps(db: Session):
-
-        return db.execute('SELECT mapdata.id, mapdata."mapName", mapdata."mapDescription", mapdata."mapAuthor", mapdata."mapId", mapdata."mapScnrObjectCount", mapdata."mapTotalObject", mapdata."mapBudgetCount", mapdata."mapBaseMap", mapdata."map_downloads", mapdata."map_rating", mapdata."mapTags", mapdata."owner_id", mapdata."variant_id", mapdata."mapUserDesc", mapdata."time_created", mapdata."time_updated", mapdata."upvote", mapdata."downvote" FROM mapdata').all()
-
+    return db.execute('SELECT mapdata.id, mapdata."mapName", mapdata."mapDescription", mapdata."mapAuthor", mapdata."mapId", mapdata."mapScnrObjectCount", mapdata."mapTotalObject", mapdata."mapBudgetCount", mapdata."mapBaseMap", mapdata."map_downloads", mapdata."map_rating", mapdata."mapTags", mapdata."owner_id", mapdata."variant_id", mapdata."mapUserDesc", mapdata."time_created", mapdata."time_updated", mapdata."upvote", mapdata."downvote" FROM mapdata').all()
     #return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).all()
 
 
@@ -118,6 +133,7 @@ def get_variant_id(db: Session, variant_id: int):
 #Get map data
 def get_map(db: Session, map_id: int):
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.id == map_id).first()
+
 
 #Update map
 def update_map(db: Session, map_id: int, user: str, mapUserDesc: str, mapTags: str, mapName: str):

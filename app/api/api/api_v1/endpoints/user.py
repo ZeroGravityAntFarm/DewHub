@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Form
 from db.schemas import schemas
 from db import controller
 from db.session import SessionLocal
@@ -75,7 +75,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/users/{user_name}")
-def read_user(user_name: str, db: Session = Depends(get_db)):
+def read_user_name(user_name: str, db: Session = Depends(get_db)):
     db_user = controller.get_user(db, user_name=user_name)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -85,3 +85,26 @@ def read_user(user_name: str, db: Session = Depends(get_db)):
 @router.get("/me", response_model=schemas.User)
 def get_me(user: str = Depends(get_current_user)):
     return user
+
+
+#Patch User Data
+@router.patch("/users/{user_id}")
+def patch_user(userName: str = Form(" "), userEmail: str = Form(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    newUser = controller.update_user(db, userName=userName, userEmail=userEmail, user=user)
+
+    if newUser:
+        return HTTPException(status_code=200, detail="Profile updated successfully!")
+    
+    else:
+        raise HTTPException(status_code=400, detail="Failed to update profile")
+
+
+@router.patch("/users/password/{user_id}")
+def patch_user_password(userPassword: str = Form(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    newUser = controller.update_user_password(db, userPassword=userPassword, user=user)
+
+    if newUser:
+        return HTTPException(status_code=200, detail="Password updated successfully!")
+    
+    else:
+        raise HTTPException(status_code=400, detail="Failed to update password")
