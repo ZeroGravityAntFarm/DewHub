@@ -99,7 +99,8 @@ def patch_user(userName: str = Form(" "), userEmail: str = Form(...), db: Sessio
         raise HTTPException(status_code=400, detail="Failed to update profile")
 
 
-@router.patch("/users/password/{user_id}")
+#Patch User Password
+@router.patch("/users/password")
 def patch_user_password(userPassword: str = Form(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     newUser = controller.update_user_password(db, userPassword=userPassword, user=user)
 

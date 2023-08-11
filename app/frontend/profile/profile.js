@@ -34,6 +34,8 @@ function delayRedirect() {
     }, 2000);
 }
 
+
+
 function loadUser() {
     var trHTML = ''
     if (token) {
@@ -128,9 +130,8 @@ function loadUser() {
             trHTML += '<p class="card-text p-3">' + object['mapDescription'] + '</p>';
             trHTML += '</ul>';
             trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-            //trHTML += '<a href="" class="btn btn-success me-1">Edit</a>';
-            trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '" >Edit</button>';
-            trHTML += '<button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#deletemap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '" >Delete</button>';
+            trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmap"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
+            trHTML += '<button type="button" class="btn btn-danger me-1"  data-bs-toggle="modal" data-bs-target="#deletemap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Delete</button>';
             trHTML += '</div>';
             trHTML += '<div class="card-footer"><small class="text-muted">Downloads: ' + object['map_downloads'] + '</small></div>';
             trHTML += '</div>';
@@ -192,6 +193,106 @@ function deleteMap(mapId) {
 }
 
 
+function editMap(mapId) {
+    var data = new FormData();
+    var trHTML = '';
+    var mapName = '';
+    var mapTags = '';
+    var mapDesc = '';
+
+    mapName = document.getElementById("usermapname");
+    mapName = mapName.value;
+    mapTags = document.getElementById("mapTags");
+    mapTags = mapTags.value;
+    mapDesc = document.getElementById("usermapdescription");
+    mapDesc = mapDesc.value;
+
+    data.append("mapName", mapName);
+    data.append("mapTags", mapTags);
+    data.append("mapUserDesc", mapDesc)
+
+    var xhr = new XMLHttpRequest();
+    var bearer_token = "Bearer " + token;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            if (xhr.status == 200) {
+                trHTML += '<div class="alert alert-success" role="alert">';
+                trHTML += 'Success!';
+                trHTML += '</div>'
+                document.getElementById("map-container").innerHTML = trHTML;
+                $('#editmap').modal('hide');
+                delayRedirect();
+
+            } else if (xhr.status != 200) {
+                trHTML += '<div class="alert alert-danger" role="alert">';
+                trHTML += '' + this.responseText + '';
+                trHTML += '</div>'
+                document.getElementById("map-container").innerHTML = trHTML;
+                $('#editmap').modal('hide');
+            }
+        }
+    });
+
+    xhr.open("PATCH", "https://api.zgaf.io/api_v1/maps/" + mapId);
+    xhr.setRequestHeader("Authorization", bearer_token);
+    xhr.send(data);
+}
+
+
+function editPassword() {
+    var data = new FormData();
+    var trHTML = '';
+    var oldPassword = '';
+    var newPassword1 = '';
+    var newPassword2 = '';
+    
+    oldPassword = document.getElementById("oldPassword");
+    oldPassword = oldPassword.value;
+    newPassword1 = document.getElementById("newPassword1");
+    newPassword1 = newPassword1.value;
+    newPassword2 = document.getElementById("newPassword2");
+    newPassword2 = newPassword2.value;
+
+    if (newPassword1 === newPassword2) {
+        data.append("userPassword", newPassword1);
+    } else {
+        trHTML += '<div class="alert alert-danger" role="alert">';
+        trHTML += 'Passwords do not match';
+        trHTML += '</div>';
+        document.getElementById("status-container").innerHTML = trHTML;
+        $('#editpassword').modal('hide');
+    }
+
+    var xhr = new XMLHttpRequest();
+    var bearer_token = "Bearer " + token;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            if (xhr.status == 200) {
+                trHTML += '<div class="alert alert-success" role="alert">';
+                trHTML += 'Success!';
+                trHTML += '</div>'
+                document.getElementById("status-containerr").innerHTML = trHTML;
+                $('#editpassword').modal('hide');
+                delayRedirect();
+
+            } else if (xhr.status != 200) {
+                trHTML += '<div class="alert alert-danger" role="alert">';
+                trHTML += '' + this.responseText + '';
+                trHTML += '</div>'
+                document.getElementById("status-container").innerHTML = trHTML;
+                $('#editpassword').modal('hide');
+            }
+        }
+    });
+
+    xhr.open("PATCH", "https://api.zgaf.io/api_v1/users/password" + mapId);
+    xhr.setRequestHeader("Authorization", bearer_token);
+    xhr.send(data);
+}
+
+
 function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -211,7 +312,7 @@ function getCookie(cname) {
 
 function delayRedirect() {
     setTimeout(function () {
-        window.location.href = "https://fileshare.zgaf.io/index.html";
+        window.location.href = "https://fileshare.zgaf.io/profile/";
     }, 500);
 }
 

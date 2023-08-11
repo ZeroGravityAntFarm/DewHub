@@ -65,7 +65,7 @@
         <div class="modal-body">
           <div class="mb-3">
             <label for="formControlTextArea" class="form-label">Map Name</label>
-            <textarea class="form-control" id="usermapname" rows="3"></textarea>
+            <textarea class="form-control" id="usermapname" rows="3" placeholder="name@example.com"></textarea>
           </div>
           <div class="mb-3">
             <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
@@ -94,7 +94,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" data-bs-dismiss="modal" id="mapDeleteCall" value="" class="btn btn-danger"
+          <button type="button" data-bs-dismiss="modal" id="editMapCall" value="" class="btn btn-danger"
             onclick="editMap(this.value)">Apply</button>
         </div>
       </div>
@@ -122,8 +122,8 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" data-bs-dismiss="modal" id="mapDeleteCall" value="" class="btn btn-danger"
-              onclick="editPassword(this.value)">Apply</button>
+            <button type="button" data-bs-dismiss="modal" id="editPasswordCall" value="" class="btn btn-danger"
+              onclick="editPassword()">Apply</button>
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" data-bs-dismiss="modal" id="mapDeleteCall" value="" class="btn btn-danger"
+            <button type="button" data-bs-dismiss="modal" id="editProfileCall" value="" class="btn btn-danger"
               onclick="editProfile(this.value)">Apply</button>
           </div>
         </div>
@@ -169,7 +169,6 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
   <script>
-
     var deleteMapModal = document.getElementById('deletemap')
     deleteMapModal.addEventListener('show.bs.modal', function (event) {
       // Button that triggered the modal
@@ -184,12 +183,29 @@
 
       modalTitle.textContent = 'Delete ' + mapName + '?'
       document.getElementById("mapDeleteCall").value = mapId
-    })
 
+    })
   </script>
 
   <script>
+    var editMapModal = document.getElementById('editmap')
+    editMapModal.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal
+      var button = event.relatedTarget
 
+      // Extract info from data-bs-* attributes
+      var mapId = button.getAttribute('data-bs-mapId')
+      var mapName = button.getAttribute('data-bs-mapName')
+
+      // Update the modal's content.
+      var modalTitle = editMapModal.querySelector('.modal-title')
+
+      document.getElementById("editMapCall").value = mapId
+      document.getElementById("usermapname").placeholder = mapName
+    })
+  </script>
+
+  <script>
     var deleteProfileModal = document.getElementById('deleteprofile')
     deleteProfileModal.addEventListener('show.bs.modal', function (event) {
       // Button that triggered the modal
@@ -204,7 +220,6 @@
       modalTitle.textContent = 'We hate to see you go!'
       document.getElementById("userDeleteCall").value = userId
     })
-
   </script>
 
   <script src="profile.js"></script>
