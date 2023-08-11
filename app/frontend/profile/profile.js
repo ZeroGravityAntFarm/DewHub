@@ -49,44 +49,40 @@ function loadUser() {
                 console.log(responseText)
                 if (xmlHttp.status == 200) {
 
-                    trHTML += '<ol class="list-group bg-dark">'
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">'
-                    trHTML += '<div class="ms-2 me-auto">'
-                    trHTML += '<div class="fw-bold">Username</div>'
-                    trHTML += '' + user["name"] + ''
-                    trHTML += '</div>'
-                    trHTML += '</li>'
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">'
-                    trHTML += '<div class="ms-2 me-auto">'
-                    trHTML += '<div class="fw-bold">Email</div>'
-                    trHTML += '' + user["email"] + ''
-                    trHTML += '</div>'
-                    trHTML += '</li>'
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">'
-                    trHTML += '<div class="ms-2 me-auto">'
-                    trHTML += '<div class="fw-bold">ID</div>'
-                    trHTML += '' + user["id"] + ''
-                    trHTML += '</div>'
-                    trHTML += '</li>'
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">'
-                    trHTML += '<div class="ms-2 me-auto">'
-                    trHTML += '<div class="fw-bold">Profile Views</div>'
-                    trHTML += '' + user["prof_views"] + ''
-                    trHTML += '</div>'
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">'
-                    trHTML += '<div class="ms-2 me-auto">'
-                    trHTML += '<div class="fw-bold">Account Enabled</div>'
-                    trHTML += '' + user["is_active"] + ''
-                    trHTML += '</div>'
-                    trHTML += '</li>'
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">'
-                    trHTML += '<div class="ms-2 me-auto">'
-                    trHTML += '<div class="fw-bold">Account Controls</div>'
-                    trHTML += '<button type="button" class="btn btn-success me-1">Edit</button>'
-                    trHTML += '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteprofile" data-bs-userId="' + user['id'] +  '" >Delete</button>';
-                    trHTML += '</div>'
-                    trHTML += '</li>'
-                    trHTML += '</ol>'
+                    trHTML += '<ol class="list-group bg-dark">';
+                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
+                    trHTML += '<div class="ms-2 me-auto">';
+                    trHTML += '<div class="fw-bold">Username</div>';
+                    trHTML += '' + user["name"] + '';
+                    trHTML += '</div>';
+                    trHTML += '</li>';
+                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
+                    trHTML += '<div class="ms-2 me-auto">';
+                    trHTML += '<div class="fw-bold">Email</div>';
+                    trHTML += '' + user["email"] + '';
+                    trHTML += '</div>';
+                    trHTML += '</li>';
+                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
+                    trHTML += '<div class="ms-2 me-auto">';
+                    trHTML += '<div class="fw-bold">ID</div>';
+                    trHTML += '' + user["id"] + '';
+                    trHTML += '</div>';
+                    trHTML += '</li>';
+                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
+                    trHTML += '<div class="ms-2 me-auto">';
+                    trHTML += '<div class="fw-bold">Account Enabled</div>';
+                    trHTML += '' + user["is_active"] + '';
+                    trHTML += '</div>';
+                    trHTML += '</li>';
+                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
+                    trHTML += '<div class="ms-2 me-auto">';
+                    trHTML += '<div class="fw-bold">Account Controls</div>';
+                    trHTML += '<button type="button" class="btn btn-secondary me-1" data-bs-toggle="modal" data-bs-target="#editprofile">Edit Profile</button>';
+                    trHTML += '<button type="button" class="btn btn-secondary me-1" data-bs-toggle="modal" data-bs-target="#editpassword">Change Password</button>';
+                    trHTML += '<button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#deleteprofile" data-bs-userId="' + user['id'] +  '" >Delete Account</button>';
+                    trHTML += '</div>';
+                    trHTML += '</li>';
+                    trHTML += '</ol>';
 
                     document.getElementById("user-profile").innerHTML = trHTML;
 
@@ -132,9 +128,9 @@ function loadUser() {
             trHTML += '<p class="card-text p-3">' + object['mapDescription'] + '</p>';
             trHTML += '</ul>';
             trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-            trHTML += '<a href="" class="btn btn-success me-1">Edit</a>';
-            //trHTML += '<button type="button" class="btn btn-danger" onclick="deleteMap(' + object['id'] + ')">Delete</button>';
-            trHTML += '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletemap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '" >Delete</button>';
+            //trHTML += '<a href="" class="btn btn-success me-1">Edit</a>';
+            trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '" >Edit</button>';
+            trHTML += '<button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#deletemap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '" >Delete</button>';
             trHTML += '</div>';
             trHTML += '<div class="card-footer"><small class="text-muted">Downloads: ' + object['map_downloads'] + '</small></div>';
             trHTML += '</div>';

@@ -51,6 +51,7 @@ def get_user(db: Session, user_name: str):
     if user:
         if user.prof_views != None:
             user.prof_views += 1
+
         else:
             user.prof_views = 1
         db.commit()

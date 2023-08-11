@@ -56,6 +56,105 @@
     </div>
   </div>
 
+  <div class="modal" tabindex="-1" id="editmap">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Map</h5>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="formControlTextArea" class="form-label">Map Name</label>
+            <textarea class="form-control" id="usermapname" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
+            <textarea class="form-control" id="usermapdescription" rows="3"></textarea>
+          </div>
+          <div>
+            <h5>Tag</h5>
+            <select class="form-select" aria-label="map tags" id="mapTags">
+              <option selected value="Slayer">Slayer</option>
+              <option value="Infection">Infection</option>
+              <option value="Puzzel">Puzzel</option>
+              <option value="KOTH">KOTH</option>
+              <option value="CTF">CTF</option>
+              <option value="Assault">Assault</option>
+              <option value="Territories">Territories</option>
+              <option value="Oddball">Oddball</option>
+              <option value="Juggernaut">Juggernaut</option>
+              <option value="VIP">VIP</option>
+              <option value="Race">Race</option>
+              <option value="Mini Games">Mini Games</option>
+              <option value="Enhanced">Enhanced</option>
+              <option value="0.7">0.7</option>
+              <option value="0.5.1">0.5.1</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" data-bs-dismiss="modal" id="mapDeleteCall" value="" class="btn btn-danger"
+            onclick="editMap(this.value)">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" tabindex="-1" id="editpassword">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Change Password</h5>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="formControlTextArea" class="form-label">Old Password:</label>
+            <input type="password" class="form-control" id="oldPassword">
+          </div>
+          <div class="mb-3">
+            <label for="formControlTextArea" class="form-label">New Password:</label>
+            <input type="password" class="form-control" id="newPassword1">
+          </div>
+          <div class="mb-3">
+            <label for="formControlTextArea" class="form-label">Verify Password:</label>
+            <input type="password" class="form-control" id="newPassword2">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" data-bs-dismiss="modal" id="mapDeleteCall" value="" class="btn btn-danger"
+              onclick="editPassword(this.value)">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" tabindex="-1" id="editprofile">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Profile</h5>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="formControlInput" class="form-label">Username</label>
+            <input type="text" class="form-control" id="inputUsername">
+          </div>
+          <div class="mb-3">
+            <label for="formControlInput" class="form-label">Email</label>
+            <input type="email" class="form-control" id="inputEmail" placeholder="name@example.com">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" data-bs-dismiss="modal" id="mapDeleteCall" value="" class="btn btn-danger"
+              onclick="editProfile(this.value)">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="status-container" class="container w-25 p-3">
     <div class="row">
       <div id="status-message"></div>
