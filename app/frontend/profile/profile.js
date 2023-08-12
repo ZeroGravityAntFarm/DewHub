@@ -306,6 +306,7 @@ function editPassword() {
         trHTML += '</div>';
         document.getElementById("status-container").innerHTML = trHTML;
         $('#editpassword').modal('hide');
+        delayRedirect();
     }
 
     var xhr = new XMLHttpRequest();
@@ -317,9 +318,9 @@ function editPassword() {
                 trHTML += '<div class="alert alert-success" role="alert">';
                 trHTML += 'Success!';
                 trHTML += '</div>'
-                document.getElementById("status-containerr").innerHTML = trHTML;
+                document.getElementById("status-container").innerHTML = trHTML;
                 $('#editpassword').modal('hide');
-                delayRedirect();
+                delayRedirectLogin();
 
             } else if (xhr.status != 200) {
                 trHTML += '<div class="alert alert-danger" role="alert">';
@@ -327,6 +328,7 @@ function editPassword() {
                 trHTML += '</div>'
                 document.getElementById("status-container").innerHTML = trHTML;
                 $('#editpassword').modal('hide');
+                delayRedirect();
             }
         }
     });
