@@ -73,6 +73,7 @@ function getMod(modId) {
             trHTML += '</div>';
             trHTML += '<ul class="list-group list-group-flush">';
             trHTML += '<li class="list-group-item bg-dark text-white">Uploaded By: ' + user["name"] + '</li>';
+            trHTML += '<li class="list-group-item bg-dark text-white">Author: ' + modData["modAuthor"] + '</li>';
             //trHTML += '<li class="list-group-item bg-dark text-white">About: ' + modData["modDescription"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">File Size: ' + humanFileSize(modData["modFileSize"]) + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">Uploaded: ' + timeAgo + ' ago</li>';

@@ -216,8 +216,12 @@ class modReader(object):
 
             #Mod name
             f.seek(0x4AC, 0)
-            self.modName = self.byte2ascii(f.read(96))
-            self.modName.encode('ascii', 'ignore')
+            self.modName = self.byte2ascii(f.read(64))
+            #self.modName.encode('ascii', 'ignore')
+
+            #Mod Author
+            f.seek(0x4AC, 0)
+            self.modAuthor = self.byte2ascii(f.read(32))
 
             #Mod description
             f.seek(0x50c, 0)

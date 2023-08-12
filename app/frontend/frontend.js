@@ -544,6 +544,7 @@ function loadMCards(page = 1) {
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['modName'] + '</h4>';
                 trHTML += '<h5 class="card-title">Uploaded By: ' + user["name"] + '</h5>';
+                trHTML += '<h5 class="card-title">Author: ' + object["modAuthor"] + '</h5>';
                 trHTML += '<h5 class="card-title">Uploaded ' + timeAgo + ' ago</h5>';
                 trHTML += '</div>';
                 trHTML += '<p class="card-text p-3">' + object['modDescription'] + '</p>';
