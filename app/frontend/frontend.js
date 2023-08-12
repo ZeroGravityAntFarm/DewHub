@@ -192,6 +192,14 @@ function uploadMods() {
     var data = new FormData();
     var trHTML = '';
     var tagData = '';
+    var tpHTML = '';
+
+    tpHTML += '<div class="spinner-border" role="status">';
+    //tpHTML += '<span class="sr-only"></span>';
+    tpHTML += '</div>';
+
+    document.getElementById("spinnyboi").innerHTML = tpHTML;
+
     tagData = document.getElementById("modTags");
     tagData = tagData.value;
     modDesc = document.getElementById("modDescription")
@@ -242,6 +250,7 @@ function uploadPrefab() {
     var data = new FormData();
     var trHTML = '';
     var tagData = '';
+
     tagData = document.getElementById("prefabTags");
     tagData = tagData.value;
     prefabDesc = document.getElementById("userprefabDesc")

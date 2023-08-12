@@ -220,7 +220,7 @@ class modReader(object):
             #self.modName.encode('ascii', 'ignore')
 
             #Mod Author
-            f.seek(0x4AC, 0)
+            f.seek(0x4EC, 0)
             self.modAuthor = self.byte2ascii(f.read(32))
 
             #Mod description
