@@ -79,7 +79,7 @@ function loadUser() {
                     trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
                     trHTML += '<div class="ms-2 me-auto">';
                     trHTML += '<div class="fw-bold">Account Controls</div>';
-                    trHTML += '<button type="button" class="btn btn-secondary me-1" data-bs-toggle="modal" data-bs-target="#editprofile">Edit Profile</button>';
+                    trHTML += '<button type="button" class="btn btn-secondary me-1" data-bs-toggle="modal" data-bs-username="' + user["name"] + '" data-bs-email="' + user["email"] + '" data-bs-target="#editprofile">Edit Profile</button>';
                     trHTML += '<button type="button" class="btn btn-secondary me-1" data-bs-toggle="modal" data-bs-target="#editpassword">Change Password</button>';
                     trHTML += '<button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#deleteprofile" data-bs-userId="' + user['id'] +  '" >Delete Account</button>';
                     trHTML += '</div>';
@@ -240,6 +240,49 @@ function editMap(mapId) {
 }
 
 
+function editProfile() {
+    var data = new FormData();
+    var trHTML = '';
+    var userName = '';
+    var userEmail = '';
+
+    userName = document.getElementById("inputUserName");
+    userName = userName.value;
+    userEmail = document.getElementById("inputEmail");
+    userEmail = userEmail.value;
+
+    data.append("userName", userName);
+    data.append("userEmail", userEmail);
+
+    var xhr = new XMLHttpRequest();
+    var bearer_token = "Bearer " + token;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            if (xhr.status == 200) {
+                trHTML += '<div class="alert alert-success" role="alert">';
+                trHTML += 'Success!';
+                trHTML += '</div>'
+                document.getElementById("map-container").innerHTML = trHTML;
+                $('#editmap').modal('hide');
+                delayRedirectLogin();
+
+            } else if (xhr.status != 200) {
+                trHTML += '<div class="alert alert-danger" role="alert">';
+                trHTML += '' + this.responseText + '';
+                trHTML += '</div>'
+                document.getElementById("map-container").innerHTML = trHTML;
+                $('#editmap').modal('hide');
+                delayRedirect();
+            }
+        }
+    });
+    xhr.open("PATCH", "https://api.zgaf.io/api_v1/users");
+    xhr.setRequestHeader("Authorization", bearer_token);
+    xhr.send(data);
+
+}
+
 function editPassword() {
     var data = new FormData();
     var trHTML = '';
@@ -256,6 +299,7 @@ function editPassword() {
 
     if (newPassword1 === newPassword2) {
         data.append("userPassword", newPassword1);
+
     } else {
         trHTML += '<div class="alert alert-danger" role="alert">';
         trHTML += 'Passwords do not match';
@@ -287,7 +331,7 @@ function editPassword() {
         }
     });
 
-    xhr.open("PATCH", "https://api.zgaf.io/api_v1/users/password" + mapId);
+    xhr.open("PATCH", "https://api.zgaf.io/api_v1/users/password");
     xhr.setRequestHeader("Authorization", bearer_token);
     xhr.send(data);
 }
@@ -313,8 +357,13 @@ function getCookie(cname) {
 function delayRedirect() {
     setTimeout(function () {
         window.location.href = "https://fileshare.zgaf.io/profile/";
-    }, 500);
+    }, 1000);
 }
 
+function delayRedirectLogin() {
+    setTimeout(function () {
+        window.location.href = "https://fileshare.zgaf.io/login/";
+    }, 1000);
+}
 
 loadUser()

@@ -65,7 +65,7 @@
         <div class="modal-body">
           <div class="mb-3">
             <label for="formControlTextArea" class="form-label">Map Name</label>
-            <textarea class="form-control" id="usermapname" rows="3" placeholder="name@example.com"></textarea>
+            <textarea class="form-control" id="usermapname" rows="3" placeholder=""></textarea>
           </div>
           <div class="mb-3">
             <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
@@ -139,16 +139,16 @@
         <div class="modal-body">
           <div class="mb-3">
             <label for="formControlInput" class="form-label">Username</label>
-            <input type="text" class="form-control" id="inputUsername">
+            <input type="text" class="form-control" id="inputUserName" placeholder="">
           </div>
           <div class="mb-3">
             <label for="formControlInput" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail" placeholder="name@example.com">
+            <input type="email" class="form-control" id="inputEmail" placeholder="">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="button" data-bs-dismiss="modal" id="editProfileCall" value="" class="btn btn-danger"
-              onclick="editProfile(this.value)">Apply</button>
+              onclick="editProfile()">Apply</button>
           </div>
         </div>
       </div>
@@ -202,6 +202,24 @@
 
       document.getElementById("editMapCall").value = mapId
       document.getElementById("usermapname").placeholder = mapName
+    })
+  </script>
+
+  <script>
+    var editProfileModal = document.getElementById('editprofile')
+    editProfileModal.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal
+      var button = event.relatedTarget
+
+      // Extract info from data-bs-* attributes
+      var userName = button.getAttribute('data-bs-username')
+      var userEmail = button.getAttribute('data-bs-email')
+
+      // Update the modal's content.
+      var modalTitle = editProfileModal.querySelector('.modal-title')
+
+      document.getElementById("inputUserName").placeholder = userName
+      document.getElementById("inputEmail").placeholder = userEmail
     })
   </script>
 
