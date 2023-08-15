@@ -6,6 +6,7 @@ from internal.auth import verify_password, get_password_hash
 from datetime import datetime, timedelta
 from internal.auth import *
 from jose import jwt
+import shutil
 import os
 from sqlalchemy import or_, desc, asc
 
@@ -388,15 +389,15 @@ def delete_mod(db: Session, mod_id: int, user: str):
             if user.id == mod.owner_id:
 
                 #Delete mod images
-                if os.path.exists("/static/mods/" + mod.id):
-                    os.rmdir("/static/mods/" + mod.id)
+                if os.path.exists("/app/static/mods/" + str(mod.id)):
+                    shutil.rmtree("/app/static/mods/" + str(mod.id))
                 
                 else:
                     return False, "Mod files not found"
                 
                 #Delete mod binaries
-                if os.path.exists("/static/mods/pak/" + mod.id):
-                    os.rmdir("/static/mods/pak/" + mod.id)
+                if os.path.exists("/app/static/mods/pak/" + str(mod.id)):
+                    shutil.rmtree("/app/static/mods/pak/" + str(mod.id))
                 
                 else:
                     return False, "Mod files not found"
