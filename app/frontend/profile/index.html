@@ -26,38 +26,13 @@
     </div>
   </header>
 
-  <div id="user-container" class="container">
-    <div class="row">
-    </div>
-  </div>
-
-  <div id="user-container" class="container">
-    <div class="row">
-      <div id="user-profile"></div>
-    </div>
-  </div>
-
   <div id="status-container" class="container w-25 p-3">
     <div class="row">
       <div id="status-message"></div>
     </div>
   </div>
 
-  <div id="contentnav-container" class="container">
-    <div class="d-grid gap-2 d-md-block">
-      <center>
-        <button type="button" class="btn btn-secondary btn-lg" onclick="loadUserMaps()">Maps</button>
-        <button type="button" class="btn btn-secondary btn-lg" onclick="loadUserPrefabs()">Prefabs</button>
-        <button type="button" class="btn btn-secondary btn-lg" onclick="loadUserMods()">Mods</button>
-      </center>
-    </div>
-  </div>
-
-  <div id="map-container" class="container">
-    <div class="row">
-      <div id="map-cards"></div>
-    </div>
-  </div>
+  <div id="user-profile" class="container"></div>
 
   <div class="modal" tabindex="-1" id="deleteprofile">
     <div class="modal-dialog">
@@ -222,7 +197,9 @@
             <input type="email" class="form-control" id="inputEmail" placeholder="">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary me-1" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary me-1" data-bs-toggle="modal" data-bs-target="#editpassword"
+              data-bs-dismiss="modal">Change Password</button>
             <button type="button" data-bs-dismiss="modal" id="editProfileCall" value="" class="btn btn-danger"
               onclick="editProfile()">Apply</button>
           </div>

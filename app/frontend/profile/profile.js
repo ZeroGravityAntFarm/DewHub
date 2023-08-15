@@ -116,6 +116,102 @@ function loadUser() {
 }
 
 
+function loadUserv2() {
+    var trHTML = ''
+    if (token) {
+
+        var xmlHttp = new XMLHttpRequest();
+
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == XMLHttpRequest.DONE) {
+                var responseText = JSON.parse(xmlHttp.responseText);
+                var trHTML = '';
+                const user = JSON.parse(xmlHttp.responseText);
+
+                console.log(responseText)
+                if (xmlHttp.status == 200) {
+
+                    //trHTML += '<section class="h-100 gradient-custom-2">';
+                    trHTML += '<div class="container py-5 h-100">';
+                    trHTML += '<div class="row d-flex justify-content-center align-items-center h-100">';
+                    trHTML += '<div class="col col-lg-9 col-xl-7">';
+                    trHTML += '<div class="card">';
+                    trHTML += '<div class="rounded-top text-white d-flex flex-row" style="background-color: #525151; height:200px;">';
+                    trHTML += '<div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">';
+                    trHTML += '<img src="https://api.zgaf.io/static/content/default/forge.jpg" alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">';
+                    trHTML += '<button type="button" class="btn btn-dark" data-mdb-ripple-color="dark" data-bs-toggle="modal" data-bs-username="' + user["name"] + '" data-bs-email="' + user["email"] + '" data-bs-target="#editprofile" style="z-index: 1;">Edit profile</button>';
+                    trHTML += '</div>';
+                    trHTML += '<div class="ms-3" style="margin-top: 130px;">';
+                    trHTML += '<h5>' + user["name"] + '</h5>';
+                    trHTML += '<p>{rank}</p>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '<div class="p-4 text-black" style="background-color: #f8f9fa;">';
+                    trHTML += '<div class="d-flex justify-content-end text-center py-1">';
+                    trHTML += '<div>';
+                    trHTML += '<p class="mb-1 h5">14</p>';
+                    trHTML += '<p class="small text-muted mb-0">Maps</p>';
+                    trHTML += '</div>';
+                    trHTML += '<div class="px-3">';
+                    trHTML += '<p class="mb-1 h5">5</p>';
+                    trHTML += '<p class="small text-muted mb-0">Prefabs</p>';
+                    trHTML += '</div>';
+                    trHTML += '<div>';
+                    trHTML += '<p class="mb-1 h5">2</p>';
+                    trHTML += '<p class="small text-muted mb-0">Mods</p>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '<div class="card-body p-4 text-black">';
+                    trHTML += '<div class="mb-5">';
+                    trHTML += '<p class="lead fw-normal mb-1">About</p>';
+                    trHTML += '<div class="p-4" style="background-color: #f8f9fa;">';
+                    trHTML += '<p class="font-italic mb-1">{prof_about}</p>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '<div class="d-flex justify-content-between align-items-center mb-4">';
+                    trHTML += '<button type="button" class="btn btn-dark btn-lg" onclick="loadUserMaps()">Maps</button>';
+                    trHTML += '<button type="button" class="btn btn-dark btn-lg" onclick="loadUserPrefabs()">Prefabs</button>';
+                    trHTML += '<button type="button" class="btn btn-dark btn-lg" onclick="loadUserMods()">Mods</button>';
+                    trHTML += '</div>';
+                    trHTML += '<div id="map-cards">';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    //trHTML += '</section>';
+
+                    document.getElementById("user-profile").innerHTML = trHTML;
+
+                } else {
+
+                    trHTML += '<div class="alert alert-success" role="alert">';
+                    trHTML += 'Success!';
+                    trHTML += '</div>'
+                    document.getElementById("status-message").innerHTML = trHTML;
+
+                    setCookie("Authorization", responseText.access_token, 1)
+
+                    delayRedirect();
+
+                }
+
+            }
+
+        }
+
+        xmlHttp.open("GET", "https://api.zgaf.io/api_v1/me", false);
+        bearer_token = "Bearer " + token
+        xmlHttp.setRequestHeader("Authorization", bearer_token);
+        xmlHttp.send();
+
+        const maps = loadUserMaps();
+    }
+
+}
+
+
 function loadUserMaps() {
 
     const xhttp = new XMLHttpRequest();
@@ -493,4 +589,4 @@ function delayRedirectLogin() {
     }, 1000);
 }
 
-loadUser()
+loadUserv2()
