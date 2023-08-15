@@ -6,6 +6,7 @@ from internal.auth import verify_password, get_password_hash
 from datetime import datetime, timedelta
 from internal.auth import *
 from jose import jwt
+import os
 from sqlalchemy import or_, desc, asc
 
 
@@ -386,7 +387,21 @@ def delete_mod(db: Session, mod_id: int, user: str):
             #Verify authenticated user is owner of requested mod 
             if user.id == mod.owner_id:
 
-                #Delete map and variant rows
+                #Delete mod images
+                if os.path.exists("/static/mods/" + mod.id):
+                    os.rmdir("/static/mods/" + mod.id)
+                
+                else:
+                    return False, "Mod files not found"
+                
+                #Delete mod binaries
+                if os.path.exists("/static/mods/pak/" + mod.id):
+                    os.rmdir("/static/mods/pak/" + mod.id)
+                
+                else:
+                    return False, "Mod files not found"
+                
+                #Delete mod row
                 db.delete(mod)
 
                 #Commit our changes to the database
