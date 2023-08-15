@@ -193,6 +193,33 @@ function deleteMap(mapId) {
 }
 
 
+function deleteMod(modId) {
+    console.log(modId);
+    const xhttp = new XMLHttpRequest();
+    token = getCookie("Authorization");
+    var trHTML = '';
+    xhttp.open("DELETE", "https://api.zgaf.io/api_v1/mods/" + mapId, async = false);
+    xhttp.setRequestHeader("Authorization", bearer_token);
+    xhttp.send();
+    const objects = JSON.parse(xhttp.responseText);
+
+    if (xhttp.status == 200) {
+        trHTML += '<div class="alert alert-success" role="alert">';
+        trHTML += 'Success!';
+        trHTML += '</div>'
+        document.getElementById("status-message").innerHTML = trHTML;
+        location.reload();
+
+    } else if (xhttp.status != 200) {
+        trHTML += '<div class="alert alert-danger" role="alert">';
+        trHTML += 'Problem deleting mod';
+        trHTML += '</div>'
+        document.getElementById("status-message").innerHTML = trHTML;
+
+    }
+}
+
+
 function editMap(mapId) {
     var data = new FormData();
     var trHTML = '';
