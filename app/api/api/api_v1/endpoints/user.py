@@ -61,10 +61,23 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 
-@router.get("/usermaps/{user_name}")
-def read_users_maps(user_name: str, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    users = controller.get_user_maps(db, skip=skip, limit=limit, user_name=user_name)
-    return users
+@router.get("/usermaps/")
+def read_users_maps(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    maps = controller.get_user_maps(db, skip=skip, limit=limit, user=user)
+    return maps 
+
+
+@router.get("/usermods/")
+def read_users_mods(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    mods = controller.get_user_mods(db, skip=skip, limit=limit, user=user)
+    return mods
+
+
+@router.get("/userprefabs/")
+def read_users_prefabs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    prefabs = controller.get_user_prefabs(db, skip=skip, limit=limit, user=user)
+    return prefabs
+
 
 @router.get("/users/{user_id}")
 def read_user(user_id: int, db: Session = Depends(get_db)):

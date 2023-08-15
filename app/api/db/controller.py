@@ -313,10 +313,7 @@ def get_variant_id_file(db: Session, var_id: int):
 
 
 #Get all maps for a specific user 
-def get_user_maps(db: Session, user_name: str, skip: int = 0, limit: int = 100):
-    #Lookup ID of requested user
-    user = db.query(models.User).filter(models.User.name == user_name).first()
-
+def get_user_maps(db: Session, user: str, skip: int = 0, limit: int = 100):
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.owner_id == user.id).offset(skip).limit(limit).all()
 
 
@@ -343,10 +340,7 @@ def create_user_map(db: Session, mapUserDesc: str, mapTags: str, map: schemas.Ma
 
 
 #Get all mods for a specific user 
-def get_user_mods(db: Session, user_name: str, skip: int = 0, limit: int = 100):
-    #Lookup ID of requested user
-    user = db.query(models.User).filter(models.User.name == user_name).first()
-
+def get_user_mods(db: Session, user: str, skip: int = 0, limit: int = 100):
     return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).filter(models.Mod.owner_id == user.id).offset(skip).limit(limit).all()
 
 
@@ -473,6 +467,11 @@ def create_prefab(db: Session, prefab: schemas.PreFabCreate, user_id: int, prefa
 #Get all prefabs
 def get_prefabs(db: Session, skip: int = 0, limit: int = 100):
     return db.query(*[c for c in models.PreFab.__table__.c if c.name != 'prefabFile']).offset(skip).limit(limit).all()
+
+
+#Get all prefabs for a specific user 
+def get_user_prefabs(db: Session, user: str, skip: int = 0, limit: int = 100):
+    return db.query(*[c for c in models.PreFab.__table__.c if c.name != 'prefabFile']).filter(models.PreFab.owner_id == user.id).offset(skip).limit(limit).all()
 
 
 #Get prefab data

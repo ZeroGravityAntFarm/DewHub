@@ -109,60 +109,134 @@ function loadUser() {
         bearer_token = "Bearer " + token
         xmlHttp.setRequestHeader("Authorization", bearer_token);
         xmlHttp.send();
-        user = JSON.parse(xmlHttp.responseText);
-        console.log(user)
 
-        const maps = loadUserMaps(user["name"]);
-        for (let [i, object] of maps.entries()) {
-
-            if (i % 3 === 0) {
-                trHTML += '</div>';
-                trHTML += '<div class="row top-buffer">';
-            }
-
-            trHTML += '<div class="col mb-3 mt-4">';
-            trHTML += '<div class="card text-white bg-dark" >';
-            trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
-            trHTML += '<div class="card-body">';
-            trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
-            trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';
-            trHTML += '</div>';
-            trHTML += '<p class="card-text p-3">' + object['mapDescription'] + '</p>';
-            trHTML += '</ul>';
-            trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-            trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmap"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
-            trHTML += '<button type="button" class="btn btn-danger me-1"  data-bs-toggle="modal" data-bs-target="#deletemap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Delete</button>';
-            trHTML += '</div>';
-            trHTML += '<div class="card-footer"><small class="text-muted">Downloads: ' + object['map_downloads'] + '</small></div>';
-            trHTML += '</div>';
-            trHTML += '<script>';
-            trHTML += '';
-            trHTML += '</script>';
-            trHTML += '</div>';
-
-        }
-
-        document.getElementById("map-cards").innerHTML = trHTML;
-        //Fail the onsubmit to avoid page refresh.
-        return false;
-
-    } else {
-
-        delayRedirect()
-
+        const maps = loadUserMaps();
     }
+
 }
 
 
-function loadUserMaps(userName) {
+function loadUserMaps() {
 
     const xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "https://api.zgaf.io/api_v1/usermaps/" + userName, async = false);
+    token = getCookie("Authorization");
+    trHTML= '';
+    xhttp.open("GET", "https://api.zgaf.io/api_v1/usermaps/", async = false);
+    xhttp.setRequestHeader("Authorization", bearer_token);
     xhttp.send();
-    const objects = JSON.parse(xhttp.responseText);
+    const maps = JSON.parse(xhttp.responseText);
 
-    return objects
+    for (let [i, object] of maps.entries()) {
 
+        if (i % 3 === 0) {
+            trHTML += '</div>';
+            trHTML += '<div class="row top-buffer">';
+        }
+
+        trHTML += '<div class="col mb-3 mt-4">';
+        trHTML += '<div class="card text-white bg-dark" >';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+        trHTML += '<div class="card-body">';
+        trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
+        trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';
+        trHTML += '</div>';
+        trHTML += '<p class="card-text p-3">' + object['mapDescription'] + '</p>';
+        trHTML += '</ul>';
+        trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
+        trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmap"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
+        trHTML += '<button type="button" class="btn btn-danger me-1"  data-bs-toggle="modal" data-bs-target="#deletemap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Delete</button>';
+        trHTML += '</div>';
+        trHTML += '<div class="card-footer"><small class="text-muted">Downloads: ' + object['map_downloads'] + '</small></div>';
+        trHTML += '</div>';
+        trHTML += '<script>';
+        trHTML += '';
+        trHTML += '</script>';
+        trHTML += '</div>';
+
+    }
+    document.getElementById("map-cards").innerHTML = trHTML;
+}
+
+
+function loadUserMods() {
+
+    const xhttp = new XMLHttpRequest();
+    token = getCookie("Authorization");
+    trHTML= '';
+    xhttp.open("GET", "https://api.zgaf.io/api_v1/usermods/", async = false);
+    xhttp.setRequestHeader("Authorization", bearer_token);
+    xhttp.send();
+    const mods = JSON.parse(xhttp.responseText);
+
+    for (let [i, object] of mods.entries()) {
+
+        if (i % 3 === 0) {
+            trHTML += '</div>';
+            trHTML += '<div class="row top-buffer">';
+        }
+
+        trHTML += '<div class="col mb-3 mt-4">';
+        trHTML += '<div class="card text-white bg-dark" >';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/modview?modId=' + object['id'] + '"><img src="https://api.zgaf.io/static/mods/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+        trHTML += '<div class="card-body">';
+        trHTML += '<h4 class="card-title">' + object['modName'] + '</h4>';
+        trHTML += '<h5 class="card-title">Author: ' + object['modAuthor'] + '</h5>';
+        trHTML += '</div>';
+        trHTML += '<p class="card-text p-3">' + object['modDescription'] + '</p>';
+        trHTML += '</ul>';
+        trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
+        //trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmod"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
+        trHTML += '<button type="button" class="btn btn-danger me-1"  data-bs-toggle="modal" data-bs-target="#deletemod" data-bs-modName="' + object['modName'] + '" data-bs-modId="' + object['id'] +  '">Delete</button>';
+        trHTML += '</div>';
+        trHTML += '</div>';
+        trHTML += '<script>';
+        trHTML += '';
+        trHTML += '</script>';
+        trHTML += '</div>';
+
+    }
+    document.getElementById("map-cards").innerHTML = trHTML;
+}
+
+
+function loadUserPrefabs() {
+
+    const xhttp = new XMLHttpRequest();
+    token = getCookie("Authorization");
+    trHTML= '';
+    xhttp.open("GET", "https://api.zgaf.io/api_v1/userprefabs/", async = false);
+    xhttp.setRequestHeader("Authorization", bearer_token);
+    xhttp.send();
+    const prefabs = JSON.parse(xhttp.responseText);
+
+    for (let [i, object] of prefabs.entries()) {
+
+        if (i % 3 === 0) {
+            trHTML += '</div>';
+            trHTML += '<div class="row top-buffer">';
+        }
+
+        trHTML += '<div class="col mb-3 mt-4">';
+        trHTML += '<div class="card text-white bg-dark" >';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/prefabview?prefabId=' + object['id'] + '"><img src="https://api.zgaf.io/static/prefabs/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+        trHTML += '<div class="card-body">';
+        trHTML += '<h4 class="card-title">' + object['prefabName'] + '</h4>';
+        trHTML += '<h5 class="card-title">Author: ' + object['prefabAuthor'] + '</h5>';
+        trHTML += '</div>';
+        trHTML += '<p class="card-text p-3">' + object['prefabDescription'] + '</p>';
+        trHTML += '</ul>';
+        trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
+        //trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmod"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
+        trHTML += '<button type="button" class="btn btn-danger me-1"  data-bs-toggle="modal" data-bs-target="#deleteprefab" data-bs-prefabName="' + object['prefabName'] + '" data-bs-prefabId="' + object['id'] +  '">Delete</button>';
+        trHTML += '</div>';
+        trHTML += '</div>';
+        trHTML += '<script>';
+        trHTML += '';
+        trHTML += '</script>';
+        trHTML += '</div>';
+
+    }
+    document.getElementById("map-cards").innerHTML = trHTML;
 }
 
 
@@ -174,7 +248,6 @@ function deleteMap(mapId) {
     xhttp.open("DELETE", "https://api.zgaf.io/api_v1/maps/" + mapId, async = false);
     xhttp.setRequestHeader("Authorization", bearer_token);
     xhttp.send();
-    const objects = JSON.parse(xhttp.responseText);
 
     if (xhttp.status == 200) {
         trHTML += '<div class="alert alert-success" role="alert">';
@@ -198,10 +271,9 @@ function deleteMod(modId) {
     const xhttp = new XMLHttpRequest();
     token = getCookie("Authorization");
     var trHTML = '';
-    xhttp.open("DELETE", "https://api.zgaf.io/api_v1/mods/" + mapId, async = false);
+    xhttp.open("DELETE", "https://api.zgaf.io/api_v1/mods/" + modId, async = false);
     xhttp.setRequestHeader("Authorization", bearer_token);
     xhttp.send();
-    const objects = JSON.parse(xhttp.responseText);
 
     if (xhttp.status == 200) {
         trHTML += '<div class="alert alert-success" role="alert">';
@@ -213,6 +285,32 @@ function deleteMod(modId) {
     } else if (xhttp.status != 200) {
         trHTML += '<div class="alert alert-danger" role="alert">';
         trHTML += 'Problem deleting mod';
+        trHTML += '</div>'
+        document.getElementById("status-message").innerHTML = trHTML;
+
+    }
+}
+
+
+function deletePrefab(prefabId) {
+    console.log(prefabId);
+    const xhttp = new XMLHttpRequest();
+    token = getCookie("Authorization");
+    var trHTML = '';
+    xhttp.open("DELETE", "https://api.zgaf.io/api_v1/prefabs/" + prefabId, async = false);
+    xhttp.setRequestHeader("Authorization", bearer_token);
+    xhttp.send();
+
+    if (xhttp.status == 200) {
+        trHTML += '<div class="alert alert-success" role="alert">';
+        trHTML += 'Success!';
+        trHTML += '</div>'
+        document.getElementById("status-message").innerHTML = trHTML;
+        location.reload();
+
+    } else if (xhttp.status != 200) {
+        trHTML += '<div class="alert alert-danger" role="alert">';
+        trHTML += 'Problem deleting prefab';
         trHTML += '</div>'
         document.getElementById("status-message").innerHTML = trHTML;
 
