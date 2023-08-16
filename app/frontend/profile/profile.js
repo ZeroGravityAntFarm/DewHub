@@ -251,7 +251,7 @@ function loadUserMaps() {
         trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
         trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';
         trHTML += '</div>';
-        trHTML += '<p class="card-text p-3">' + object['mapDescription'] + '</p>';
+        //trHTML += '<p class="card-text p-3">' + object['mapDescription'] + '</p>';
         trHTML += '</ul>';
         trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
         trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmap"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
@@ -293,7 +293,7 @@ function loadUserMods() {
         trHTML += '<h4 class="card-title">' + object['modName'] + '</h4>';
         trHTML += '<h5 class="card-title">Author: ' + object['modAuthor'] + '</h5>';
         trHTML += '</div>';
-        trHTML += '<p class="card-text p-3">' + object['modDescription'] + '</p>';
+        //trHTML += '<p class="card-text p-3">' + object['modDescription'] + '</p>';
         trHTML += '</ul>';
         trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
         //trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmod"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
@@ -334,7 +334,7 @@ function loadUserPrefabs() {
         trHTML += '<h4 class="card-title">' + object['prefabName'] + '</h4>';
         trHTML += '<h5 class="card-title">Author: ' + object['prefabAuthor'] + '</h5>';
         trHTML += '</div>';
-        trHTML += '<p class="card-text p-3">' + object['prefabDescription'] + '</p>';
+        //trHTML += '<p class="card-text p-3">' + object['prefabDescription'] + '</p>';
         trHTML += '</ul>';
         trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
         //trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmod"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
