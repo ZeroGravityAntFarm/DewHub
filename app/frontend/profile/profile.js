@@ -127,6 +127,7 @@ function loadUserv2() {
                 var responseText = JSON.parse(xmlHttp.responseText);
                 var trHTML = '';
                 const user = JSON.parse(xmlHttp.responseText);
+                const user_stats = loadUserStats(user["id"]);
 
                 console.log(responseText)
                 if (xmlHttp.status == 200) {
@@ -149,15 +150,15 @@ function loadUserv2() {
                     trHTML += '<div class="p-4 text-black" style="background-color: #f8f9fa;">';
                     trHTML += '<div class="d-flex justify-content-end text-center py-1">';
                     trHTML += '<div>';
-                    trHTML += '<p class="mb-1 h5">14</p>';
+                    trHTML += '<p class="mb-1 h5">' + user_stats["maps"] +'</p>';
                     trHTML += '<p class="small text-muted mb-0">Maps</p>';
                     trHTML += '</div>';
                     trHTML += '<div class="px-3">';
-                    trHTML += '<p class="mb-1 h5">5</p>';
+                    trHTML += '<p class="mb-1 h5">' + user_stats["prefabs"] +'</p>';
                     trHTML += '<p class="small text-muted mb-0">Prefabs</p>';
                     trHTML += '</div>';
                     trHTML += '<div>';
-                    trHTML += '<p class="mb-1 h5">2</p>';
+                    trHTML += '<p class="mb-1 h5">' + user_stats["mods"] +'</p>';
                     trHTML += '<p class="small text-muted mb-0">Mods</p>';
                     trHTML += '</div>';
                     trHTML += '</div>';
@@ -166,7 +167,7 @@ function loadUserv2() {
                     trHTML += '<div class="mb-5">';
                     trHTML += '<p class="lead fw-normal mb-1">About</p>';
                     trHTML += '<div class="p-4" style="background-color: #f8f9fa;">';
-                    trHTML += '<p class="font-italic mb-1">{prof_about}</p>';
+                    trHTML += '<p class="font-italic mb-1">' + user["about"] + '</p>';
                     trHTML += '</div>';
                     trHTML += '</div>';
                     trHTML += '<div class="d-flex justify-content-between align-items-center mb-4">';
@@ -209,6 +210,20 @@ function loadUserv2() {
         const maps = loadUserMaps();
     }
 
+}
+
+
+function loadUserStats(user_id){
+    var xmlHttp = new XMLHttpRequest();
+
+    xmlHttp.open('GET', 'https://api.zgaf.io/api_v1/users/stats/' + user_id, false)
+    bearer_token = "Bearer " + token
+    xmlHttp.setRequestHeader("Authorization", bearer_token);
+    xmlHttp.send();
+
+    const user_stats = JSON.parse(xmlHttp.responseText);
+
+    return user_stats
 }
 
 

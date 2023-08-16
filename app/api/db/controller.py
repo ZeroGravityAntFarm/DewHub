@@ -6,10 +6,10 @@ from internal.auth import verify_password, get_password_hash
 from datetime import datetime, timedelta
 from internal.auth import *
 from jose import jwt
+from sqlalchemy import or_, desc, asc
 import shutil
 import os
-from sqlalchemy import or_, desc, asc
-
+import json
 
 #Authenticate a user
 def authenticate_user(db, username: str, password: str):
@@ -95,6 +95,22 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
 
     return db_user
+
+
+#Query user stats 
+def get_user_stats(db: Session, user_id: int):
+
+    map_count = db.query(models.Map).filter(models.Map.owner_id == user_id).count()
+    prefab_count = db.query(models.PreFab).filter(models.PreFab.owner_id == user_id).count()
+    mod_count = db.query(models.Mod).filter(models.Mod.owner_id == user_id).count()
+
+
+    user_stats = { 'maps': map_count, 
+                   'prefabs': prefab_count,
+                   'mods': mod_count }
+
+
+    return user_stats
 
 
 #Update user data
