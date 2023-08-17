@@ -481,14 +481,18 @@ function editProfile() {
     var trHTML = '';
     var userName = '';
     var userEmail = '';
+    var userAbout = '';
 
     userName = document.getElementById("inputUserName");
     userName = userName.value;
     userEmail = document.getElementById("inputEmail");
     userEmail = userEmail.value;
+    userAbout = document.getElementById("inputAbout");
+    userAbout = userAbout.value;
 
     data.append("userName", userName);
     data.append("userEmail", userEmail);
+    data.append("userAbout", userAbout);
 
     var xhr = new XMLHttpRequest();
     var bearer_token = "Bearer " + token;
@@ -499,17 +503,16 @@ function editProfile() {
                 trHTML += '<div class="alert alert-success" role="alert">';
                 trHTML += 'Success!';
                 trHTML += '</div>'
-                document.getElementById("map-container").innerHTML = trHTML;
+                document.getElementById("status-message").innerHTML = trHTML;
                 $('#editmap').modal('hide');
-                delayRedirectLogin();
 
             } else if (xhr.status != 200) {
                 trHTML += '<div class="alert alert-danger" role="alert">';
                 trHTML += '' + this.responseText + '';
                 trHTML += '</div>'
-                document.getElementById("map-container").innerHTML = trHTML;
+                document.getElementById("status-message").innerHTML = trHTML;
                 $('#editmap').modal('hide');
-                delayRedirect();
+
             }
         }
     });

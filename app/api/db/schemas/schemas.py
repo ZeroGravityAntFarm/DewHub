@@ -99,7 +99,6 @@ class Variant(VariantBase):
 class UserBase(BaseModel):
     email: str
     name: str
-    rank: str
 
 #Inherits from UserBase
 class UserCreate(UserBase):
@@ -108,6 +107,8 @@ class UserCreate(UserBase):
 #Inherits from UserBase
 class User(UserBase):
     id: int
+    rank: str
+    about: str
     is_active: bool
     maps: list[Map] = []
 

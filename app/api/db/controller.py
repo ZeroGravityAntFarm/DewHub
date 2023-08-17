@@ -89,7 +89,7 @@ def get_user_by_email(db: Session, email: str):
 #Create new user
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = pwd_context.hash(user.password)
-    db_user = models.User(email=user.email, name=user.name, hashed_password=hashed_password, rank="Recruit")
+    db_user = models.User(email=user.email, name=user.name, hashed_password=hashed_password, rank="Recruit", about="")
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -114,10 +114,11 @@ def get_user_stats(db: Session, user_id: int):
 
 
 #Update user data
-def update_user(db: Session, user: str, userName: str, userEmail: str):
+def update_user(db: Session, user: str, userName: str, userEmail: str, userAbout: str):
     user = db.query(models.User).filter(models.User.id == user.id).first()
     user.name = userName
     user.email = userEmail
+    user.about = userAbout
     db.commit()
 
     return user

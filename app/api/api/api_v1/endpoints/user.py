@@ -121,8 +121,8 @@ def read_user_stats(user_id: str, db: Session = Depends(get_db)):
 
 #Patch User Data
 @router.patch("/users")
-def patch_user(userName: str = Form(" "), userEmail: str = Form(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
-    newUser = controller.update_user(db, userName=userName, userEmail=userEmail, user=user)
+def patch_user(userName: str = Form(" "), userAbout: str = Form(" "), userEmail: str = Form(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    newUser = controller.update_user(db, userName=userName, userEmail=userEmail, userAbout=userAbout, user=user)
 
     if newUser:
         return HTTPException(status_code=200, detail="Profile updated successfully!")
