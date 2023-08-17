@@ -144,7 +144,7 @@ function loadUserv2() {
                     trHTML += '</div>';
                     trHTML += '<div class="ms-3" style="margin-top: 130px;">';
                     trHTML += '<h5>' + user["name"] + '</h5>';
-                    trHTML += '<p>{rank}</p>';
+                    trHTML += '<p>' + user["rank"] + '</p>';
                     trHTML += '</div>';
                     trHTML += '</div>';
                     trHTML += '<div class="p-4 text-black" style="background-color: #f8f9fa;">';
@@ -257,7 +257,7 @@ function loadUserMaps() {
         trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmap"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
         trHTML += '<button type="button" class="btn btn-danger me-1"  data-bs-toggle="modal" data-bs-target="#deletemap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Delete</button>';
         trHTML += '</div>';
-        trHTML += '<div class="card-footer"><small class="text-muted">Downloads: ' + object['map_downloads'] + '</small></div>';
+        //trHTML += '<div class="card-footer"><small class="text-muted">Downloads: ' + object['map_downloads'] + '</small></div>';
         trHTML += '</div>';
         trHTML += '<script>';
         trHTML += '';

@@ -14,6 +14,8 @@ class User(Base):
     hashed_password = Column(String(128))
     is_active = Column(Boolean, default=True)
     prof_views = Column(Integer, index=True)
+    rank = Column(String(64))
+    about = Column(String(1200))
     time_created = Column(DateTime(timezone=True), default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 

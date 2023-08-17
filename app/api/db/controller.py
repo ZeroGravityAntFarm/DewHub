@@ -89,7 +89,7 @@ def get_user_by_email(db: Session, email: str):
 #Create new user
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = pwd_context.hash(user.password)
-    db_user = models.User(email=user.email, name=user.name, hashed_password=hashed_password)
+    db_user = models.User(email=user.email, name=user.name, hashed_password=hashed_password, rank="Recruit")
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -131,6 +131,75 @@ def update_user_password(db: Session, userPassword: int, user: str):
     db.commit()
 
     return user
+
+
+#Update a user's rank. Fired on any map, prefab, or mod create call. 
+def update_rank(user_id: int, db: Session):
+
+    ranks = {"Recruit": 0, 
+         "Apprentice": 1,
+         "Apprentice II": 2,
+         "Private": 3,
+         "Private II": 4,
+         "Corporal": 5,
+         "Corporal II": 6,
+         "Sergeant": 7,
+         "Sergeant II": 8,
+         "Sergant III": 9,
+         "Gunnery Sergeant": 10,
+         "Gunnery Sergeant II": 11,
+         "Gunnery Sergeant III": 12,
+         "Gunnery Sergeant Master": 13,
+         "Lieutenant": 14,
+         "Lieutenant II": 15,
+         "Lieutenant III": 16,
+         "First Lieutenant": 17,
+         "Captain": 18,
+         "Captain II": 19,
+         "Captain III": 20,
+         "Staff Captain": 21,
+         "Major": 22,
+         "Major II": 23,
+         "Major III": 24,
+         "Field Major": 25,
+         "Commander": 26,
+         "Commander II": 27,
+         "Commander III": 28,
+         "Strike Commander": 29,
+         "Colonel": 30,
+         "Colonel II": 31,
+         "Colonel III": 32,
+         "Force Colonel": 33,
+         "Brigadier": 34,
+         "Brigadier II": 35,
+         "Brigadier III": 36,
+         "Brigadier General": 37,
+         "General": 38,
+         "General II": 39,
+         "General III": 40,
+         "Five Star General": 45,
+         "Engineer": 50,
+         "Architect": 75,
+         "Precursor": 100,}
+
+    #Get user contributions
+    map_count = db.query(models.Map).filter(models.Map.owner_id == user_id).count()
+    prefab_count = db.query(models.PreFab).filter(models.PreFab.owner_id == user_id).count()
+    mod_count = db.query(models.Mod).filter(models.Mod.owner_id == user_id).count()
+
+    #Get user profile from db
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+
+    count = map_count + prefab_count + mod_count
+
+    for title, level in ranks.items():
+        if count >= level:
+            user.rank = title
+        
+        else:
+            break
+    
+    db.commit()
 
 
 #Get all maps
@@ -335,6 +404,7 @@ def get_user_maps(db: Session, user: str, skip: int = 0, limit: int = 100):
 
 #Create new map entry
 def create_user_map(db: Session, mapUserDesc: str, mapTags: str, map: schemas.MapCreate, user_id: int, variant_id: int):
+
     db_map = models.Map(mapName=map.mapName, 
                         mapAuthor=map.mapAuthor,
                         mapTags=mapTags,
@@ -351,6 +421,9 @@ def create_user_map(db: Session, mapUserDesc: str, mapTags: str, map: schemas.Ma
     db.execute("REFRESH MATERIALIZED VIEW mapdata")
     db.commit()
     db.refresh(db_map)
+
+    #Update user's rank
+    update_rank(user_id, db)
 
     return db_map
 
@@ -374,6 +447,9 @@ def create_user_mod(db: Session, modDescription: str, modTags: str, mod: schemas
     db.add(db_mod)
     db.commit()
     db.refresh(db_mod)
+
+    #Update user's rank
+    update_rank(user_id, db)
 
     return db_mod
 
@@ -414,6 +490,9 @@ def delete_mod(db: Session, mod_id: int, user: str):
                 
                 #Delete mod row
                 db.delete(mod)
+
+                #Update user's rank
+                update_rank(user_id, db)
 
                 #Commit our changes to the database
                 db.commit()
@@ -476,6 +555,9 @@ def create_prefab(db: Session, prefab: schemas.PreFabCreate, user_id: int, prefa
     db.add(prefab)
     db.commit()
     db.refresh(prefab)
+
+    #Update user's rank
+    update_rank(user_id, db)
 
     return prefab
 

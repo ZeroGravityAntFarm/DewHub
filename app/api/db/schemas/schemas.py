@@ -99,6 +99,7 @@ class Variant(VariantBase):
 class UserBase(BaseModel):
     email: str
     name: str
+    rank: str
 
 #Inherits from UserBase
 class UserCreate(UserBase):
