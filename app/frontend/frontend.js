@@ -69,6 +69,76 @@ function generatePagination(pages, current, type) {
     return trHTML;
 }
 
+function searchMapsQuery(queryParam) {
+    scroll(0, 0);
+    var page = 1;
+    var trHTML = '';
+    const xhttp = new XMLHttpRequest();
+    var searchQuery = queryParam;
+    console.log(searchQuery);
+    xhttp.open("GET", "https://api.zgaf.io/api_v1/maps/search/" + searchQuery + "?page=" + page + "&size=21");
+    xhttp.send();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const data = JSON.parse(this.responseText);
+
+            if (data == null || data == undefined) {
+                trHTML += '<div class="alert alert-warning" role="alert">';
+                trHTML += 'No results found';
+                trHTML += '</div>'
+                document.getElementById("map-cards").innerHTML = trHTML;
+
+                return
+
+            } else {
+                trHTML = '';
+                document.getElementById("map-cards").innerHTML = trHTML;
+
+            }
+
+            for (let [i, object] of data["items"].entries()) {
+
+                var udate = new Date(object["time_created"]);
+                var timeAgo = timeSince(udate);
+
+                trHTML += '<div class="card mb-3 text-white bg-dark">';
+                trHTML += '<div class="row g-0">';
+                trHTML += '<div class="col-md-4">';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img h-100" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+                trHTML += '</div>';
+                trHTML += '<div class="col-md-8">';
+                trHTML += '<div class="card-body">';
+                trHTML += '<h3 class="card-title">' + object['mapName'] + '</h3>';
+                trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';
+                trHTML += '<h5 class="card-title">Type: ' + object['mapTags'] + '</h5>';
+                trHTML += '<p class="card-text">' + object['mapDescription'] + '</p>';
+                trHTML += '<p class="card-text"><small class="text-muted">Uploaded ' + timeAgo + ' ago</small></p>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/file" class="btn btn-primary me-1">Map File</a>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
+                trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small></div>';
+                trHTML += '</div>';
+                trHTML += '</div>';
+                trHTML += '</div>';
+                trHTML += '</div>';
+
+            }
+
+            trHTML += '<nav aria-label="Map Navigation">';
+            trHTML += '<ul class="pagination">';
+
+            //Calculate the number of pages
+            pages = Math.ceil(data["total"] / data["size"]);
+            current = data["page"];
+
+            trHTML += generatePagination(pages, current, "searchMaps");
+
+            trHTML += '</ul>';
+            trHTML += '</nav>';
+        }
+        document.getElementById("map-cards").innerHTML = trHTML;
+    }
+}
+
 function searchMaps(page = 1) {
     scroll(0, 0);
     var trHTML = '';
