@@ -268,6 +268,9 @@ def delete_map(db: Session, map_id: int, user: str):
                     db.delete(map)
                     db.delete(variant)
 
+                    #Update user's rank
+                    update_rank(user.id, db)
+
                     #Commit our changes to the database
                     db.commit()
 
@@ -307,6 +310,9 @@ def delete_prefab(db: Session, prefab_id: int, user: str):
             if user.id == prefab.owner_id:
                 #Delete map and variant rows
                 db.delete(prefab)
+                
+                #Update user's rank
+                update_rank(user.id, db)
 
                 #Commit our changes to the database
                 db.commit()
@@ -493,7 +499,7 @@ def delete_mod(db: Session, mod_id: int, user: str):
                 db.delete(mod)
 
                 #Update user's rank
-                update_rank(user_id, db)
+                update_rank(user.id, db)
 
                 #Commit our changes to the database
                 db.commit()

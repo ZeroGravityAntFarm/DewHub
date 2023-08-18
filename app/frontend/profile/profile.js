@@ -16,7 +16,8 @@ function deleteUser(userId) {
             trHTML += '</div>';
 
             document.getElementById("status-message").innerHTML = trHTML;
-            delayRedirect();
+            delayRedirectMain();
+
         } else {
             trHTML += '<div class="alert alert-danger" role="alert">';
             trHTML += 'Failed to delete account!';
@@ -27,13 +28,6 @@ function deleteUser(userId) {
 
     }
 }
-
-function delayRedirect() {
-    setTimeout(function () {
-        window.location.href = "https://fileshare.zgaf.io";
-    }, 2000);
-}
-
 
 
 function loadUser() {
@@ -485,8 +479,10 @@ function editProfile() {
 
     userName = document.getElementById("inputUserName");
     userName = userName.value;
+
     userEmail = document.getElementById("inputEmail");
     userEmail = userEmail.value;
+
     userAbout = document.getElementById("inputAbout");
     userAbout = userAbout.value;
 
@@ -505,6 +501,7 @@ function editProfile() {
                 trHTML += '</div>'
                 document.getElementById("status-message").innerHTML = trHTML;
                 $('#editmap').modal('hide');
+                delayRedirect();
 
             } else if (xhr.status != 200) {
                 trHTML += '<div class="alert alert-danger" role="alert">';
@@ -531,8 +528,10 @@ function editPassword() {
     
     oldPassword = document.getElementById("oldPassword");
     oldPassword = oldPassword.value;
+
     newPassword1 = document.getElementById("newPassword1");
     newPassword1 = newPassword1.value;
+
     newPassword2 = document.getElementById("newPassword2");
     newPassword2 = newPassword2.value;
 
@@ -600,6 +599,14 @@ function delayRedirect() {
         window.location.href = "https://fileshare.zgaf.io/profile/";
     }, 1000);
 }
+
+
+function delayRedirectMain() {
+    setTimeout(function () {
+        window.location.href = "https://fileshare.zgaf.io";
+    }, 2000);
+}
+
 
 function delayRedirectLogin() {
     setTimeout(function () {
