@@ -1,8 +1,10 @@
 token = getCookie("Authorization")
 
+
 document.getElementById('search_bar').addEventListener('keypress', function () {
     searchMaps();
 });
+
 
 function generatePagination(pages, current, type) {
     var last = pages;
@@ -69,7 +71,74 @@ function generatePagination(pages, current, type) {
     return trHTML;
 }
 
-function searchMapsQuery(queryParam) {
+
+function generateQueryPagination(pages, current, type, query) {
+    var last = pages;
+    var delta = 2;
+    var left = current - delta;
+    var right = current + delta + 1;
+    var trHTML = "";
+
+    if (current > 1) {
+        prevpage = current - 1;
+    }
+    else {
+        prevpage = current;
+    }
+
+    if (current < pages) {
+        nextpage = current + 1;
+    }
+    else {
+        nextpage = current;
+    }
+
+    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + prevpage + ', ' + query + ');">Previous</a></li>';
+
+    for (let i = 1; i <= last; i++) {
+        if (i == left && left > delta - 1) {
+            if (current == i) {
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + 1 + ', ' + query + ');">' + 1 + '</a></li>';
+            }
+            else {
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + 1 + ', ' + query + ');">' + 1 + '</a></li>';
+            }
+
+            if (left != delta) {
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+            }
+        }
+
+        if (i >= left && i < right) {
+            if (current == i) {
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + i + ', ' + query + ');">' + i + '</a></li>';
+            }
+            else {
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + i + ', ' + query + ');">' + i + '</a></li>';
+            }
+        }
+
+        if (i == right) {
+            if (right != last) {
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark">...</a></li>';
+            }
+
+            if (current == i) {
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + last + ', ' + query + ');">' + last + '</a></li>';
+            }
+            else {
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + last + ', ' + query + ');">' + last + '</a></li>';
+            }
+        }
+    }
+
+    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + nextpage + ', ' + query + ');">Next</a></li>';
+
+    return trHTML;
+}
+
+
+function searchMapsQuery(page = 1, queryParam) {
     scroll(0, 0);
     var page = 1;
     var trHTML = '';
@@ -130,7 +199,7 @@ function searchMapsQuery(queryParam) {
             pages = Math.ceil(data["total"] / data["size"]);
             current = data["page"];
 
-            trHTML += generatePagination(pages, current, "searchMaps");
+            trHTML += generateQueryPagination(pages, current, "searchMaps", queryParam);
 
             trHTML += '</ul>';
             trHTML += '</nav>';
