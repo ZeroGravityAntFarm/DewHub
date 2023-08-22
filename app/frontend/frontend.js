@@ -93,15 +93,15 @@ function generateQueryPagination(pages, current, type, query) {
         nextpage = current;
     }
 
-    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + prevpage + ',  &quot;' + query + ' &quot;)">Previous</a></li>';
+    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + prevpage + ',  &quot;' + query + '&quot;)">Previous</a></li>';
 
     for (let i = 1; i <= last; i++) {
         if (i == left && left > delta - 1) {
             if (current == i) {
-                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + 1 + ',  &quot;' + query + ' &quot;)">' + 1 + '</a></li>';
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + 1 + ',  &quot;' + query +'&quot;)">' + 1 + '</a></li>';
             }
             else {
-                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + 1 + ',  &quot;' + query + ' &quot;)">' + 1 + '</a></li>';
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + 1 + ',  &quot;' + query + '&quot;)">' + 1 + '</a></li>';
             }
 
             if (left != delta) {
@@ -111,10 +111,10 @@ function generateQueryPagination(pages, current, type, query) {
 
         if (i >= left && i < right) {
             if (current == i) {
-                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + i + ',  &quot;' + query + ' &quot;)">' + i + '</a></li>';
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + i + ',  &quot;' + query + '&quot;)">' + i + '</a></li>';
             }
             else {
-                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + i + ',  &quot;' + query + ' &quot;)">' + i + '</a></li>';
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + i + ',  &quot;' + query + '&quot;)">' + i + '</a></li>';
             }
         }
 
@@ -124,15 +124,15 @@ function generateQueryPagination(pages, current, type, query) {
             }
 
             if (current == i) {
-                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + last + ',  &quot;' + query + ' &quot;)">' + last + '</a></li>';
+                trHTML += '<li class="page-item active"><a class="page-link bg-dark" href="javascript:' + type + '(' + last + ',  &quot;' + query + '&quot;)">' + last + '</a></li>';
             }
             else {
-                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + last + ',  &quot;' + query + ' &quot;)">' + last + '</a></li>';
+                trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + last + ',  &quot;' + query + '&quot;)">' + last + '</a></li>';
             }
         }
     }
 
-    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + nextpage + ',  &quot;' + query + ' &quot;)">Next</a></li>';
+    trHTML += '<li class="page-item bg-dark"><a class="page-link bg-dark" href="javascript:' + type + '(' + nextpage + ',  &quot;' + query + '&quot;)">Next</a></li>';
 
     return trHTML;
 }
@@ -140,7 +140,6 @@ function generateQueryPagination(pages, current, type, query) {
 
 function searchMapsQuery(page = 1, queryParam) {
     scroll(0, 0);
-    var page = 1;
     var trHTML = '';
     const xhttp = new XMLHttpRequest();
     var searchQuery = queryParam;
