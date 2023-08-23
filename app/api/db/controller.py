@@ -205,8 +205,8 @@ def update_rank(user_id: int, db: Session):
 
 #Get all maps
 def get_maps(db: Session):
-    return db.execute('SELECT mapdata.id, mapdata."mapName", mapdata."mapDescription", mapdata."mapAuthor", mapdata."mapId", mapdata."mapScnrObjectCount", mapdata."mapTotalObject", mapdata."mapBudgetCount", mapdata."mapBaseMap", mapdata."map_downloads", mapdata."map_rating", mapdata."mapTags", mapdata."owner_id", mapdata."variant_id", mapdata."mapUserDesc", mapdata."time_created", mapdata."time_updated", mapdata."upvote", mapdata."downvote" FROM mapdata').all()
-    #return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).all()
+    #return db.execute('SELECT mapdata.id, mapdata."mapName", mapdata."mapDescription", mapdata."mapAuthor", mapdata."mapId", mapdata."mapScnrObjectCount", mapdata."mapTotalObject", mapdata."mapBudgetCount", mapdata."mapBaseMap", mapdata."map_downloads", mapdata."map_rating", mapdata."mapTags", mapdata."owner_id", mapdata."variant_id", mapdata."mapUserDesc", mapdata."time_created", mapdata."time_updated", mapdata."upvote", mapdata."downvote" FROM mapdata').all()
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).all()
 
 
 #Get all variants

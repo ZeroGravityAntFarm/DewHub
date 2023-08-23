@@ -88,12 +88,14 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
             with open("/app/static/maps/" + str(map_create.id) + "/" + str(idx), "wb") as f:
                 f.write(image.file.read())
                 f.close()
-                image.file.close()
 
-            #Create thumbnail for each image using PIL
-            image = Image.open(image)
+            image = Image.open(image.file)
             image.thumbnail((450, 300))
-            image.save("/app/static/maps/thumbnails/" + str(idx))
+            image = image.convert('RGB')
+
+            Path("/app/static/maps/tb/" + str(map_create.id) + "/").mkdir(parents=True, exist_ok=True)
+            image.save("/app/static/maps/tb/" + str(map_create.id) + "/" + str(idx), "JPEG")
+            image.close()
              
 
     return HTTPException(status_code=200, detail="Success!")
@@ -156,12 +158,16 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
                 with open("/app/static/prefabs/" + str(prefab_create.id) + "/" + str(idx), "wb") as f:
                     f.write(image.file.read())
                     f.close()
-                    image.file.close()
                 
                 #Create thumbnail for each image using PIL
-                image = Image.open(image)
+                image = Image.open(image.file)
                 image.thumbnail((450, 300))
-                image.save("/app/static/maps/thumbnails/" + str(idx))
+                image = image.convert('RGB')
+
+                Path("/app/static/prefabs/tb/" + str(prefab_create.id) + "/").mkdir(parents=True, exist_ok=True)
+                image.save("/app/static/prefabs/tb/" + str(prefab_create.id) + "/" + str(idx), "JPEG")
+                image.close()
+                
 
         return HTTPException(status_code=200, detail="Success!")
     
@@ -192,12 +198,16 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
                 with open("/app/static/prefabs/" + str(prefab_create.id) + "/" + str(idx), "wb") as f:
                     f.write(image.file.read())
                     f.close()
-                    image.file.close()
+                    
                 
-                #Create thumbnail for each image using PIL
-                image = Image.open(image)
+                #Create thumbnail image
+                image = Image.open(image.file)
+                image.convert('RGB')
                 image.thumbnail((450, 300))
-                image.save("/app/static/maps/thumbnails/" + str(idx))
+
+                Path("/app/static/prefabs/tb/" + str(prefab_create.id) + "/").mkdir(parents=True, exist_ok=True)
+                image.save("/app/static/prefabs/tb/" + str(prefab_create.id) + "/" + str(idx), "JPEG")
+                image.close()
 
         return HTTPException(status_code=200, detail="Success!")
 
@@ -262,6 +272,16 @@ def upload(modDescription: str = Form(" "), modTags: str = Form(...), files: Lis
             with open("/app/static/mods/" + str(mod_create.id) + "/" + str(idx), "wb") as f:
                 f.write(image.file.read())
                 f.close()
-                image.file.close()
+                
+
+            
+            #Create thumbnail
+            image = Image.open(image.file)
+            image = image.convert('RGB')
+            image.thumbnail((450, 300))
+
+            Path("/app/static/mods/tb/" + str(mod_create.id) + "/").mkdir(parents=True, exist_ok=True)
+            image.save("/app/static/mods/tb/" + str(mod_create.id) + "/" + str(idx), "JPEG")
+            image.close()
 
     return HTTPException(status_code=200, detail="Success!")
