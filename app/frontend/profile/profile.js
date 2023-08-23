@@ -240,7 +240,7 @@ function loadUserMaps() {
 
         trHTML += '<div class="col mb-3 mt-4">';
         trHTML += '<div class="card text-white bg-dark" >';
-        trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
         trHTML += '<div class="card-body">';
         trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
         trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';
@@ -282,7 +282,7 @@ function loadUserMods() {
 
         trHTML += '<div class="col mb-3 mt-4">';
         trHTML += '<div class="card text-white bg-dark" >';
-        trHTML += '<a href="https://api.zgaf.io/api_v1/modview?modId=' + object['id'] + '"><img src="https://api.zgaf.io/static/mods/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/modview?modId=' + object['id'] + '"><img src="https://api.zgaf.io/static/mods/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
         trHTML += '<div class="card-body">';
         trHTML += '<h4 class="card-title">' + object['modName'] + '</h4>';
         trHTML += '<h5 class="card-title">Author: ' + object['modAuthor'] + '</h5>';
@@ -323,7 +323,7 @@ function loadUserPrefabs() {
 
         trHTML += '<div class="col mb-3 mt-4">';
         trHTML += '<div class="card text-white bg-dark" >';
-        trHTML += '<a href="https://api.zgaf.io/api_v1/prefabview?prefabId=' + object['id'] + '"><img src="https://api.zgaf.io/static/prefabs/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+        trHTML += '<a href="https://api.zgaf.io/api_v1/prefabview?prefabId=' + object['id'] + '"><img src="https://api.zgaf.io/static/prefabs/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
         trHTML += '<div class="card-body">';
         trHTML += '<h4 class="card-title">' + object['prefabName'] + '</h4>';
         trHTML += '<h5 class="card-title">Author: ' + object['prefabAuthor'] + '</h5>';
