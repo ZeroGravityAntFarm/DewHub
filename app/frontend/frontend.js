@@ -172,7 +172,7 @@ function searchMapsQuery(page = 1, queryParam) {
                 trHTML += '<div class="card mb-3 text-white bg-dark">';
                 trHTML += '<div class="row g-0">';
                 trHTML += '<div class="col-md-4">';
-                trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img h-100" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/tb/' + object['id'] + '/0" class="card-img h-100" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                 trHTML += '</div>';
                 trHTML += '<div class="col-md-8">';
                 trHTML += '<div class="card-body">';
@@ -241,7 +241,7 @@ function searchMaps(page = 1) {
                 trHTML += '<div class="card mb-3 text-white bg-dark">';
                 trHTML += '<div class="row g-0">';
                 trHTML += '<div class="col-md-4">';
-                trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/' + object['id'] + '/0" class="card-img h-100" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/tb/' + object['id'] + '/0" class="card-img h-100" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                 trHTML += '</div>';
                 trHTML += '<div class="col-md-8">';
                 trHTML += '<div class="card-body">';
