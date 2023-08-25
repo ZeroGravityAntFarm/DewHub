@@ -164,13 +164,28 @@ function loadUserv2() {
                     trHTML += '<p class="font-italic mb-1">' + user["about"] + '</p>';
                     trHTML += '</div>';
                     trHTML += '</div>';
-                    trHTML += '<div class="d-flex justify-content-between align-items-center mb-4">';
-                    trHTML += '<button type="button" class="btn btn-dark btn-lg" onclick="loadUserMaps()">Maps</button>';
-                    trHTML += '<button type="button" class="btn btn-dark btn-lg" onclick="loadUserPrefabs()">Prefabs</button>';
-                    trHTML += '<button type="button" class="btn btn-dark btn-lg" onclick="loadUserMods()">Mods</button>';
+                    trHTML += '<ul class="nav nav-tabs mb-3" id="contentTabs" role="tablist">';
+                    trHTML += '<li class="nav-item" role="presentation">';
+                    trHTML += '<button class="nav-link active" id="map-tab" data-bs-toggle="tab" data-bs-target="#map-cards" onclick="loadUserMaps()" type="button" role="tab" aria-controls="map-cards" aria-selected="true">Maps</button>';
+                    trHTML += '</li>';
+                    trHTML += '<li class="nav-item" role="presentation">';
+                    trHTML += '<button class="nav-link" id="prefab-tab" data-bs-toggle="tab" data-bs-target="#prefab-cards" onclick="loadUserPrefabs()" type="button" role="tab" aria-controls="prefab-cards" aria-selected="false">Prefabs</button>';
+                    trHTML += '</li>';
+                    trHTML += '<li class="nav-item" role="presentation">';
+                    trHTML += '<button class="nav-link" id="mod-tab" data-bs-toggle="tab" data-bs-target="#mod-cards" onclick="loadUserMods()" type="button" role="tab" aria-controls="mod-cards" aria-selected="false">Mods</button>';
+                    trHTML += '</li>';
+                    trHTML += '</ul>';
+                    trHTML += '<div class="tab-content" id="myTabContent">';
+                    trHTML += '<div class="tab-pane fade show active" id="map-cards" role="tabpanel" aria-labelledby="map-tab"></div>';
+                    trHTML += '<div class="tab-pane fade" id="prefab-cards" role="tabpanel" aria-labelledby="prefab-tab"></div>';
+                    trHTML += '<div class="tab-pane fade" id="mod-cards" role="tabpanel" aria-labelledby="mod-tab"></div>';
                     trHTML += '</div>';
-                    trHTML += '<div id="map-cards">';
-                    trHTML += '</div>';
+                    //trHTML += '<div class="d-flex justify-content-between align-items-center mb-4">';
+                    //trHTML += '<button type="button" class="btn btn-dark btn-lg" onclick="loadUserMaps()">Maps</button>';
+                    //trHTML += '<button type="button" class="btn btn-dark btn-lg" onclick="loadUserPrefabs()">Prefabs</button>';
+                    //trHTML += '<button type="button" class="btn btn-dark btn-lg" onclick="loadUserMods()">Mods</button>';
+                    //trHTML += '</div>';
+                    //trHTML += '<div id="map-cards"></div>';
                     trHTML += '</div>';
                     trHTML += '</div>';
                     trHTML += '</div>';
@@ -300,7 +315,7 @@ function loadUserMods() {
         trHTML += '</div>';
 
     }
-    document.getElementById("map-cards").innerHTML = trHTML;
+    document.getElementById("mod-cards").innerHTML = trHTML;
 }
 
 
@@ -341,7 +356,7 @@ function loadUserPrefabs() {
         trHTML += '</div>';
 
     }
-    document.getElementById("map-cards").innerHTML = trHTML;
+    document.getElementById("prefab-cards").innerHTML = trHTML;
 }
 
 
