@@ -134,37 +134,38 @@ function loadUserv2() {
                     trHTML += '<div class="rounded-top text-white d-flex flex-row" style="background-color: #525151; height:200px;">';
                     trHTML += '<div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">';
                     trHTML += '<img src="https://api.zgaf.io/static/content/default/forge.jpg" alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">';
-                    trHTML += '<button type="button" class="btn btn-dark" data-mdb-ripple-color="dark" data-bs-toggle="modal" data-bs-username="' + user["name"] + '" data-bs-email="' + user["email"] + '" data-bs-target="#editprofile" style="z-index: 1;">Edit profile</button>';
+                    trHTML += '<button type="button" class="btn btn-secondary" data-mdb-ripple-color="dark" data-bs-toggle="modal" data-bs-username="' + user["name"] + '" data-bs-email="' + user["email"] + '" data-bs-target="#editprofile" style="z-index: 1;">Edit profile</button>';
+                    trHTML += '<button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#deleteprofile" data-bs-userId="' + user['id'] + '" style="z-index: 2;">Delete Account</button>';
                     trHTML += '</div>';
                     trHTML += '<div class="ms-3" style="margin-top: 130px;">';
                     trHTML += '<h5>' + user["name"] + '</h5>';
                     trHTML += '<p>' + user["rank"] + '</p>';
                     trHTML += '</div>';
                     trHTML += '</div>';
-                    trHTML += '<div class="p-4 text-black" style="background-color: #f8f9fa;">';
+                    trHTML += '<div class="p-4 text-black bg-dark">';
                     trHTML += '<div class="d-flex justify-content-end text-center py-1">';
                     trHTML += '<div>';
-                    trHTML += '<p class="mb-1 h5">' + user_stats["maps"] +'</p>';
+                    trHTML += '<p class="mb-1 h5 text-muted">' + user_stats["maps"] +'</p>';
                     trHTML += '<p class="small text-muted mb-0">Maps</p>';
                     trHTML += '</div>';
                     trHTML += '<div class="px-3">';
-                    trHTML += '<p class="mb-1 h5">' + user_stats["prefabs"] +'</p>';
+                    trHTML += '<p class="mb-1 h5 text-muted">' + user_stats["prefabs"] +'</p>';
                     trHTML += '<p class="small text-muted mb-0">Prefabs</p>';
                     trHTML += '</div>';
                     trHTML += '<div>';
-                    trHTML += '<p class="mb-1 h5">' + user_stats["mods"] +'</p>';
+                    trHTML += '<p class="mb-1 h5 text-muted">' + user_stats["mods"] +'</p>';
                     trHTML += '<p class="small text-muted mb-0">Mods</p>';
                     trHTML += '</div>';
                     trHTML += '</div>';
                     trHTML += '</div>';
-                    trHTML += '<div class="card-body p-4 text-black">';
+                    trHTML += '<div class="card-body p-4 text-black bg-dark">';
                     trHTML += '<div class="mb-5">';
-                    trHTML += '<p class="lead fw-normal mb-1">About</p>';
-                    trHTML += '<div class="p-4" style="background-color: #f8f9fa;">';
-                    trHTML += '<p class="font-italic mb-1">' + user["about"] + '</p>';
+                    trHTML += '<p class="lead fw-normal mb-1 text-muted">About:</p>';
+                    trHTML += '<div class="p-4">';
+                    trHTML += '<p class="font-italic mb-1 text-muted">' + user["about"] + '</p>';
                     trHTML += '</div>';
                     trHTML += '</div>';
-                    trHTML += '<ul class="nav nav-tabs mb-3" id="contentTabs" role="tablist">';
+                    trHTML += '<ul class="nav nav-tabs mb-3 bg-dark" id="contentTabs" role="tablist">';
                     trHTML += '<li class="nav-item" role="presentation">';
                     trHTML += '<button class="nav-link active" id="map-tab" data-bs-toggle="tab" data-bs-target="#map-cards" onclick="loadUserMaps()" type="button" role="tab" aria-controls="map-cards" aria-selected="true">Maps</button>';
                     trHTML += '</li>';
@@ -254,7 +255,7 @@ function loadUserMaps() {
         }
 
         trHTML += '<div class="col mb-3 mt-4">';
-        trHTML += '<div class="card text-white bg-dark" >';
+        trHTML += '<div class="card text-white bg-secondary" >';
         trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
         trHTML += '<div class="card-body">';
         trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
@@ -296,7 +297,7 @@ function loadUserMods() {
         }
 
         trHTML += '<div class="col mb-3 mt-4">';
-        trHTML += '<div class="card text-white bg-dark" >';
+        trHTML += '<div class="card text-white bg-secondary" >';
         trHTML += '<a href="https://api.zgaf.io/api_v1/modview?modId=' + object['id'] + '"><img src="https://api.zgaf.io/static/mods/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
         trHTML += '<div class="card-body">';
         trHTML += '<h4 class="card-title">' + object['modName'] + '</h4>';
@@ -337,7 +338,7 @@ function loadUserPrefabs() {
         }
 
         trHTML += '<div class="col mb-3 mt-4">';
-        trHTML += '<div class="card text-white bg-dark" >';
+        trHTML += '<div class="card text-white bg-secondary" >';
         trHTML += '<a href="https://api.zgaf.io/api_v1/prefabview?prefabId=' + object['id'] + '"><img src="https://api.zgaf.io/static/prefabs/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
         trHTML += '<div class="card-body">';
         trHTML += '<h4 class="card-title">' + object['prefabName'] + '</h4>';
