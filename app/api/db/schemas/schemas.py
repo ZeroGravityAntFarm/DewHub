@@ -57,10 +57,6 @@ class Mod(BaseModel):
 
 #Inherits from Mod
 class ModCreate(Mod):
-    modId: int | None = None
-    modTags: str  | None = None
-    modDescription: str | None = None
-    modFileName: str
     pass
 
 class VariantQuery(BaseModel):
