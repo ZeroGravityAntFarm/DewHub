@@ -418,11 +418,12 @@ def create_user_map(db: Session, mapUserDesc: str, mapTags: str, map: schemas.Ma
                         mapDescription=map.mapDescription,
                         mapId=map.mapId,
                         mapScnrObjectCount=map.mapScnrObjectCount,
-                        mapTotalObject=map.mapTotalObject,
+                        mapTotalObject=map.mapTotalObjectCount,
                         mapFile=bytes(map.contents),
                         mapUserDesc=mapUserDesc,
                         variant_id=variant_id,
                         owner_id=user_id,
+                        gameVersion=map.gameVersion,
                         map_downloads=0)
     db.add(db_map)
     db.execute("REFRESH MATERIALIZED VIEW mapdata")

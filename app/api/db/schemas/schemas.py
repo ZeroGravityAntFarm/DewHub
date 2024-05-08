@@ -17,6 +17,7 @@ class MapCreate(MapBase):
     variantId: int | None = None
     mapTags: str  | None = None
     mapUserDesc: str | None = None
+    gameVersion: str
     pass
 
 #Inherits from MapBase
@@ -39,6 +40,7 @@ class MapQuery(BaseModel):
     mapBudgetCount:int | None = None
     variant_id:int | None = None
     mapTags: str
+    gameVersion: str
     time_created: datetime = None
 
     class Config:
@@ -52,6 +54,7 @@ class Mod(BaseModel):
     mod_downloads: int | None = None
     modFileSize: int
     modFileName: str
+    gameVersion: str
     modTags: str | None = None
     time_created: datetime = None
 
@@ -68,6 +71,7 @@ class VariantQuery(BaseModel):
     time_updated: str | None = None
     owner_id: int
     downloads: int
+    gameVersion: str
     variantFileName: str
 
 
@@ -78,6 +82,7 @@ class VariantBase(BaseModel):
     variantAuthor: str
     variantFile: bytes
     variantFile: str
+    gameVersion: str
 
 #Inherits from VariantBase
 class VariantCreate(VariantBase):
@@ -116,6 +121,7 @@ class PrefBase(BaseModel):
     prefabDescription: str
     prefabAuthor: str
     prefabFile: bytes
+    gameVersion: str
 
 class PreFabCreate(PrefBase):
     pass
@@ -123,6 +129,7 @@ class PreFabCreate(PrefBase):
 class PrefabQuery(PrefBase):
     downloads: int
     prefabTags: str
+    gameVersion: str
     
 
 #Auth token

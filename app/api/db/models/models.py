@@ -42,6 +42,7 @@ class Map(Base):
     map_downloads = Column(Integer, index=True)
     map_rating = Column(Integer, index=True)
     mapTags = Column(String(64))
+    gameVersion = Column(String(64))
     time_created = Column(DateTime(timezone=True), default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -63,6 +64,7 @@ class Mod(Base):
     modId = Column(Integer, index=True)
     mod_downloads = Column(Integer, index=True)
     modTags = Column(String(64))
+    gameVersion = Column(String(64))
     time_created = Column(DateTime(timezone=True), default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -83,6 +85,7 @@ class Variant(Base):
     time_created = Column(DateTime(timezone=True), default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
     downloads = Column(Integer)
+    gameVersion = Column(String(64))
 
     #Relationships
     owner_id = Column(Integer, ForeignKey("users.id"))
@@ -100,6 +103,7 @@ class PreFab(Base):
     prefabFileName = Column(String(128))
     prefabTags = Column(String(128), index=True)
     downloads = Column(Integer)
+    gameVersion = Column(String(64))
     time_created = Column(DateTime(timezone=True), default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 

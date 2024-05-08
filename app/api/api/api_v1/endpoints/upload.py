@@ -71,7 +71,7 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
         raise HTTPException(status_code=400, detail="Unexpected map file size")
     
     if mapData == 2:
-        raise HTTPException(status_code=400, detail="Map file empty")
+        raise HTTPException(status_code=400, detail="Invalid ElDewrito map file")
 
     if variantData == 1:
         raise HTTPException(status_code=400, detail="Unexpected variant file size")

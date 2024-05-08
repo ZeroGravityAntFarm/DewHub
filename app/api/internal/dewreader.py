@@ -1,21 +1,23 @@
 import os
 
 class mapReader(object):
-    mapName = None
-    mapDescription = None
-    mapAuthor = None
-    mapId = None
-    scnrObjectCount = None
-    mapTotalObjectCount = None
-    mapBudgetCount = None
-
+    
     def __init__(self, mapfile, contents):
+        mapName = None
+        mapDescription = None
+        mapAuthor = None
+        mapId = None
+        mapScnrObjectCount = None
+        mapTotalObjectCount = None
+        mapBudgetCount = None
+        gameVersion = None
+
         self.mapFile = mapfile
         self.contents = contents
         self.read()
 
     def byte2ascii(self, hval):
-        ascii_object = hval.decode("utf-8").replace(u"\u0000", "")
+        ascii_object = hval.decode("utf-8", errors="ignore").replace(u"\u0000", "")
 
         return ascii_object
 
@@ -30,12 +32,25 @@ class mapReader(object):
         with open(self.mapFile, "w+b") as f:
             f.write(self.contents)
 
-            #Verify the map file size since they are static
+            #Verify the map file size and headers
             size = f.tell()
-            if size != 61440:
-                return 1
+            f.seek(0x0000, 0)
+
+            if size == 61440 and self.byte2ascii(f.read(4)) == "_blf":
+                f.seek(0x0278, 0)
+                sig = self.byte2ascii(f.read(1))
+
+                #This one byte seems to be in 0.5 maps but not in 0.6 so we ball
+                if sig in (")"):
+                    self.gameVersion = "0.5.1"
+                
+                else:
+                    self.gameVersion = "0.6.1"
         
-            if size == 0:
+            elif size <= 126976 and self.byte2ascii(f.read(4)) == "flb_":
+                self.gameVersion = "0.7.0"
+
+            else:
                 return 2
 
             #Map name
@@ -58,10 +73,13 @@ class mapReader(object):
             #Object Data
             f.seek(0x0242, 0)
             self.mapScnrObjectCount = self.byte2int(f.read(2))
+            
+            if not self.mapScnrObjectCount:
+                self.mapScnrObjectCount = None
     
             #Total Objects
             f.seek(0x0244, 0)
-            self.mapTotalObject = self.byte2int(f.read(2))
+            self.mapTotalObjectCount = self.byte2int(f.read(2))
 
             #Budget
             f.seek(0x0246, 0)
@@ -83,7 +101,7 @@ class variantReader(object):
         self.read()
 
     def byte2ascii(self, hval):
-        ascii_object = hval.decode("utf-8").replace(u"\u0000", "")
+        ascii_object = hval.decode("utf-8", errors="ignore").replace(u"\u0000", "")
 
         return ascii_object
 
@@ -138,7 +156,7 @@ class prefabReader(object):
         self.read()
 
     def byte2ascii(self, hval):
-        ascii_object = hval.decode("utf-8").replace(u"\u0000", "")
+        ascii_object = hval.decode("utf-8", errors="ignore").replace(u"\u0000", "")
 
         return ascii_object
 

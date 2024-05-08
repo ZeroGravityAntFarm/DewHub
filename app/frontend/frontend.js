@@ -327,16 +327,77 @@ function uploadMaps() {
 }
 
 function uploadMods() {
+    var formData = new FormData();
+    var trHTML = '';
+    var tagData = '';
+
+    const progressBar = document.getElementById('progress-bar');
+    let uploadPercentage = 0;
+
+    tagData = document.getElementById("modTags");
+    tagData = tagData.value;
+    modDesc = document.getElementById("modDescription")
+    modDesc = modDesc.value;
+
+    formData.append("files", document.getElementById("modFile").files[0]);
+    formData.append("modTags", tagData);
+    formData.append("modDescription", modDesc);
+
+    images = document.getElementById("modFileMultiple").files
+
+    for (let i = 0; i < images.length; i++) {
+        formData.append("files", images[i]);
+    }
+
+    var bearer_token = "Bearer " + token;
+
+    $.ajax({
+	url: 'https://api.zgaf.io/api_v1/upload/mod',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+	headers: {
+        'Authorization': bearer_token
+        },
+        xhr: function () {
+            const myXhr = $.ajaxSettings.xhr();
+            myXhr.open('POST', 'https://api.zgaf.io/api_v1/upload/mod');
+
+            if (myXhr.upload) {
+                myXhr.upload.onprogress = function (event) {
+                    uploadPercentage = Math.round((event.loaded / event.total) * 100);
+                    progressBar.style.width = uploadPercentage + '%';
+                };
+             }
+            return myXhr;
+        },
+        success: function (response) {
+            console.log('File uploaded successfully!', response);
+            trHTML += '<div class="alert alert-success" role="alert">';
+            trHTML += 'Success!';
+            trHTML += '</div>'
+            document.getElementById("map-container").innerHTML = trHTML;
+            $('#mod-upload').modal('hide');
+
+            delayRedirect();
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            console.log('File upload failed.', jqXhr.status, textStatus, errorThrown);
+            trHTML += '<div class="alert alert-danger" role="alert">';
+            trHTML += 'Upload failed: ' + jqXhr.status + '';
+            trHTML += '</div>'
+            document.getElementById("map-container").innerHTML = trHTML;
+            $('#mod-upload').modal('hide');
+        }
+    });
+}
+
+function uploadModsOld() {
     var data = new FormData();
     var trHTML = '';
     var tagData = '';
     var tpHTML = '';
-
-    tpHTML += '<div class="spinner-border" role="status">';
-    //tpHTML += '<span class="sr-only"></span>';
-    tpHTML += '</div>';
-
-    document.getElementById("spinnyboi").innerHTML = tpHTML;
 
     tagData = document.getElementById("modTags");
     tagData = tagData.value;
@@ -519,12 +580,13 @@ function loadCards(page = 1) {
                 var timeAgo = timeSince(udate);
 
                 trHTML += '<div class="col mb-3 mt-4">';
-                trHTML += '<div class="card text-white bg-dark" >';
+                trHTML += '<div class="card text-white bg-dark h-100">';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
                 trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';
                 trHTML += '<h5 class="card-title">Type: ' + object['mapTags'] + '</h5>';
+		trHTML += '<h5 class="card-title">Version: ' + object['gameVersion'] + '</h5>';
                 trHTML += '<h5 class="card-title">Uploaded ' + timeAgo + ' ago</h5>';
                 trHTML += '</div>';
                 trHTML += '<div>';
@@ -578,7 +640,7 @@ function loadVCards(page = 1) {
                 var timeAgo = timeSince(udate);
 
                 trHTML += '<div class="col mb-3 mt-4">';
-                trHTML += '<div class="card text-white bg-dark" >';
+                trHTML += '<div class="card text-white bg-dark h-100">';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/variantview?varId=' + object['id'] + '"><img src="https://api.zgaf.io/static/content/variants/' + imageType[1] + '.png" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['variantName'] + '</h4>';
@@ -631,7 +693,7 @@ function loadPCards(page = 1) {
                 var timeAgo = timeSince(udate);
 
                 trHTML += '<div class="col mb-3 mt-4">';
-                trHTML += '<div class="card text-white bg-dark" >';
+                trHTML += '<div class="card text-white bg-dark h-100">';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/prefabview?prefabId=' + object['id'] + '"><img src="https://api.zgaf.io/static/prefabs/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['prefabName'] + '</h4>';
@@ -686,7 +748,7 @@ function loadMCards(page = 1) {
                 user = getUser(object["owner_id"]);
 
                 trHTML += '<div class="col mb-3 mt-4">';
-                trHTML += '<div class="card text-white bg-dark" >';
+                trHTML += '<div class="card text-white bg-dark h-100">';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/modview?modId=' + object['id'] + '"><img src="https://api.zgaf.io/static/mods/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['modName'] + '</h4>';
@@ -741,7 +803,7 @@ function loadNewest(page = 1) {
                 var timeAgo = timeSince(udate);
 
                 trHTML += '<div class="col mb-3 mt-4">';
-                trHTML += '<div class="card text-white bg-dark" >';
+                trHTML += '<div class="card text-white bg-dark h-100">';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
@@ -752,8 +814,8 @@ function loadNewest(page = 1) {
                 trHTML += '<p class="card-text p-3">' + object['mapDescription'] + '</p>';
                 trHTML += '</ul>';
                 trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/file" class="btn btn-primary me-1">Map File</a>';
-                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/file" class="btn btn-primary me-1">Map File</a>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
                 trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small></div>';
                 trHTML += '</div>';
@@ -796,7 +858,7 @@ function loadOldest(page = 1) {
                 var timeAgo = timeSince(udate);
 
                 trHTML += '<div class="col mb-3 mt-4">';
-                trHTML += '<div class="card text-white bg-dark" >';
+                trHTML += '<div class="card text-white bg-dark h-100">';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
@@ -807,8 +869,8 @@ function loadOldest(page = 1) {
                 trHTML += '<p class="card-text p-3">' + object['mapDescription'] + '</p>';
                 trHTML += '</ul>';
                 trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/file" class="btn btn-primary me-1">Map File</a>';
-                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/file" class="btn btn-primary me-1">Map File</a>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
                 trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small></div>';
                 trHTML += '</div>';
@@ -851,7 +913,7 @@ function loadDownloaded(page = 1) {
                 var timeAgo = timeSince(udate);
 
                 trHTML += '<div class="col mb-3 mt-4">';
-                trHTML += '<div class="card text-white bg-dark" >';
+                trHTML += '<div class="card text-white bg-dark h-100">';
                 trHTML += '<a href="https://api.zgaf.io/api_v1/mapview?mapId=' + object['id'] + '"><img src="https://api.zgaf.io/static/maps/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'https://api.zgaf.io/static/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
@@ -862,8 +924,8 @@ function loadDownloaded(page = 1) {
                 trHTML += '<p class="card-text p-3">' + object['mapDescription'] + '</p>';
                 trHTML += '</ul>';
                 trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/file" class="btn btn-primary me-1">Map File</a>';
-                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['mapName'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/file" class="btn btn-primary me-1">Map File</a>';
+                trHTML += '<a href="https://api.zgaf.io/api_v1/maps/' + object['id'] + '/variant/file" class="btn btn-primary me-1">Variant File</a>';
                 trHTML += '</div>';
                 trHTML += '<div class="card-footer"><small class="text-muted bi-person-down"> ' + object['map_downloads'] + '</small></div>';
                 trHTML += '</div>';
