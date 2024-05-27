@@ -1,12 +1,10 @@
-from fastapi import APIRouter, HTTPException, Depends, Form, Request
+from fastapi import APIRouter, HTTPException, Depends, Form
 from db.schemas import schemas
 from db import controller
 from db.session import SessionLocal
 from sqlalchemy.orm import Session
 from internal.auth import get_current_user
 from email.utils import parseaddr
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
 
 router = APIRouter()
 
@@ -18,19 +16,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-#Set our Jinja template dir
-templates = Jinja2Templates(directory="templates")
-
-
-#Returns dynamically built view for maps. Only way to get meta tags working (that I know of).
-@router.get("/userprofile/{profile_id}", response_class=HTMLResponse)
-async def return_map(request: Request, profile_id: int, db: Session = Depends(get_db)):
-    user = controller.get_userId(db, user_id=profile_id)
-    userStats = controller.get_user_stats(db, user_id=profile_id)
-
-    return templates.TemplateResponse("userProfile/index.html", {"request": request, "userName": user.name, "userAbout": user.about, "userRank": user.rank})
 
 
 @router.post("/users/", response_model=schemas.User)
@@ -156,4 +141,3 @@ def patch_user_password(userPassword: str = Form(...), db: Session = Depends(get
     
     else:
         raise HTTPException(status_code=400, detail="Failed to update password")
-    

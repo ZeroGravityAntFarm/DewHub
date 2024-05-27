@@ -75,6 +75,7 @@ function getMap(mapId) {
             trHTML += '<li class="list-group-item bg-dark text-white">Uploaded By: ' + user["name"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">Author: ' + mapData["mapAuthor"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">About: ' + mapData["mapUserDesc"] + '</li>';
+	    trHTML += '<li class="list-group-item bg-dark text-white">ElDewrito Version: ' + mapData["gameVersion"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">Total Objects: ' + mapData["mapTotalObject"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">Scenario Objects: ' + mapData["mapScnrObjectCount"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">Downloads: ' + mapData["map_downloads"] + '</li>';

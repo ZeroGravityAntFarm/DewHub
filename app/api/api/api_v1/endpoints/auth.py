@@ -23,7 +23,7 @@ async def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username, password, or account deactivated.",
+            detail="Incorrect username, password or account deactivated.",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)

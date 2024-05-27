@@ -172,3 +172,4 @@ app/static/maps/11/slayer.png
 app/frontend/.index.html.swp
 app/frontend/content/eldorito.png
 *.bak
+app/api/api/api_v1/endpoints/.upload.py.swp

@@ -71,7 +71,7 @@ def delete_mod(mod_id: int = 0, db: Session = Depends(get_db), user: str = Depen
 
 #Get single mod file
 @router.get("/mods/{mod_id}/file")
-@limiter.limit("100/minute")
+@limiter.limit("60/minute")
 def mod_file(request: Request, mod_id: int, db: Session = Depends(get_db)):
     mod_file = controller.get_mod_file(db, mod_id=mod_id)
 

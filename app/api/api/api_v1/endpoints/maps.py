@@ -196,9 +196,12 @@ def read_map(request: Request, var_id: int, db: Session = Depends(get_db)):
 @router.get("/maps/search/{search_text}")
 def search_maps(search_text: str = 0,  params: Params = Depends(), db: Session = Depends(get_db)):
     maps = controller.search_maps(db, search_text=search_text)
-
-    return paginate(maps, params)
-
+    
+    if maps:
+        return paginate(maps, params)
+    
+    else:
+        return {"No results"}
 
 #Patch Single Map
 @router.patch("/maps/{map_id}")
