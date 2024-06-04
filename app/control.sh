@@ -1,8 +1,8 @@
 #!/bin/bash
 
 name="dew-share"
-port="8117"
-domain="fileshare.zgaf.io"
+port=""
+domain="fileshare.com"
 secrets="./secrets.var"
 
 if [[ $EUID -ne 0 ]]; then
