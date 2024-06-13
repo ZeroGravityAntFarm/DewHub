@@ -277,175 +277,6 @@ function searchMaps(page = 1) {
 }
 
 
-function uploadMaps() {
-    var data = new FormData();
-    var trHTML = '';
-    var tagData = '';
-    tagData = document.getElementById("mapTags");
-    tagData = tagData.value;
-    mapDesc = document.getElementById("usermapdescription")
-    mapDesc = mapDesc.value;
-
-    data.append("files", document.getElementById("mapFile").files[0]);
-    data.append("files", document.getElementById("variantFile").files[0]);
-    data.append("mapTags", tagData);
-    data.append("mapUserDesc", mapDesc);
-
-    images = document.getElementById("formFileMultiple").files
-
-    for (let i = 0; i < images.length; i++) {
-        data.append("files", images[i]);
-    }
-
-    var xhr = new XMLHttpRequest();
-    var bearer_token = "Bearer " + token;
-
-    //xhr.withCredentials = true;
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-            if (xhr.status == 200) {
-                trHTML += '<div class="alert alert-success" role="alert">';
-                trHTML += 'Success!';
-                trHTML += '</div>'
-                document.getElementById("map-container").innerHTML = trHTML;
-                $('#map-upload').modal('hide');
-
-                delayRedirect();
-            } else if (xhr.status != 200) {
-                trHTML += '<div class="alert alert-danger" role="alert">';
-                trHTML += '' + this.responseText + '';
-                trHTML += '</div>'
-                document.getElementById("map-container").innerHTML = trHTML;
-                $('#map-upload').modal('hide');
-            }
-        }
-    });
-
-    xhr.open("POST", "/api_v2/upload/map");
-    xhr.setRequestHeader("Authorization", bearer_token);
-    //xhr.setRequestHeader("Content-Type", "multipart/form-data");
-    xhr.send(data);
-}
-
-function uploadMods() {
-    var formData = new FormData();
-    var trHTML = '';
-    var tagData = '';
-
-    const progressBar = document.getElementById('progress-bar');
-    let uploadPercentage = 0;
-
-    tagData = document.getElementById("modTags");
-    tagData = tagData.value;
-    modDesc = document.getElementById("modDescription")
-    modDesc = modDesc.value;
-
-    formData.append("files", document.getElementById("modFile").files[0]);
-    formData.append("modTags", tagData);
-    formData.append("modDescription", modDesc);
-
-    images = document.getElementById("modFileMultiple").files
-
-    for (let i = 0; i < images.length; i++) {
-        formData.append("files", images[i]);
-    }
-
-    var bearer_token = "Bearer " + token;
-
-    $.ajax({
-	url: '/api_v2/upload/mod',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-	headers: {
-        'Authorization': bearer_token
-        },
-        xhr: function () {
-            const myXhr = $.ajaxSettings.xhr();
-            myXhr.open('POST', '/api_v2/upload/mod');
-
-            if (myXhr.upload) {
-                myXhr.upload.onprogress = function (event) {
-                    uploadPercentage = Math.round((event.loaded / event.total) * 100);
-                    progressBar.style.width = uploadPercentage + '%';
-                };
-             }
-            return myXhr;
-        },
-        success: function (response) {
-            console.log('File uploaded successfully!', response);
-            trHTML += '<div class="alert alert-success" role="alert">';
-            trHTML += 'Success!';
-            trHTML += '</div>'
-            document.getElementById("map-container").innerHTML = trHTML;
-            $('#mod-upload').modal('hide');
-
-            delayRedirect();
-        },
-        error: function (jqXhr, textStatus, errorThrown) {
-            console.log('File upload failed.', jqXhr.status, textStatus, errorThrown);
-            trHTML += '<div class="alert alert-danger" role="alert">';
-            trHTML += 'Upload failed: ' + jqXhr.status + '';
-            trHTML += '</div>'
-            document.getElementById("map-container").innerHTML = trHTML;
-            $('#mod-upload').modal('hide');
-        }
-    });
-}
-
-
-function uploadPrefab() {
-    var data = new FormData();
-    var trHTML = '';
-    var tagData = '';
-
-    tagData = document.getElementById("prefabTags");
-    tagData = tagData.value;
-    prefabDesc = document.getElementById("userprefabDesc")
-    prefabDesc = userprefabDesc.value;
-
-    data.append("files", document.getElementById("prefabFile").files[0]);
-    data.append("prefabTags", tagData);
-    data.append("prefabDesc", prefabDesc);
-
-    images = document.getElementById("prefabFileMultiple").files
-
-    for (let i = 0; i < images.length; i++) {
-        data.append("files", images[i]);
-    }
-
-    var xhr = new XMLHttpRequest();
-    var bearer_token = "Bearer " + token;
-
-    //xhr.withCredentials = true;
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-            if (xhr.status == 200) {
-                trHTML += '<div class="alert alert-success" role="alert">';
-                trHTML += 'Success!';
-                trHTML += '</div>'
-                document.getElementById("map-container").innerHTML = trHTML;
-                $('#prefab-upload').modal('hide');
-                delayRedirect();
-
-            } else if (xhr.status != 200) {
-                trHTML += '<div class="alert alert-danger" role="alert">';
-                trHTML += '' + this.responseText + '';
-                trHTML += '</div>'
-                document.getElementById("map-container").innerHTML = trHTML;
-                $('#prefab-upload').modal('hide');
-            }
-        }
-    });
-
-    xhr.open("POST", "/api_v2/upload/prefab");
-    xhr.setRequestHeader("Authorization", bearer_token);
-    //xhr.setRequestHeader("Content-Type", "multipart/form-data");
-    xhr.send(data);
-}
-
-
 function timeSince(date) {
 
     var seconds = Math.floor((new Date() - date) / 1000);
@@ -512,8 +343,21 @@ function logout() {
 
 function loadCards(page = 1) {
     scroll(0, 0);
+    const queryString = window.location.search;
+    const params = queryString.slice(1).split('&');
+    let versionParam;
+
+    for (let i = 0; i < params.length; i++) {
+      const param = params[i].split('=');
+      if (param[0] === 'version') {
+        versionParam = param[1];
+      } else {
+        versionParam = 'all';
+      }
+    }
+
     const xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/api_v2/maps/?page=" + page + "&size=21");
+    xhttp.open("GET", "/api_v2/maps/?page=" + page + "&size=21&version=" + versionParam);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -531,7 +375,7 @@ function loadCards(page = 1) {
 
                 trHTML += '<div class="col mb-3 mt-4">';
                 trHTML += '<div class="card text-white bg-dark h-100" >';
-                trHTML += '<a href="/api_v2/mapview?mapId=' + object['id'] + '"><img src="/maps/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'/content/default/forge.jpg\';"></a>';
+                trHTML += '<a href="/api_v2/mapview?mapId=' + object['id'] + '"><img src="/maps/tb/' + object['id'] + '/0" class="card-img-top" height="200px" alt="..." onerror="this.onerror=null;this.src=\'/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
                 trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';

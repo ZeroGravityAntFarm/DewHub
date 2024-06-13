@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, Request
+from fastapi import APIRouter, Depends, HTTPException, Response, Request, Form
 from fastapi_pagination import paginate, Page, Params
 from db.schemas import schemas
 from db import controller
@@ -119,3 +119,18 @@ def search_mods(search_text: str = 0,  params: Params = Depends(), db: Session =
     
     else:
         return {"No results"}
+
+
+#Patch Single Map
+@router.patch("/mods/{mod_id}")
+def patch_mod(mod_id: int, modDescription: str = Form(" "), modName: str = Form(...), modVisibility: bool = Form(...), modTags: str = Form(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    
+    modVisibility = not modVisibility
+    
+    mod = controller.update_mod(db, mod_id=mod_id, modUserDesc=modDescription, modTags=modTags, user=user, modVisibility=modVisibility, modName=modName)
+
+    if mod:
+        return HTTPException(status_code=200, detail="Mod update successfully")
+    
+    else:
+        raise HTTPException(status_code=400, detail="Could not update mod")

@@ -29,6 +29,18 @@
          data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
          <span class="navbar-toggler-icon"></span>
       </button>
+      <div class="dropdown">
+         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+           Version
+         </button>
+         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+           <li><a class="dropdown-item active" href="/?version=0.7">0.7.X</a></li>
+           <li><a class="dropdown-item" href="/?version=0.6.1">0.6.1</a></li>
+           <li><a class="dropdown-item" href="/?version=0.5.1">0.5.1</a></li>
+           <li><hr class="dropdown-divider"></li>
+           <li><a class="dropdown-item" href="#">All</a></li>
+         </ul>
+       </div>
       <form class="d-flex w-100 py-1">
          <input class="form-control me-1 ms-1" id="search_bar" type="search" placeholder="Search" aria-label="Search">
          <button type='button' class="btn btn-outline-success" onclick="searchMaps()">Search</button>
@@ -159,7 +171,7 @@
                      style="display:inline-block;">
                      <span class="d-sm-inline mx-3 text-muted">About</span>
                   </a>
-                  <a href="https://stats.uptimerobot.com/j6NNxFjN9x"
+                  <a href="https://status.zgaf.io/status/ed-service"
                      class="d-flex align-items-center px-3 text-muted align-middle">
                      <i class="fs-4 bi-activity"></i>
                   </a>
@@ -270,6 +282,12 @@
                                 <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
                                 <textarea class="form-control" id="usermapdescription" rows="3"></textarea>
                               </div>
+                              <div class="form-check">
+                                 <input class="form-check-input" type="checkbox" value="" id="mapvisibilitycheckbox" checked>
+                                 <label class="form-check-label" for="flexCheckChecked">Visible</label>
+                                 <p class="text-muted">Determines if the map is visible on the map page. Anyone with the map link
+                                    can still download.</p>
+                              </div>
                               <div>
                                 <h5>Tag</h5>
                                 <select class="form-select" aria-label="map tags" id="mapTags">
@@ -295,6 +313,57 @@
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                               <button type="button" data-bs-dismiss="modal" id="editMapCall" value="" class="btn btn-danger"
                                 onclick="editMap(this.value)">Apply</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="modal" tabindex="-1" id="editmod">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Edit Mod</h5>
+                            </div>
+                            <div class="modal-body">
+                              <div class="mb-3">
+                                <label for="formControlTextArea" class="form-label">Mod Name</label>
+                                <textarea class="form-control" id="usermodname" rows="3" placeholder=""></textarea>
+                              </div>
+                              <div class="mb-3">
+                                <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
+                                <textarea class="form-control" id="usermoddescription" rows="3"></textarea>
+                              </div>
+                              <div class="form-check">
+                                 <input class="form-check-input" type="checkbox" value="" id="modvisibilitycheckbox" checked>
+                                 <label class="form-check-label" for="flexCheckChecked">Visible</label>
+                                 <p class="text-muted">Determines if the mod is visible on the mod page. Anyone with the mod link
+                                    can still download.</p>
+                              </div>
+                              <div>
+                                 <h5>Tag</h5>
+                                 <select class="form-select" aria-label="mod tags" id="modTags">
+                                    <option value="vehicle">Vehicle</option>
+                                    <option value="animation">Animation</option>
+                                    <option value="object">Object</option>
+                                    <option value="armor">Armor</option>
+                                    <option value="ui">UI</option>
+                                    <option value="hud">HUD</option>
+                                    <option value="biped">Biped</option>
+                                    <option value="weapon">Weapon</option>
+                                    <option value="campaign">Campaign</option>
+                                    <option value="mode">Mode</option>
+                                    <option value="ability">Ability</option>
+                                    <option value="map">Map</option>
+                                    <option value="ai">A.I.</option>
+                                    <option value="misc">Misc</option>
+                                 </select>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="button" data-bs-dismiss="modal" id="editModCall" value="" class="btn btn-danger"
+                                onclick="editMod(this.value)">Apply</button>
                             </div>
                           </div>
                         </div>
@@ -435,6 +504,24 @@
                           document.getElementById("usermapname").placeholder = mapName
                         })
                       </script>
+
+                      <script>
+                        var editModModal = document.getElementById('editmod')
+                        editModModal.addEventListener('show.bs.modal', function (event) {
+                          // Button that triggered the modal
+                          var button = event.relatedTarget
+
+                          // Extract info from data-bs-* attributes
+                          var modId = button.getAttribute('data-bs-modId')
+                          var modName = button.getAttribute('data-bs-modName')
+
+                          // Update the modal's content.
+                          var modalTitle = editMapModal.querySelector('.modal-title')
+
+                          document.getElementById("editModCall").value = modId
+                          document.getElementById("usermodname").placeholder = modName
+                        })
+                      </script>
                     
                       <script>
                         var editProfileModal = document.getElementById('editprofile')
@@ -532,6 +619,12 @@
                <div class="mb-3">
                   <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
                   <textarea class="form-control" id="usermapdescription" rows="3"></textarea>
+               </div>
+               <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="mapvisibilitycheckbox" checked>
+                  <label class="form-check-label" for="flexCheckChecked">Visible</label>
+                  <p class="text-muted">Determines if the map is visible on the map page. Anyone with the map link
+                     can still download.</p>
                </div>
                <div>
                   <h5>Tag</h5>

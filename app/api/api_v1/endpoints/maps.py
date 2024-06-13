@@ -14,6 +14,7 @@ from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 
+
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -23,8 +24,10 @@ def get_db():
     finally:
         db.close()
 
+
 #Set our Jinja template dir
 templates = Jinja2Templates(directory="templates")
+
 
 #Returns dynamically built view for maps. Only way to get meta tags working (that I know of).
 @router.get("/mapview", response_class=HTMLResponse)
@@ -48,14 +51,15 @@ async def return_map(request: Request, varId: int, db: Session = Depends(get_db)
 #Get all Maps
 @router.get("/maps/")
 @limiter.limit("60/minute")
-def read_maps(request: Request, params: Params = Depends(), db: Session = Depends(get_db)):
-    maps = controller.get_maps(db)
+def read_maps(request: Request, version: str = "all", params: Params = Depends(), db: Session = Depends(get_db)):
+    maps = controller.get_maps(db, version)
 
     if maps:
         return paginate(maps, params)
 
     else:
         raise HTTPException(status_code=400, detail="Maps not found")
+
 
 #Get all variants
 @router.get("/variants/")
@@ -68,6 +72,7 @@ def read_variants(request: Request, params: Params = Depends(), db: Session = De
 
     else:
         raise HTTPException(status_code=400, detail="Variants not found")
+
 
 #Get variant by id
 @router.get("/variants/{variant_id}")
@@ -93,6 +98,7 @@ def read_maps_new(request: Request, params: Params = Depends(), db: Session = De
     else:
         raise HTTPException(status_code=400, detail="Maps not found")
 
+
 #Get all Maps Most Downloads first
 @router.get("/maps/downloaded", response_model=Page[schemas.MapQuery])
 @limiter.limit("60/minute")
@@ -104,6 +110,7 @@ def read_maps_downloaded(request: Request, params: Params = Depends(), db: Sessi
 
     else:
         raise HTTPException(status_code=400, detail="Maps not found")
+
 
 #Get all Maps Oldest first
 @router.get("/maps/oldest", response_model=Page[schemas.MapQuery])
@@ -117,6 +124,7 @@ def read_maps_oldest(request: Request, params: Params = Depends(), db: Session =
     else:
         raise HTTPException(status_code=400, detail="Maps not found")
 
+
 #Get single map
 @router.get("/maps/{map_id}")
 def read_map(map_id: int, db: Session = Depends(get_db)):
@@ -128,6 +136,7 @@ def read_map(map_id: int, db: Session = Depends(get_db)):
     else:
         raise HTTPException(status_code=400, detail="Map not found")
 
+
 #Delete Map entry 
 @router.delete("/maps/{map_id}")
 def read_map(map_id: int = 0, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
@@ -138,6 +147,7 @@ def read_map(map_id: int = 0, db: Session = Depends(get_db), user: str = Depends
 
     else:
         raise HTTPException(status_code=400, detail=msg)
+
 
 #Get single map file
 @router.get("/maps/{map_id}/file")
@@ -151,6 +161,7 @@ def read_map(request: Request, map_id: int, db: Session = Depends(get_db)):
 
     else:
         raise HTTPException(status_code=400, detail="Map file not found")
+
 
 #Get single variant
 @router.get("/maps/{map_id}/variant")
@@ -203,13 +214,29 @@ def search_maps(search_text: str = 0,  params: Params = Depends(), db: Session =
     else:
         return {"No results"}
 
-#Patch Single Map
-@router.patch("/maps/{map_id}")
-def patch_map(map_id: int, mapUserDesc: str = Form(" "), mapTags: str = Form(...), db: Session = Depends(get_db), mapName: str = Form(...), user: str = Depends(get_current_user)):
-    map = controller.update_map(db, map_id=map_id, mapUserDesc=mapUserDesc, mapTags=mapTags, mapName=mapName, user=user)
 
-    if map:
-        return HTTPException(status_code=200, detail="Map update successfully")
+#Search Variants
+@router.get("/variants/search/{search_text}")
+def search_variants(search_text: str = 0,  params: Params = Depends(), db: Session = Depends(get_db)):
+    variants = controller.search_variants(db, search_text=search_text)
+    
+    if variants:
+        return paginate(maps, params)
     
     else:
-        raise HTTPException(status_code=400, detail="Could not update map")
+        return {"No results"}
+
+
+#Patch Single Map
+@router.patch("/maps/{map_id}")
+def patch_map(map_id: int, mapUserDesc: str = Form(" "), mapVisibility: bool = Form(...), mapTags: str = Form(...), db: Session = Depends(get_db), mapName: str = Form(...), user: str = Depends(get_current_user)):
+    
+    mapVisibility = not mapVisibility
+    
+    map = controller.update_map(db, map_id=map_id, mapUserDesc=mapUserDesc, mapTags=mapTags, mapName=mapName, user=user, mapVisibility=mapVisibility)
+
+    if map:
+        return HTTPException(status_code=200, detail="Map updated successfully")
+    
+    else:
+        raise HTTPException(status_code=400, detail="Failed to update map")

@@ -6,11 +6,13 @@ function uploadMaps() {
     tagData = tagData.value;
     mapDesc = document.getElementById("usermapdescription")
     mapDesc = mapDesc.value;
+    mapVis = document.querySelector('#mapvisibilitycheckbox').checked;
 
     data.append("files", document.getElementById("mapFile").files[0]);
     data.append("files", document.getElementById("variantFile").files[0]);
     data.append("mapTags", tagData);
     data.append("mapUserDesc", mapDesc);
+    data.append("mapVisibility", mapVis);
 
     images = document.getElementById("formFileMultiple").files
 
@@ -60,10 +62,12 @@ function uploadMods() {
     tagData = tagData.value;
     modDesc = document.getElementById("modDescription")
     modDesc = modDesc.value;
+    modVis = document.querySelector('#modvisibilitycheckbox').checked;
 
     formData.append("files", document.getElementById("modFile").files[0]);
     formData.append("modTags", tagData);
     formData.append("modDescription", modDesc);
+    formData.append("modVisibility", modVis);
 
     images = document.getElementById("modFileMultiple").files
 

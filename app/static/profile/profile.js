@@ -30,86 +30,6 @@ function deleteUser(userId) {
 }
 
 
-function loadUser() {
-    var trHTML = ''
-    if (token) {
-
-        var xmlHttp = new XMLHttpRequest();
-
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == XMLHttpRequest.DONE) {
-                var responseText = JSON.parse(xmlHttp.responseText);
-                var trHTML = '';
-                const user = JSON.parse(xmlHttp.responseText);
-
-                console.log(responseText)
-                if (xmlHttp.status == 200) {
-
-                    trHTML += '<ol class="list-group bg-dark">';
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
-                    trHTML += '<div class="ms-2 me-auto">';
-                    trHTML += '<div class="fw-bold">Username</div>';
-                    trHTML += '' + user["name"] + '';
-                    trHTML += '</div>';
-                    trHTML += '</li>';
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
-                    trHTML += '<div class="ms-2 me-auto">';
-                    trHTML += '<div class="fw-bold">Email</div>';
-                    trHTML += '' + user["email"] + '';
-                    trHTML += '</div>';
-                    trHTML += '</li>';
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
-                    trHTML += '<div class="ms-2 me-auto">';
-                    trHTML += '<div class="fw-bold">ID</div>';
-                    trHTML += '' + user["id"] + '';
-                    trHTML += '</div>';
-                    trHTML += '</li>';
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
-                    trHTML += '<div class="ms-2 me-auto">';
-                    trHTML += '<div class="fw-bold">Account Enabled</div>';
-                    trHTML += '' + user["is_active"] + '';
-                    trHTML += '</div>';
-                    trHTML += '</li>';
-                    trHTML += '<li class="list-group-item d-flex justify-content-between align-items-start">';
-                    trHTML += '<div class="ms-2 me-auto">';
-                    trHTML += '<div class="fw-bold">Account Controls</div>';
-                    trHTML += '<button type="button" class="btn btn-secondary me-1" data-bs-toggle="modal" data-bs-username="' + user["name"] + '" data-bs-email="' + user["email"] + '" data-bs-target="#editprofile">Edit Profile</button>';
-                    trHTML += '<button type="button" class="btn btn-secondary me-1" data-bs-toggle="modal" data-bs-target="#editpassword">Change Password</button>';
-                    trHTML += '<button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#deleteprofile" data-bs-userId="' + user['id'] +  '" >Delete Account</button>';
-                    trHTML += '</div>';
-                    trHTML += '</li>';
-                    trHTML += '</ol>';
-
-                    document.getElementById("user-profile").innerHTML = trHTML;
-
-                } else {
-
-                    trHTML += '<div class="alert alert-success" role="alert">';
-                    trHTML += 'Success!';
-                    trHTML += '</div>'
-                    document.getElementById("status-message").innerHTML = trHTML;
-
-                    setCookie("Authorization", responseText.access_token, 1)
-
-                    delayRedirect();
-
-                }
-
-            }
-
-        }
-
-        xmlHttp.open("GET", "/api_v2/me", false);
-        bearer_token = "Bearer " + token
-        xmlHttp.setRequestHeader("Authorization", bearer_token);
-        xmlHttp.send();
-
-        const maps = loadUserMaps();
-    }
-
-}
-
-
 function loadUserv2() {
     var trHTML = ''
     if (token) {
@@ -306,7 +226,7 @@ function loadUserMods() {
         //trHTML += '<p class="card-text p-3">' + object['modDescription'] + '</p>';
         trHTML += '</ul>';
         trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-        //trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmod"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
+        trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmod"   data-bs-modName="' + object['modName'] + '" data-bs-modId="' + object['id'] +  '">Edit</button>';
         trHTML += '<button type="button" class="btn btn-danger me-1"  data-bs-toggle="modal" data-bs-target="#deletemod" data-bs-modName="' + object['modName'] + '" data-bs-modId="' + object['id'] +  '">Delete</button>';
         trHTML += '</div>';
         trHTML += '</div>';
@@ -452,10 +372,13 @@ function editMap(mapId) {
     mapTags = mapTags.value;
     mapDesc = document.getElementById("usermapdescription");
     mapDesc = mapDesc.value;
+    mapVis = document.querySelector('#mapvisibilitycheckbox').checked;
+    
 
     data.append("mapName", mapName);
     data.append("mapTags", mapTags);
-    data.append("mapUserDesc", mapDesc)
+    data.append("mapUserDesc", mapDesc);
+    data.append("mapVisibility", mapVis);
 
     var xhr = new XMLHttpRequest();
     var bearer_token = "Bearer " + token;
@@ -481,6 +404,57 @@ function editMap(mapId) {
     });
 
     xhr.open("PATCH", "/api_v2/maps/" + mapId);
+    xhr.setRequestHeader("Authorization", bearer_token);
+    xhr.send(data);
+}
+
+
+function editMod(modId) {
+    var data = new FormData();
+    var trHTML = '';
+    var modName = '';
+    var modTags = '';
+    var modDesc = '';
+
+    modName = document.getElementById("usermodname");
+    modName = modName.value;
+    modTags = document.getElementById("modTags");
+    modTags = modTags.value;
+    modDesc = document.getElementById("usermoddescription");
+    modDesc = modDesc.value;
+    modVis = document.querySelector('#modvisibilitycheckbox').checked;
+    
+
+    data.append("modName", modName);
+    data.append("modTags", modTags);
+    data.append("modDescription", modDesc);
+    data.append("modVisibility", modVis);
+    console.log(modVis);
+
+    var xhr = new XMLHttpRequest();
+    var bearer_token = "Bearer " + token;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            if (xhr.status == 200) {
+                trHTML += '<div class="alert alert-success" role="alert">';
+                trHTML += 'Success!';
+                trHTML += '</div>'
+                document.getElementById("map-container").innerHTML = trHTML;
+                $('#editmod').modal('hide');
+                delayRedirect();
+
+            } else if (xhr.status != 200) {
+                trHTML += '<div class="alert alert-danger" role="alert">';
+                trHTML += '' + this.responseText + '';
+                trHTML += '</div>'
+                document.getElementById("map-container").innerHTML = trHTML;
+                $('#editmod').modal('hide');
+            }
+        }
+    });
+
+    xhr.open("PATCH", "/api_v2/mods/" + modId);
     xhr.setRequestHeader("Authorization", bearer_token);
     xhr.send(data);
 }

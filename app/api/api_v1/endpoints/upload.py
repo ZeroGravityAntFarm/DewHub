@@ -14,6 +14,7 @@ from pathlib import Path
 router = APIRouter()
 logger = logging.getLogger('uvicorn')
 
+
 def get_db():
     db = SessionLocal()
     try:
@@ -21,12 +22,14 @@ def get_db():
     finally:
         db.close()
 
+
 def removeHtml(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
 
+
 @router.post("/upload/map")
-def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), mapVisibility: bool = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     valid_variants = ['variant.oddball', 'variant.zombiez', 'variant.ctf', 'variant.koth', 'variant.slayer', 'variant.assault', 'variant.vip', 'variant.jugg', 'variant.terries']
     map_images = []
 
@@ -58,6 +61,8 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
     logger.info("Reading Map #########################################################")
     mapContents = mapFile.file.read()
     variantContents = variantFile.file.read()
+
+    mapVisibility = not mapVisibility #Invert value because I didnt want to mess with updating all values in db.
 
     #Cleanup
     mapFile.file.close()
@@ -96,7 +101,7 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), files: List[U
         return HTTPException(status_code=400, detail="Variant file empty")
 
     variant_id = controller.create_user_variant(db, variant=variantData,  user_id=user.id)
-    map_create = controller.create_user_map(db, map=mapData, mapTags=mapTags, user_id=user.id, variant_id=variant_id, mapUserDesc=mapUserDesc)
+    map_create = controller.create_user_map(db, map=mapData, mapTags=mapTags, user_id=user.id, variant_id=variant_id, mapUserDesc=mapUserDesc, mapVisibility=mapVisibility)
 
     if len(map_images) > 0:
         for idx, image in enumerate(map_images):
@@ -229,7 +234,7 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
 
 
 @router.post("/upload/mod")
-def upload(modDescription: str = Form(" "), modTags: str = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+def upload(modDescription: str = Form(" "), modTags: str = Form(...), modVisibility: bool = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     mod_images = []
     valid_files = [".pak"]
 
@@ -272,7 +277,9 @@ def upload(modDescription: str = Form(" "), modTags: str = Form(...), files: Lis
     if modData == 1:
         raise HTTPException(status_code=400, detail="Mod file empty")
 
-    mod_create = controller.create_user_mod(db, modTags=modTags, mod=modData, user_id=user.id, modDescription=modDescription)
+    modVisibility = not modVisibility #Invert value because I didnt want to mess with updating all values in db. 
+
+    mod_create = controller.create_user_mod(db, modTags=modTags, mod=modData, user_id=user.id, modDescription=modDescription, modVisibility=modVisibility)
 
     #Pak files could be larger than bytea size limit so we puts them on the disk instead
     Path("/app/static/mods/pak/" + str(mod_create.id) + "/").mkdir(parents=True, exist_ok=True)
