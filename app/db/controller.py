@@ -12,7 +12,7 @@ import os
 import json
 
 #Authenticate a user
-def authenticate_user(db, username: str, password: str):
+def authenticate_user(db, username: str, password: str, client_host: str):
     user = get_user_auth(db, username)
     
     #Check if user exists
@@ -26,9 +26,19 @@ def authenticate_user(db, username: str, password: str):
     #Verify password against hashed password
     if not verify_password(password, user.hashed_password):
         return False
+    
+    user.last_login_ip = client_host
+    user.last_login_time = datetime.utcnow()
+    db.commit()
 
     return user
 
+
+#Query user profile 
+def get_user_auth(db: Session, user_name: str):
+    user = db.query(models.User).filter(models.User.name == user_name).first()
+
+    return user
 
 #Create a JWT access token
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -69,12 +79,6 @@ def get_userId(db: Session, user_id: int):
     if user:
       return user_data
 
-
-#Query user profile 
-def get_user_auth(db: Session, user_name: str):
-    user = db.query(models.User).filter(models.User.name == user_name).first()
-
-    return user
 
 #Get all users
 def get_users(db: Session, skip: int = 0, limit: int = 100):
@@ -204,9 +208,14 @@ def update_rank(user_id: int, db: Session):
 
 
 #Get all maps
-def get_maps(db: Session):
+def get_maps(db: Session, version: str):
     #return db.execute('SELECT mapdata.id, mapdata."mapName", mapdata."mapDescription", mapdata."mapAuthor", mapdata."mapId", mapdata."mapScnrObjectCount", mapdata."mapTotalObject", mapdata."mapBudgetCount", mapdata."mapBaseMap", mapdata."map_downloads", mapdata."map_rating", mapdata."mapTags", mapdata."owner_id", mapdata."variant_id", mapdata."mapUserDesc", mapdata."time_created", mapdata."time_updated", mapdata."upvote", mapdata."downvote" FROM mapdata').all()
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).all()
+    
+    if version == "all":
+        return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.notVisible == False).all()
+    
+    else:
+        return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.notVisible == False).filter(func.lower(models.Map.gameVersion).contains(version)).all()
 
 
 #Get all variants
@@ -225,31 +234,46 @@ def get_map(db: Session, map_id: int):
 
 
 #Update map
-def update_map(db: Session, map_id: int, user: str, mapUserDesc: str, mapTags: str, mapName: str):
+def update_map(db: Session, map_id: int, user: str, mapUserDesc: str, mapTags: str, mapName: str, mapVisibility: bool):
     map = db.query(models.Map).filter(models.Map.id == map_id and models.Map.owner_id == user.id).first()
 
     map.mapName = mapName 
     map.mapTags = mapTags
     map.mapUserDesc = mapUserDesc
+    map.notVisible = mapVisibility
     
     db.commit()
 
     return map
 
 
+#Update map
+def update_mod(db: Session, mod_id: int, user: str, modUserDesc: str, modTags: str, modName: str, modVisibility: bool):
+    mod = db.query(models.Mod).filter(models.Mod.id == mod_id and models.Mod.owner_id == user.id).first()
+
+    mod.modName = modName 
+    mod.modTags = modTags
+    mod.modDescription = modUserDesc
+    mod.notVisible = modVisibility
+    
+    db.commit()
+
+    return mod
+
+
 #Get all maps by newest first
 def get_newest(db: Session):
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(desc(models.Map.time_created)).all()
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.notVisible == False).order_by(desc(models.Map.time_created)).all()
 
 
 #Get all maps by newest first
 def get_most_downloaded(db: Session):
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(desc(models.Map.map_downloads)).all()
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.notVisible == False).order_by(desc(models.Map.map_downloads)).all()
 
 
-#Get all maps by newest first
+#Get all maps by oldest first
 def get_oldest(db: Session):
-    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).order_by(asc(models.Map.time_created)).all()
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.notVisible == False).order_by(asc(models.Map.time_created)).all()
 
 
 #Delete single map
@@ -410,7 +434,7 @@ def get_user_maps(db: Session, user: str, skip: int = 0, limit: int = 100):
 
 
 #Create new map entry
-def create_user_map(db: Session, mapUserDesc: str, mapTags: str, map: schemas.MapCreate, user_id: int, variant_id: int):
+def create_user_map(db: Session, mapUserDesc: str, mapVisibility: bool, mapTags: str, map: schemas.MapCreate, user_id: int, variant_id: int):
 
     db_map = models.Map(mapName=map.mapName, 
                         mapAuthor=map.mapAuthor,
@@ -420,6 +444,7 @@ def create_user_map(db: Session, mapUserDesc: str, mapTags: str, map: schemas.Ma
                         mapScnrObjectCount=map.mapScnrObjectCount,
                         mapTotalObject=map.mapTotalObjectCount,
                         mapFile=bytes(map.contents),
+                        notVisible=mapVisibility,
                         mapUserDesc=mapUserDesc,
                         variant_id=variant_id,
                         owner_id=user_id,
@@ -443,7 +468,7 @@ def get_user_mods(db: Session, user: str, skip: int = 0, limit: int = 100):
 
 #Case insensitive search for map name, author, or description
 def search_mods(db: Session, search_text: str):
-    mod_data = db.query(*[c for c in models.Mod.__table__.c]).filter(func.lower(models.Mod.modName).contains(search_text.lower()) | func.lower(models.Mod.modTags).contains(search_text.lower()) | func.lower(models.Mod.modAuthor).contains(search_text.lower()) | func.lower(models.Mod.modDescription).contains(search_text.lower())).all()
+    mod_data = db.query(*[c for c in models.Mod.__table__.c]).filter(func.lower(models.Mod.modName).contains(search_text.lower()) | func.lower(models.Mod.modTags).contains(search_text.lower()) | func.lower(models.Mod.modAuthor).contains(search_text.lower()) | func.lower(models.Mod.modDescription).contains(search_text.lower())).filter(models.Mod.notVisible == False).all()
 
     if mod_data:
         return mod_data
@@ -453,14 +478,16 @@ def search_mods(db: Session, search_text: str):
 
 
 #Create new mod entry
-def create_user_mod(db: Session, modDescription: str, modTags: str, mod: schemas.ModCreate, user_id: int):
+def create_user_mod(db: Session, modDescription: str, modTags: str, mod: schemas.ModCreate, user_id: int, modVisibility: bool):
     db_mod = models.Mod(modName=mod.modName, 
                         modAuthor=mod.modAuthor,
                         modTags=modTags,
                         modFileName=mod.modFile,
                         modFileSize=mod.modFileSize,
                         modDescription=mod.modDescription,
+                        notVisible=modVisibility,
                         owner_id=user_id,
+                        gameVersion="0.7.1",
                         mod_downloads=0)
     db.add(db_mod)
     db.commit()
@@ -474,7 +501,7 @@ def create_user_mod(db: Session, modDescription: str, modTags: str, mod: schemas
 
 #Get all mods
 def get_mods(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).offset(skip).limit(limit).all()
+    return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).offset(skip).limit(limit).filter(models.Mod.notVisible == False).all()
 
 
 #Get single mod
@@ -545,12 +572,12 @@ def get_mod_file(db: Session, mod_id: int):
 
 #Get all mods by newest first
 def get_newest_mods(db: Session):
-    return db.query(*[c for c in models.Mod.__table__.c]).order_by(desc(models.Mod.time_created)).all()
+    return db.query(*[c for c in models.Mod.__table__.c]).order_by(desc(models.Mod.time_created)).filter(models.Mod.notVisible == False).all()
 
 
 #Get all maps by newest first
 def get_oldest_mods(db: Session):
-    return db.query(*[c for c in models.Mod.__table__.c]).order_by(asc(models.Mod.time_created)).all()
+    return db.query(*[c for c in models.Mod.__table__.c]).order_by(asc(models.Mod.time_created)).filter(models.Mod.notVisible == False).all()
 
 
 #Create new variant entry
@@ -623,10 +650,18 @@ def get_prefab_file(db: Session, prefab_id: int):
 
 #Case insensitive search for map name, author, or description
 def search_maps(db: Session, search_text: str):
-    map_data = db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(func.lower(models.Map.mapName).contains(search_text.lower()) | func.lower(models.Map.mapTags).contains(search_text.lower()) | func.lower(models.Map.mapAuthor).contains(search_text.lower()) | func.lower(models.Map.mapDescription).contains(search_text.lower())).all()
+    map_data = db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(func.lower(models.Map.mapName).contains(search_text.lower()) | func.lower(models.Map.mapTags).contains(search_text.lower()) | func.lower(models.Map.mapAuthor).contains(search_text.lower()) | func.lower(models.Map.mapDescription).contains(search_text.lower())).filter(models.Map.notVisible == False).all()
 
     if map_data:
         return map_data
+
+
+#Case insensitive search for map name, author, or description
+def search_variants(db: Session, search_text: str):
+    variant_data = db.query(*[c for c in models.Variant.__table__.c]).filter(func.lower(models.Variant.variantName).contains(search_text.lower()) | func.lower(models.Variant.variantTags).contains(search_text.lower()) | func.lower(models.Variant.variantAuthor).contains(search_text.lower()) | func.lower(models.Variant.variantDescription).contains(search_text.lower())).all()
+
+    if variant_data:
+        return variant_data
 
 
 #Returns map downvotes and upvotes

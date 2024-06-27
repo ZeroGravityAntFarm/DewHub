@@ -13,6 +13,8 @@ class User(Base):
     role = Column(String(64), unique=False, index=True)
     hashed_password = Column(String(128))
     is_active = Column(Boolean, default=True)
+    last_login_ip = Column(String(64))
+    last_login_time = Column(DateTime(timezone=True))
     prof_views = Column(Integer, index=True)
     rank = Column(String(64))
     about = Column(String(1200))

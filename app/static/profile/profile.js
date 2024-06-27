@@ -54,7 +54,7 @@ function loadUserv2() {
                     trHTML += '<div class="rounded-top text-white d-flex flex-row" style="background-color: #525151; height:200px;">';
                     trHTML += '<div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">';
                     trHTML += '<img src="/content/default/forge.jpg" alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">';
-                    trHTML += '<button type="button" class="btn btn-secondary" data-mdb-ripple-color="dark" data-bs-toggle="modal" data-bs-username="' + user["name"] + '" data-bs-email="' + user["email"] + '" data-bs-target="#editprofile" style="z-index: 1;">Edit profile</button>';
+                    trHTML += '<button type="button" class="btn btn-secondary" data-mdb-ripple-color="dark" data-bs-toggle="modal" data-bs-username="' + user["name"] + '" data-bs-email="' + user["email"] + '" data-bs-about="' + user["about"] + '" data-bs-target="#editprofile" style="z-index: 1;">Edit profile</button>';
                     trHTML += '<button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#deleteprofile" data-bs-userId="' + user['id'] + '" style="z-index: 2;">Delete Account</button>';
                     trHTML += '</div>';
                     trHTML += '<div class="ms-3" style="margin-top: 130px;">';
@@ -175,7 +175,7 @@ function loadUserMaps() {
         }
 
         trHTML += '<div class="col mb-3 mt-4">';
-        trHTML += '<div class="card text-white bg-secondary" >';
+        trHTML += '<div class="card text-white bg-secondary h-100">';
         trHTML += '<a href="/api_v2/mapview?mapId=' + object['id'] + '"><img src="/maps/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'/content/default/forge.jpg\';"></a>';
         trHTML += '<div class="card-body">';
         trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
@@ -184,7 +184,7 @@ function loadUserMaps() {
         //trHTML += '<p class="card-text p-3">' + object['mapDescription'] + '</p>';
         trHTML += '</ul>';
         trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-        trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmap"   data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
+        trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmap" data-bs-mapTags="' + object['mapTags'] + '" data-bs-mapDesc="' + object['mapUserDesc'] + '" data-bs-mapVis="' + object['notVisible'] + '" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Edit</button>';
         trHTML += '<button type="button" class="btn btn-danger me-1"  data-bs-toggle="modal" data-bs-target="#deletemap" data-bs-mapName="' + object['mapName'] + '" data-bs-mapId="' + object['id'] +  '">Delete</button>';
         trHTML += '</div>';
         //trHTML += '<div class="card-footer"><small class="text-muted">Downloads: ' + object['map_downloads'] + '</small></div>';
@@ -226,7 +226,7 @@ function loadUserMods() {
         //trHTML += '<p class="card-text p-3">' + object['modDescription'] + '</p>';
         trHTML += '</ul>';
         trHTML += '<div class="d-grid gap-2 d-md-block p-3">';
-        trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmod"   data-bs-modName="' + object['modName'] + '" data-bs-modId="' + object['id'] +  '">Edit</button>';
+        trHTML += '<button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#editmod" data-bs-notVisible="' + object['notVisible'] + '" data-bs-modTags="' + object['modTags'] + '" data-bs-modDescription="' + object['modDescription'] + '" data-bs-modName="' + object['modName'] + '" data-bs-modId="' + object['id'] +  '">Edit</button>';
         trHTML += '<button type="button" class="btn btn-danger me-1"  data-bs-toggle="modal" data-bs-target="#deletemod" data-bs-modName="' + object['modName'] + '" data-bs-modId="' + object['id'] +  '">Delete</button>';
         trHTML += '</div>';
         trHTML += '</div>';
@@ -372,7 +372,7 @@ function editMap(mapId) {
     mapTags = mapTags.value;
     mapDesc = document.getElementById("usermapdescription");
     mapDesc = mapDesc.value;
-    mapVis = document.querySelector('#mapvisibilitycheckbox').checked;
+    mapVis = document.getElementById('mapvisibilitycheckbox').checked;
     
 
     data.append("mapName", mapName);
@@ -422,7 +422,7 @@ function editMod(modId) {
     modTags = modTags.value;
     modDesc = document.getElementById("usermoddescription");
     modDesc = modDesc.value;
-    modVis = document.querySelector('#modvisibilitycheckbox').checked;
+    modVis = document.getElementById('modvisibilitycheckbox').checked;
     
 
     data.append("modName", modName);

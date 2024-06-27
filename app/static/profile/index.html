@@ -283,7 +283,7 @@
                                 <textarea class="form-control" id="usermapdescription" rows="3"></textarea>
                               </div>
                               <div class="form-check">
-                                 <input class="form-check-input" type="checkbox" value="" id="mapvisibilitycheckbox" checked>
+                                 <input class="form-check-input" type="checkbox" value="" id="mapvisibilitycheckbox">
                                  <label class="form-check-label" for="flexCheckChecked">Visible</label>
                                  <p class="text-muted">Determines if the map is visible on the map page. Anyone with the map link
                                     can still download.</p>
@@ -335,7 +335,7 @@
                                 <textarea class="form-control" id="usermoddescription" rows="3"></textarea>
                               </div>
                               <div class="form-check">
-                                 <input class="form-check-input" type="checkbox" value="" id="modvisibilitycheckbox" checked>
+                                 <input class="form-check-input" type="checkbox" value="" id="modvisibilitycheckbox">
                                  <label class="form-check-label" for="flexCheckChecked">Visible</label>
                                  <p class="text-muted">Determines if the mod is visible on the mod page. Anyone with the mod link
                                     can still download.</p>
@@ -496,12 +496,22 @@
                           // Extract info from data-bs-* attributes
                           var mapId = button.getAttribute('data-bs-mapId')
                           var mapName = button.getAttribute('data-bs-mapName')
+                          var mapVis = button.getAttribute('data-bs-mapVis')
+                          var mapDesc = button.getAttribute('data-bs-mapDesc')
+                          var mapTags = button.getAttribute('data-bs-mapTags')
+
+                          if (typeof mapDesc === 'object' && mapDesc === null) {
+                            mapDesc = "";
+                          }
                     
                           // Update the modal's content.
                           var modalTitle = editMapModal.querySelector('.modal-title')
                     
                           document.getElementById("editMapCall").value = mapId
-                          document.getElementById("usermapname").placeholder = mapName
+                          document.getElementById("usermapname").value = mapName
+                          document.getElementById("mapvisibilitycheckbox").checked = mapVis
+                          document.getElementById("usermapdescription").value = mapDesc
+                          document.getElementById("mapTags").value = mapTags
                         })
                       </script>
 
@@ -514,12 +524,18 @@
                           // Extract info from data-bs-* attributes
                           var modId = button.getAttribute('data-bs-modId')
                           var modName = button.getAttribute('data-bs-modName')
+                          var modDescription = button.getAttribute('data-bs-modDescription')
+                          var modTags = button.getAttribute('data-bs-modTags')
+                          var modVis = button.getAttribute('data-bs-notVisible')
 
                           // Update the modal's content.
                           var modalTitle = editMapModal.querySelector('.modal-title')
 
                           document.getElementById("editModCall").value = modId
-                          document.getElementById("usermodname").placeholder = modName
+                          document.getElementById("usermodname").value = modName
+                          document.getElementById("usermoddescription").value = modDescription
+                          document.getElementById("modvisibilitycheckbox").checked = !modVis
+                          document.getElementById("modTags").value = modTags
                         })
                       </script>
                     
@@ -532,12 +548,14 @@
                           // Extract info from data-bs-* attributes
                           var userName = button.getAttribute('data-bs-username')
                           var userEmail = button.getAttribute('data-bs-email')
+                          var userAbout = button.getAttribute('data-bs-about')
                     
                           // Update the modal's content.
                           var modalTitle = editProfileModal.querySelector('.modal-title')
                     
-                          document.getElementById("inputUserName").placeholder = userName
-                          document.getElementById("inputEmail").placeholder = userEmail
+                          document.getElementById("inputUserName").value = userName
+                          document.getElementById("inputEmail").value = userEmail
+                          document.getElementById("inputAbout").value = userAbout
                         })
                       </script>
                     

@@ -59,7 +59,7 @@ form.onsubmit = function(event){
         formData.forEach((value, key) => (data[key] = value));
         console.log(data)
         //open the request
-        xhr.open('POST','https://api.zgaf.io/api_v1/users/')
+        xhr.open('POST','https://fileshare.zgaf.io/api_v2/users/')
 
         //send the form data
         xhr.setRequestHeader("Content-Type", "application/json");

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Header
 from db.schemas import schemas
 from fastapi.security import OAuth2PasswordRequestForm
 from db.controller import authenticate_user, create_access_token
@@ -18,8 +18,9 @@ def get_db():
         db.close()
 
 @router.post("/login", response_model=schemas.Token)
-async def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(db, form_data.username, form_data.password)
+async def login_for_access_token(real_ip: str = Header(None, alias='X-Forwarded-For'), db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+    client_host = real_ip
+    user = authenticate_user(db, form_data.username, form_data.password, client_host)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

@@ -157,7 +157,7 @@ function loadDownloaded(page = 1) {
 
                 trHTML += '<div class="col mb-3 mt-4">';
                 trHTML += '<div class="card text-white bg-dark h-100" >';
-                trHTML += '<a href="/api_v2/mapview?mapId=' + object['id'] + '"><img src="/maps/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'/content/default/forge.jpg\';"></a>';
+                trHTML += '<a href="/api_v2/mapview?mapId=' + object['id'] + '"><img src="/maps/tb/' + object['id'] + '/0" class="card-img-top" height="200px" alt="..." onerror="this.onerror=null;this.src=\'/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['mapName'] + '</h4>';
                 trHTML += '<h5 class="card-title">Author: ' + object['mapAuthor'] + '</h5>';

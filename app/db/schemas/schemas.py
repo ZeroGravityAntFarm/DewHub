@@ -18,6 +18,7 @@ class MapCreate(MapBase):
     variantId: int | None = None
     mapTags: str  | None = None
     mapUserDesc: str | None = None
+    mapVisibility: bool
     gameVersion: str
     pass
 
@@ -57,6 +58,7 @@ class Mod(BaseModel):
     modFileSize: int
     modFileName: str
     gameVersion: str
+    owner_id: int 
     modId: int | None = None
     modTags: str | None = None
     time_created: datetime = None

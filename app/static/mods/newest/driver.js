@@ -158,7 +158,7 @@ function loadNewest(page = 1) {
 
                 trHTML += '<div class="col mb-3 mt-4">';
                 trHTML += '<div class="card text-white bg-dark h-100" >';
-                trHTML += '<a href="/api_v2/modview?modId=' + object['id'] + '"><img src="/mods/tb/' + object['id'] + '/0" class="card-img-top" alt="..." onerror="this.onerror=null;this.src=\'/content/default/forge.jpg\';"></a>';
+                trHTML += '<a href="/api_v2/modview?modId=' + object['id'] + '"><img src="/mods/tb/' + object['id'] + '/0" class="card-img-top" height="300px" alt="..." onerror="this.onerror=null;this.src=\'/content/default/forge.jpg\';"></a>';
                 trHTML += '<div class="card-body">';
                 trHTML += '<h4 class="card-title">' + object['modName'] + '</h4>';
                 trHTML += '<h5 class="card-title">Uploaded By: ' + user["name"] + '</h5>';

@@ -72,16 +72,44 @@
                      </a>
                      <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                         <li class="w-100">
-                           <a href="/variants/newest" class="nav-link px-3 link-secondary"> <span
-                                 class="d-sm-inline">Newest</span></a>
+                           <a href="/variants/all" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">All</span></a>
                         </li>
                         <li>
-                           <a href="/variants/downloaded" class="nav-link px-3 link-secondary">
-                              <span class="d-sm-inline">Most Downloaded</span></a>
+                           <a href="/variants/slayer" class="nav-link px-3 link-secondary">
+                              <span class="d-sm-inline">Slayer</span></a>
                         </li>
                         <li>
-                           <a href="/variants/oldest" class="nav-link px-3 link-secondary"> <span
-                                 class="d-sm-inline">Oldest</span></a>
+                           <a href="/variants/oddball" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">Oddball</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/koth" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">KOTH</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/ctf" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">CTF</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/assault" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">Assault</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/territories" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">Territories</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/juggernaut" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">Juggernaut</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/infection" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">Infection</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/vip" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">VIP</span></a>
                         </li>
                      </ul>
                   </li>
@@ -155,7 +183,7 @@
                      style="display:inline-block;">
                      <span class="d-sm-inline mx-3 text-muted">About</span>
                   </a>
-                  <a href="https://stats.uptimerobot.com/j6NNxFjN9x"
+                  <a href="https://status.zgaf.io/status/ed-service"
                      class="d-flex align-items-center px-3 text-muted align-middle">
                      <i class="fs-4 bi-activity"></i>
                   </a>
@@ -200,6 +228,12 @@
                <div class="mb-3">
                   <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
                   <textarea class="form-control" id="usermapdescription" rows="3"></textarea>
+               </div>
+               <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="mapvisibilitycheckbox" checked>
+                  <label class="form-check-label" for="flexCheckChecked">Visible</label>
+                  <p class="text-muted">Determines if the map is visible on the map page. Anyone with the map link can
+                     still download.</p>
                </div>
                <div>
                   <h5>Tag</h5>
@@ -290,6 +324,12 @@
                <div class="mb-3">
                   <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
                   <textarea class="form-control" id="modDescription" rows="3"></textarea>
+               </div>
+               <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="modvisibilitycheckbox" checked>
+                  <label class="form-check-label" for="flexCheckChecked">Visible</label>
+                  <p class="text-muted">Determines if the mod is visible on the mod page. Anyone with the mod link
+                     can still download.</p>
                </div>
                <div>
                   <h5>Tag</h5>
