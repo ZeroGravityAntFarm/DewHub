@@ -37,8 +37,8 @@ class MapQuery(BaseModel):
     mapName: str
     mapDescription: str | None = None
     mapAuthor: str
-    mapScnrObjectCount: int
-    mapTotalObject: int
+    mapScnrObjectCount: int | None = None
+    mapTotalObject: int | None = None
     map_downloads: int | None = None
     mapBudgetCount:int | None = None
     variant_id:int | None = None
@@ -146,6 +146,18 @@ class PrefabQuery(PrefBase):
     prefabTags: str
     gameVersion: str
     
+
+class WebHookBase(BaseModel):
+    owner_id: int
+    webhookname: str
+    webhooktype: str
+    webhookurl: str
+    webhookenabled: bool
+
+
+class WebHookCreate(WebHookBase):
+    pass
+
 
 #Auth token
 class Token(BaseModel):

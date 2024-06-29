@@ -26,6 +26,7 @@ class User(Base):
     mods = relationship("Mod", back_populates="owner")
     variants = relationship("Variant", back_populates="owner")
     prefabs = relationship("PreFab", back_populates="owner")
+    webhooks = relationship("WebHook", back_populates="owner")
 
 class Map(Base):
     __tablename__ = "maps"
@@ -114,6 +115,22 @@ class PreFab(Base):
     #Relationships
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="prefabs")
+
+
+class WebHook(Base):
+    __tablename__ = "webhooks"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(Integer, index=True)
+    webhookname = Column(String(128), index=True)
+    webhooktype = Column(String(128), index=True)
+    webhookurl = Column(String(128), index=True)
+    webhookenabled = Column(Boolean)
+
+
+    #Relationships
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User", back_populates="webhooks")
 
 
 class Vote(Base):

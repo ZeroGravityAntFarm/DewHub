@@ -815,6 +815,26 @@ function uploadPrefab() {
 }
 
 
+function loadUserWebHooks(){
+    var xmlHttp = new XMLHttpRequest();
+    var trHTML = '';
+
+    xmlHttp.open('GET', '/api_v2/user/webhook/', false)
+    bearer_token = "Bearer " + token
+    xmlHttp.setRequestHeader("Authorization", bearer_token);
+    xmlHttp.send();
+
+    const user_webhooks = JSON.parse(xmlHttp.responseText);
+
+    for (let [i, object] of user_webhooks.entries()) {
+        trHTML += '<li class="list-group-item d-flex"><p class="p-0 m-0 flex-grow-1">' + object['webhookname'] + '</p><button class="btn btn-success" data-bs-dismiss="modal" data-bs-webhookid="'+ object["id"] +'" data-bs-webhookname="'+ object["webhookname"] +'" data-bs-webhooktype="'+ object["webhooktype"] +'" data-bs-webhookenabled="'+ object["webhookenabled"] +'" data-bs-target="#editwebhook" data-bs-toggle="modal">Edit</button><button onclick="deleteWebHook(' + object['id']+ ')" class="btn btn-danger" data-bs-dismiss="modal">Delete</button></li>';
+    }
+    document.getElementById("webhook-table").innerHTML = trHTML;
+
+    return user_webhooks
+}
+
+
 function setCookie(c_name, value, exdays) {
     var exdate = new Date();
     exdate.setDate(exdate.getDate() + exdays);
@@ -837,6 +857,134 @@ function getCookie(cname) {
     }
     return "";
 }
+
+function createWebHook() {
+    var data = new FormData();
+    var trHTML = '';
+    var webhookname = '';
+    var webhooktype = '';
+    var webhookenabled = '';
+
+    webhookname = document.getElementById("webhookname");
+    webhookname = webhookname.value;
+    selectBox = document.querySelector('#webhookType');
+    webhooktype = selectBox.options[selectBox.selectedIndex].value;
+    webhookurl = document.getElementById("webhookurl");
+    webhookurl = webhookurl.value;
+    webhookenabled = document.getElementById('webhookenabled').checked;
+    
+
+    data.append("webhookname", webhookname);
+    data.append("webhooktype", webhooktype);
+    data.append("webhookurl", webhookurl);
+    data.append("webhookenabled", webhookenabled);
+
+    var xhr = new XMLHttpRequest();
+    var bearer_token = "Bearer " + token;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            if (xhr.status == 200) {
+                trHTML += '<div class="alert alert-success" role="alert">';
+                trHTML += 'Success!';
+                trHTML += '</div>'
+                document.getElementById("map-container").innerHTML = trHTML;
+                $('#editmod').modal('hide');
+                delayRedirect();
+
+            } else if (xhr.status != 200) {
+                trHTML += '<div class="alert alert-danger" role="alert">';
+                trHTML += '' + this.responseText + '';
+                trHTML += '</div>'
+                document.getElementById("map-container").innerHTML = trHTML;
+                $('#editmod').modal('hide');
+            }
+        }
+    });
+
+    xhr.open("POST", "/api_v2/user/webhook");
+    xhr.setRequestHeader("Authorization", bearer_token);
+    xhr.send(data);
+}
+
+
+function deleteWebHook(webhookId) {
+    if (token) {
+        var xmlHttp = new XMLHttpRequest();
+        var trHTML = '';
+
+        xmlHttp.open('DELETE', '/api_v2/user/webhook/' + webhookId, false)
+        bearer_token = "Bearer " + token
+        xmlHttp.setRequestHeader("Authorization", bearer_token);
+        xmlHttp.send();
+
+        if (xmlHttp.status == 200) {
+            trHTML += '<div class="alert alert-success" role="alert">';
+            trHTML += 'Success!';
+            trHTML += '</div>';
+
+            document.getElementById("status-message").innerHTML = trHTML;
+
+        } else {
+            trHTML += '<div class="alert alert-danger" role="alert">';
+            trHTML += 'Failed to delete webhook!';
+            trHTML += '</div>';
+
+            document.getElementById("status-message").innerHTML = trHTML;
+        }
+    }
+}
+
+
+function updateWebHook(webhook_id) {
+    var data = new FormData();
+    var trHTML = '';
+    var editwebhookname = '';
+    var editwebhookenabled = '';
+    var editwebhooktype = '';
+
+    editwebhookname = document.getElementById("editwebhookname");
+    editwebhookname = editwebhookname.value;
+
+    editwebhookenabled = document.getElementById("editwebhookenabled");
+    editwebhookenabled = editwebhookenabled.checked;
+
+    editwebhooktype = document.getElementById("editwebhooktype");
+    editwebhooktype = editwebhooktype.value;
+
+    data.append("webhookname", editwebhookname);
+    data.append("webhooktype", editwebhooktype);
+    data.append("webhookenabled", editwebhookenabled);
+
+    var xhr = new XMLHttpRequest();
+    var bearer_token = "Bearer " + token;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            if (xhr.status == 200) {
+                trHTML += '<div class="alert alert-success" role="alert">';
+                trHTML += 'Success!';
+                trHTML += '</div>'
+                document.getElementById("status-message").innerHTML = trHTML;
+                $('#editmap').modal('hide');
+                delayRedirect();
+
+            } else if (xhr.status != 200) {
+                trHTML += '<div class="alert alert-danger" role="alert">';
+                trHTML += '' + this.responseText + '';
+                trHTML += '</div>'
+                document.getElementById("status-message").innerHTML = trHTML;
+                $('#editmap').modal('hide');
+
+            }
+        }
+    });
+    xhr.open("PATCH", "/api_v2/user/webhook/" + webhook_id);
+    xhr.setRequestHeader("Authorization", bearer_token);
+    xhr.send(data);
+
+}
+
 
 function delayRedirect() {
     setTimeout(function () {

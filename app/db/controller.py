@@ -33,6 +33,12 @@ def authenticate_user(db, username: str, password: str, client_host: str):
 
     return user
 
+#Sync sqlalchemy models with database, creates missing tables
+def sync_models():
+    from db.session import Base
+    from db.session import engine
+
+    Base.metadata.create_all(engine)
 
 #Query user profile 
 def get_user_auth(db: Session, user_name: str):
@@ -694,3 +700,55 @@ def create_vote(db: Session, map_id: int, userId: int, vote: bool):
         return True, voteObject
     
     return False, "You can only vote once!"
+
+
+
+#Get all webhooks owned by a user
+def get_user_webhooks(db: Session, user: str):
+    webhooks = db.query(*[c for c in models.WebHook.__table__.c if c.name != 'webhookurl']).filter(models.WebHook.owner_id == user.id).all()
+
+    if webhooks:
+        return webhooks
+
+
+#Create new webhook for user
+def create_webhook(db: Session, webhookurl: str, webhookenabled: bool, webhooktype: str, webhookname: str, user: str):
+    webhook = models.WebHook(webhookname=webhookname,
+                owner_id=user.id,
+                webhookurl=webhookurl,
+                webhookenabled=webhookenabled,
+                webhooktype=webhooktype)
+
+    db.add(webhook)
+    db.commit()
+    db.refresh(webhook)
+
+    if webhook:
+        return webhook
+
+
+#Delete Webhook
+def delete_webhook(db: Session, webhook_id: int, user: str):
+    webhook = db.query(models.WebHook).filter(models.WebHook.id == webhook_id and models.WebHook.owner_id == user.id).first()
+
+    if webhook:
+        db.delete(webhook)
+        db.commit()
+
+        return True, "Deleted Successfully"
+
+    else:
+        return False, "Webhook not found"
+
+
+#Update webhook
+def update_webhook(db: Session, webhook_id: int, webhookname: str, webhookenabled: bool, webhooktype: str, user: str):
+    webhook = db.query(models.WebHook).filter(models.WebHook.id == webhook_id and models.WebHook.owner_id == user.id).first()
+
+    webhook.webhookname = webhookname
+    webhook.webhooktype = webhooktype
+    webhook.webhookenabled = webhookenabled
+
+    db.commit()
+
+    return webhook

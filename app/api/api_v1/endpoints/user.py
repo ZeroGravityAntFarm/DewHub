@@ -17,7 +17,7 @@ def get_db():
     finally:
         db.close()
 
-
+#Create a new user
 @router.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     
@@ -45,6 +45,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return controller.create_user(db=db, user=user)
 
 
+#Delete a user
 @router.delete("/users/{user_id}")
 def get_me(user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     status, msg = controller.delete_user(db, user)
@@ -56,6 +57,7 @@ def get_me(user: str = Depends(get_current_user), db: Session = Depends(get_db))
         return msg
 
 
+#Get all users
 @router.get("/users/")
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = controller.get_users(db, skip=skip, limit=limit)
@@ -63,6 +65,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 
+#Get all maps by a user
 @router.get("/usermaps/")
 def read_users_maps(skip: int = 0, limit: int = 1000, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     maps = controller.get_user_maps(db, skip=skip, limit=limit, user=user)
@@ -70,6 +73,7 @@ def read_users_maps(skip: int = 0, limit: int = 1000, db: Session = Depends(get_
     return maps 
 
 
+#Get all mods by a user
 @router.get("/usermods/")
 def read_users_mods(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     mods = controller.get_user_mods(db, skip=skip, limit=limit, user=user)
@@ -77,6 +81,7 @@ def read_users_mods(skip: int = 0, limit: int = 100, db: Session = Depends(get_d
     return mods
 
 
+#Get all prefabs by a user
 @router.get("/userprefabs/")
 def read_users_prefabs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     prefabs = controller.get_user_prefabs(db, skip=skip, limit=limit, user=user)
@@ -84,6 +89,7 @@ def read_users_prefabs(skip: int = 0, limit: int = 100, db: Session = Depends(ge
     return prefabs
 
 
+#Get single user by ID
 @router.get("/users/{user_id}")
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = controller.get_userId(db, user_id=user_id)
@@ -94,6 +100,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
+#Get single user by name
 @router.get("/users/{user_name}")
 def read_user_name(user_name: str, db: Session = Depends(get_db)):
     db_user = controller.get_user(db, user_name=user_name)
@@ -104,13 +111,15 @@ def read_user_name(user_name: str, db: Session = Depends(get_db)):
     return db_user
 
 
+#Get user that is currently authenticated
 @router.get("/me", response_model=schemas.User)
 def get_me(user: str = Depends(get_current_user)):
     return user
 
 
+#Get single user stats
 @router.get("/users/stats/{user_id}")
-def read_user_stats(user_id: str, db: Session = Depends(get_db)):
+def read_user_stats(user_id: int, db: Session = Depends(get_db)):
     user_stats = controller.get_user_stats(db, user_id=user_id)
 
     if user_stats is None:
@@ -119,7 +128,7 @@ def read_user_stats(user_id: str, db: Session = Depends(get_db)):
     return user_stats
 
 
-#Patch User Data
+#Update User Data
 @router.patch("/users")
 def patch_user(userName: str = Form(" "), userAbout: str = Form(" "), userEmail: str = Form(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     newUser = controller.update_user(db, userName=userName, userEmail=userEmail, userAbout=userAbout, user=user)
@@ -131,7 +140,7 @@ def patch_user(userName: str = Form(" "), userAbout: str = Form(" "), userEmail:
         raise HTTPException(status_code=400, detail="Failed to update profile")
 
 
-#Patch User Password
+#Update User Password
 @router.patch("/users/password")
 def patch_user_password(userPassword: str = Form(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     newUser = controller.update_user_password(db, userPassword=userPassword, user=user)
@@ -141,3 +150,46 @@ def patch_user_password(userPassword: str = Form(...), db: Session = Depends(get
     
     else:
         raise HTTPException(status_code=400, detail="Failed to update password")
+
+
+#Create a new webhook
+@router.post("/user/webhook")
+def create_webhook(webhookname: str = Form(" "), webhooktype: str = Form(" "), webhookenabled: bool = Form(...), webhookurl: str = Form(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    userWebhooks = controller.create_webhook(db, webhookname=webhookname, webhooktype=webhooktype, webhookenabled=webhookenabled, webhookurl=webhookurl, user=user)
+
+    if userWebhooks:
+        return "Success"
+
+    else:
+        return "Update failed"
+
+
+#Update a webhook
+@router.patch("/user/webhook/{webhook_id}")
+def update_webhook(webhook_id: int, webhookname: str = Form(" "), webhooktype: str = Form(" "), webhookenabled: bool = Form(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    userWebhooks = controller.update_webhook(db, webhookname=webhookname, webhooktype=webhooktype, webhookenabled=webhookenabled, user=user, webhook_id=webhook_id)
+    
+    if userWebhooks:
+        return "Success"
+
+    else:
+        return "Update failed"
+
+
+#Delete a webhook
+@router.delete("/user/webhook/{webhook_id}")
+def delete_webhook(webhook_id: int, db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    status, msg = controller.delete_webhook(db, user=user, webhook_id=webhook_id)
+
+    return msg
+
+
+#Get my webhooks
+@router.get("/user/webhook/")
+def read_user_webhooks(db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    user_webhooks = controller.get_user_webhooks(db, user=user)
+
+    if user_webhooks is None:
+        raise HTTPException(status_code=404, detail="No webhooks found")
+    
+    return user_webhooks
