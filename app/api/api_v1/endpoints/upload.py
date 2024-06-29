@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Form, HTTPException, File, UploadFile, Depends
+from fastapi import APIRouter, Form, HTTPException, File, UploadFile, Depends, BackgroundTasks
 import uvicorn
 from PIL import Image
 import io
@@ -10,6 +10,9 @@ from internal.auth import get_current_user
 from internal.dewreader import *
 import re
 from pathlib import Path 
+from discord_webhook import DiscordWebhook
+import time
+
 
 router = APIRouter()
 logger = logging.getLogger('uvicorn')
@@ -23,13 +26,35 @@ def get_db():
         db.close()
 
 
+#Remove bad HTML from user form fields
 def removeHtml(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
 
 
+#Send webhook notifications in background
+def send_map_webhooks(webhooks, mapId: int):
+    if webhooks:
+        for webhook in webhooks:
+            #logger.info(webhook.webhookname)
+            wh = DiscordWebhook(url=webhook.webhookurl, content="https://fileshare.zgaf.io/api_v2/mapview?mapId=" + str(mapId))
+            wh.execute()
+            time.sleep(0.5)
+
+
+#Send webhook notifications in background
+def send_mod_webhooks(webhooks, modId: int):
+    if webhooks:
+        for webhook in webhooks:
+            #logger.info(webhook.webhookname)
+            wh = DiscordWebhook(url=webhook.webhookurl, content="https://fileshare.zgaf.io/api_v2/modview?modId=" + str(modId))
+            wh.execute()
+            time.sleep(0.5)
+
+
+#Upload a map file
 @router.post("/upload/map")
-def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), mapVisibility: bool = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+def upload(background_tasks: BackgroundTasks, mapUserDesc: str = Form(" "), mapTags: str = Form(...), mapVisibility: bool = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     valid_variants = ['variant.oddball', 'variant.zombiez', 'variant.ctf', 'variant.koth', 'variant.slayer', 'variant.assault', 'variant.vip', 'variant.jugg', 'variant.terries']
     map_images = []
 
@@ -58,7 +83,6 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), mapVisibility
         elif file.filename not in valid_variants or "sandbox.map":
             raise HTTPException(status_code=400, detail="Invalid file {}".format(file.filename))
 
-    logger.info("Reading Map #########################################################")
     mapContents = mapFile.file.read()
     variantContents = variantFile.file.read()
 
@@ -101,7 +125,7 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), mapVisibility
         return HTTPException(status_code=400, detail="Variant file empty")
 
     variant_id = controller.create_user_variant(db, variant=variantData,  user_id=user.id)
-    map_create = controller.create_user_map(db, map=mapData, mapTags=mapTags, user_id=user.id, variant_id=variant_id, mapUserDesc=mapUserDesc, mapVisibility=mapVisibility)
+    map_create, webhooks = controller.create_user_map(db, map=mapData, mapTags=mapTags, user_id=user.id, variant_id=variant_id, mapUserDesc=mapUserDesc, mapVisibility=mapVisibility)
 
     if len(map_images) > 0:
         for idx, image in enumerate(map_images):
@@ -119,6 +143,8 @@ def upload(mapUserDesc: str = Form(" "), mapTags: str = Form(...), mapVisibility
             image.close()
              
 
+    #Run webhook queue in background
+    background_tasks.add_task(send_map_webhooks, webhooks, map_create.id)
     return HTTPException(status_code=200, detail="Success!")
 
 
@@ -234,7 +260,7 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
 
 
 @router.post("/upload/mod")
-def upload(modDescription: str = Form(" "), modTags: str = Form(...), modVisibility: bool = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+def upload(background_tasks: BackgroundTasks, modDescription: str = Form(" "), modTags: str = Form(...), modVisibility: bool = Form(...), files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
     mod_images = []
     valid_files = [".pak"]
 
@@ -247,7 +273,7 @@ def upload(modDescription: str = Form(" "), modTags: str = Form(...), modVisibil
     if len(files) > 7:
         raise HTTPException(status_code=400, detail="Too many files! Expected mod, and up to 5 Images.")
 
-    if len(files) < 2:
+    if len(files) < 1:
         raise HTTPException(status_code=400, detail="Missing files.")
 
     for file in files:
@@ -279,7 +305,7 @@ def upload(modDescription: str = Form(" "), modTags: str = Form(...), modVisibil
 
     modVisibility = not modVisibility #Invert value because I didnt want to mess with updating all values in db. 
 
-    mod_create = controller.create_user_mod(db, modTags=modTags, mod=modData, user_id=user.id, modDescription=modDescription, modVisibility=modVisibility)
+    mod_create, webhooks = controller.create_user_mod(db, modTags=modTags, mod=modData, user_id=user.id, modDescription=modDescription, modVisibility=modVisibility)
 
     #Pak files could be larger than bytea size limit so we puts them on the disk instead
     Path("/app/static/mods/pak/" + str(mod_create.id) + "/").mkdir(parents=True, exist_ok=True)
@@ -307,4 +333,7 @@ def upload(modDescription: str = Form(" "), modTags: str = Form(...), modVisibil
             image.save("/app/static/mods/tb/" + str(mod_create.id) + "/" + str(idx), "JPEG")
             image.close()
 
+
+    #Run webhook queue in background
+    background_tasks.add_task(send_mod_webhooks, webhooks, mod_create.id)
     return HTTPException(status_code=200, detail="Success!")

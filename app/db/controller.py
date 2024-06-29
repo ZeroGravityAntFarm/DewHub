@@ -10,6 +10,11 @@ from sqlalchemy import or_, desc, asc
 import shutil
 import os
 import json
+import logging
+import uvicorn
+
+logger = logging.getLogger('uvicorn')
+
 
 #Authenticate a user
 def authenticate_user(db, username: str, password: str, client_host: str):
@@ -33,12 +38,14 @@ def authenticate_user(db, username: str, password: str, client_host: str):
 
     return user
 
+
 #Sync sqlalchemy models with database, creates missing tables
 def sync_models():
     from db.session import Base
     from db.session import engine
 
     Base.metadata.create_all(engine)
+
 
 #Query user profile 
 def get_user_auth(db: Session, user_name: str):
@@ -464,7 +471,14 @@ def create_user_map(db: Session, mapUserDesc: str, mapVisibility: bool, mapTags:
     #Update user's rank
     update_rank(user_id, db)
 
-    return db_map
+    #Get webhooks
+    if not mapVisibility:
+        webhooks = db.query(models.WebHook).filter(models.WebHook.webhooktype == "map" and models.WebHook.webhookenabled == True).all()
+        
+        return db_map, webhooks
+
+    else:
+        return db_map, None
 
 
 #Get all mods for a specific user 
@@ -502,7 +516,14 @@ def create_user_mod(db: Session, modDescription: str, modTags: str, mod: schemas
     #Update user's rank
     update_rank(user_id, db)
 
-    return db_mod
+    #Get webhooks
+    if not modVisibility:
+        webhooks = db.query(models.WebHook).filter(models.WebHook.webhooktype == "mod" and models.WebHook.webhookenabled == True).all()
+        
+        return db_mod, webhooks
+
+    else:
+        return db_mod, None
 
 
 #Get all mods
