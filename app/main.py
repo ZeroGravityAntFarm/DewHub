@@ -1,6 +1,8 @@
 from fastapi import FastAPI
+from starlette.responses import Response
+from starlette.types import Scope
+from starlette.staticfiles import StaticFiles
 from api.api_v1.api import api_router
-from fastapi.staticfiles import StaticFiles
 from db.models import models
 from db.session import engine
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,7 +21,20 @@ app = FastAPI()
 app.include_router(api_router)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-app.mount("/", StaticFiles(directory="static", html = True), name="static")
+
+
+############### Static Files Custom Response Hack ##################
+
+class CustomStaticFiles(StaticFiles):
+    async def get_response(self, path: str, scope: Scope) -> Response:
+        response = await super().get_response(path, scope)
+
+        if path.endswith('.pak') or path.endswith('.map'):
+            response.headers["Content-Type"] = "application/octet-stream"
+
+        return response
+
+app.mount("/", CustomStaticFiles(directory="static", html = True), name="static")
 add_pagination(app)
 
 app.add_middleware(
@@ -29,3 +44,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+'''
+if __name__ == "__main__":
+    # Use this for debugging purposes only
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8001, proxy_headers=True, forwarded_allow_ips='*', log_level="debug")
+'''
