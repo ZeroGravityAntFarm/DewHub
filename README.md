@@ -1,4 +1,4 @@
 # DewShare
  A website to share user created ElDewrito maps, mods, and variants.
 
-![image](https://imgur.com/a/OYfgIID)
+![image](https://i.imgur.com/zz4eM6h.png)
