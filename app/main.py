@@ -10,6 +10,8 @@ from internal.limiter import limiter
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from fastapi_pagination import add_pagination
+from db.session import SessionLocal
+from db.models import models
 import tempfile
 
 models.Base.metadata.create_all(bind=engine)
@@ -24,7 +26,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 ############### Static Files Custom Response Hack ##################
-
 class CustomStaticFiles(StaticFiles):
     async def get_response(self, path: str, scope: Scope) -> Response:
         response = await super().get_response(path, scope)
@@ -32,7 +33,19 @@ class CustomStaticFiles(StaticFiles):
         if path.endswith('.pak') or path.endswith('.map'):
             response.headers["Content-Type"] = "application/octet-stream"
 
+        #This is so ghetto I hate it. FASTAPI please add more control for static files
+        split_path = path.split("/")
+        if len(split_path) > 3:
+            db = SessionLocal()
+            if split_path[1] == "pak":
+                modId = split_path[2]
+                mod = db.query(models.Mod).filter(models.Mod.id == modId).first()
+                mod.mod_downloads += 1
+
+                db.commit()
+
         return response
+
 
 app.mount("/", CustomStaticFiles(directory="static", html = True), name="static")
 add_pagination(app)
@@ -44,11 +57,3 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-'''
-if __name__ == "__main__":
-    # Use this for debugging purposes only
-    import uvicorn
-
-    uvicorn.run(app, host="0.0.0.0", port=8001, proxy_headers=True, forwarded_allow_ips='*', log_level="debug")
-'''

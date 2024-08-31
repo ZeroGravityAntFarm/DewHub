@@ -5,14 +5,14 @@
    <!-- Required meta tags -->
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
- 
+
    <!-- Facebook Meta Tags -->
    <meta property="og:url" content="https://fileshare.zgaf.io/api_v2/modview?modId={{ id }}">
    <meta property="og:type" content="website">
    <meta property="og:title" content="{{ modName }}">
    <meta property="og:description" content="{{ modDescription }}">
    <meta property="og:image" content="https://fileshare.zgaf.io/mods/{{ id }}/0">
- 
+
    <!-- Twitter Meta Tags -->
    <meta name="twitter:card" content="summary_large_image">
    <meta property="twitter:domain" content="fileshare.zgaf.io">
@@ -20,30 +20,47 @@
    <meta name="twitter:title" content="{{ modName }}">
    <meta name="twitter:description" content="{{ modDescription }}">
    <meta name="twitter:image" content="https://fileshare.zgaf.io/mods/{{ id }}/0">
- 
+
    <!-- Meta Tags Generated via https://www.opengraph.xyz -->
- 
+
    <!-- Bootstrap CSS -->
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-     integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
- 
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+
    <title>Dewrito Share</title>
- 
-   <link href="/scripts/index.css" rel="stylesheet">
- </head>
+
+   <link href="/frontend.css" rel="stylesheet">
+</head>
 
 <body>
    <header class="navbar navbar-dark navbar-expand-lg sticky-top bg-dark flex-md-nowrap p-1">
       <a class="navbar-brand col-md-0 col-lg-0 me-0 px-3" href="/">
-         <img src="/content/default/eldorito.png" alt="eldorito"
-            style="width:30px;height:30px;">
+         <img src="/content/default/eldorito.png" alt="eldorito" style="width:30px;height:30px;">
       </a>
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
          data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
          <span class="navbar-toggler-icon"></span>
       </button>
+      <div class="dropdown">
+         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Version
+         </button>
+         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li><a class="dropdown-item active" href="/?version=0.7">0.7.X</a></li>
+            <li><a class="dropdown-item" href="/?version=0.6.1">0.6.1</a></li>
+            <li><a class="dropdown-item" href="/?version=0.5.1">0.5.1</a></li>
+            <li>
+               <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="/">All</a></li>
+         </ul>
+      </div>
       <form class="d-flex w-100 py-1">
-         <input class="form-control me-1 ms-1" id="search_bar" type="search" placeholder="Search" aria-label="Search">
+         <input class="form-control me-1 ms-1" id="search_bar" type="search" placeholder="Search Maps"
+            aria-label="Search">
          <button type='button' class="btn btn-outline-success" onclick="searchMaps()">Search</button>
       </form>
       <div class="d-flex w-100"></div>
@@ -64,7 +81,7 @@
                      <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-3 align-middle">
                         <i class="fs-4 bi-map"></i> <span class="ms-1 d-sm-inline">Maps</span>
                      </a>
-                     <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                     <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                         <li class="w-100">
                            <a href="/maps/newest" class="nav-link px-3 link-secondary"> <span
                                  class="d-sm-inline">Newest</span></a>
@@ -85,16 +102,44 @@
                      </a>
                      <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                         <li class="w-100">
-                           <a href="/variants/newest" class="nav-link px-3 link-secondary"> <span
-                                 class="d-sm-inline">Newest</span></a>
+                           <a href="/variants/all" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">All</span></a>
                         </li>
                         <li>
-                           <a href="/variants/downloaded" class="nav-link px-3 link-secondary">
-                              <span class="d-sm-inline">Most Downloaded</span></a>
+                           <a href="/variants/slayer" class="nav-link px-3 link-secondary">
+                              <span class="d-sm-inline">Slayer</span></a>
                         </li>
                         <li>
-                           <a href="/variants/oldest" class="nav-link px-3 link-secondary"> <span
-                                 class="d-sm-inline">Oldest</span></a>
+                           <a href="/variants/oddball" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">Oddball</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/koth" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">KOTH</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/ctf" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">CTF</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/assault" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">Assault</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/territories" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">Territories</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/juggernaut" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">Juggernaut</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/infection" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">Infection</span></a>
+                        </li>
+                        <li>
+                           <a href="/variants/vip" class="nav-link px-3 link-secondary"> <span
+                                 class="d-sm-inline">VIP</span></a>
                         </li>
                      </ul>
                   </li>
@@ -121,14 +166,10 @@
                      <a href="#submenu4" data-bs-toggle="collapse" class="nav-link px-3 align-middle">
                         <i class="fs-4 bi-code-square"></i> <span class="ms-1 d-sm-inline">Mods</span>
                      </a>
-                     <ul class="collapse show nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
+                     <ul class="collapse nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
                         <li class="w-100">
                            <a href="/mods/newest" class="nav-link px-3 link-secondary"> <span
                                  class="d-sm-inline">Newest</span></a>
-                        </li>
-                        <li>
-                           <a href="/mods/downloaded" class="nav-link px-3 link-secondary">
-                              <span class="d-sm-inline">Most Downloaded</span></a>
                         </li>
                         <li>
                            <a href="/mods/oldest" class="nav-link px-3 link-secondary"> <span
@@ -137,29 +178,41 @@
                      </ul>
                   </li>
                   <hr class="bg-secondary border-2 border-top border-secondary" />
-                  <a href="/maps?search=Slayer" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">Slayer</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'Slayer');">Slayer</a>
 
-                  <a href="/maps?search=Infection" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">Infection</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'Infection');">Infection</a>
 
-                  <a href="/maps?search=Race" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">Race</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'Race');">Race</a>
 
-                  <a href="/maps?search=Puzzle" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">Puzzle</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'Puzzle');">Puzzle</a>
 
-                  <a href="/maps?search=KOTH" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">KOTH</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'KOTH');">KOTH</a>
 
-                  <a href="/maps?search=CTF" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">CTF</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'CTF');">CTF</a>
 
-                  <a href="/maps?search=Assault" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">Assault</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'Assault');">Assault</a>
 
-                  <a href="/maps?search=Territories" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">Territories</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'Territories');">Territories</a>
 
-                  <a href="/maps?search=Oddball" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">Oddball</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'Oddball');">Oddball</a>
 
-                  <a href="/maps?search=Juggernaut" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">Juggernaut</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'Juggernaut');">Juggernaut</a>
 
-                  <a href="/maps?search=VIP" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">VIP</a>
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'VIP');">VIP</a>
 
-                  <a href="/maps?search=Mini%20Games" class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%">Mini
+                  <a noref class="nav-link px-3 py-0 link-secondary align-middle" style="font-size: 75%"
+                     onclick="searchMapsQuery(1, 'Mini Games');">Mini
                      Games</a>
 
                   <hr class="bg-secondary border-2 border-top border-secondary" />
@@ -172,7 +225,7 @@
                      style="display:inline-block;">
                      <span class="d-sm-inline mx-3 text-muted">About</span>
                   </a>
-                  <a href="https://stats.uptimerobot.com/j6NNxFjN9x"
+                  <a href="https://status.zgaf.io/status/ed-service"
                      class="d-flex align-items-center px-3 text-muted align-middle">
                      <i class="fs-4 bi-activity"></i>
                   </a>
@@ -186,7 +239,7 @@
          <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="col py-0">
                <div id="map-container" class="container">
-                  <div class="row h-50">
+                  <div class="row mt-5">
                      <div id="mod-info"></div>
                   </div>
                </div>
@@ -218,30 +271,38 @@
                   <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
                   <textarea class="form-control" id="usermapdescription" rows="3"></textarea>
                </div>
-               <div>
-                  <h5>Tag</h5>
-                  <select class="form-select" aria-label="map tags" id="mapTags">
-                     <option selected value="Slayer">Slayer</option>
-                     <option value="Infection">Infection</option>
-                     <option value="Puzzle">Puzzle</option>
-                     <option value="KOTH">KOTH</option>
-                     <option value="CTF">CTF</option>
-                     <option value="Assault">Assault</option>
-                     <option value="Territories">Territories</option>
-                     <option value="Oddball">Oddball</option>
-                     <option value="Juggernaut">Juggernaut</option>
-                     <option value="VIP">VIP</option>
-                     <option value="Race">Race</option>
-                     <option value="Mini Games">Mini Games</option>
-                     <option value="Enhanced">Enhanced</option>
-                     <option value="0.7">0.7</option>
-                     <option value="0.5.1">0.5.1</option>
-                  </select>
+               <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="mapvisibilitycheckbox" checked>
+                  <label class="form-check-label" for="flexCheckChecked">Visible</label>
+                  <p class="text-muted">Determines if the map is visible on the map page. Anyone with the map link can
+                     still download.</p>
                </div>
-            </div>
-            <div class="modal-footer">
-               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-               <button type="button" class="btn btn-primary" onclick="uploadMaps()">Upload</button>
+               <div>
+                  <div>
+                     <h5>Tag</h5>
+                     <select class="form-select" aria-label="map tags" id="mapTags">
+                        <option selected value="Slayer">Slayer</option>
+                        <option value="Infection">Infection</option>
+                        <option value="Puzzle">Puzzle</option>
+                        <option value="KOTH">KOTH</option>
+                        <option value="CTF">CTF</option>
+                        <option value="Assault">Assault</option>
+                        <option value="Territories">Territories</option>
+                        <option value="Oddball">Oddball</option>
+                        <option value="Juggernaut">Juggernaut</option>
+                        <option value="VIP">VIP</option>
+                        <option value="Race">Race</option>
+                        <option value="Mini Games">Mini Games</option>
+                        <option value="Enhanced">Enhanced</option>
+                        <option value="0.7">0.7</option>
+                        <option value="0.5.1">0.5.1</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" onclick="uploadMaps()">Upload</button>
+               </div>
             </div>
          </div>
       </div>
@@ -308,6 +369,12 @@
                   <label for="formControlTextArea" class="form-label">Description (max 1200)</label>
                   <textarea class="form-control" id="modDescription" rows="3"></textarea>
                </div>
+               <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="modvisibilitycheckbox" checked>
+                  <label class="form-check-label" for="flexCheckChecked">Visible</label>
+                  <p class="text-muted">Determines if the mod is visible on the mod page. Anyone with the mod link
+                     can still download.</p>
+               </div>
                <div>
                   <h5>Tag</h5>
                   <select class="form-select" aria-label="mod tags" id="modTags">
@@ -324,21 +391,23 @@
                      <option value="ability">Ability</option>
                      <option value="map">Map</option>
                      <option value="ai">A.I.</option>
-                     <option value="0.7">0.7</option>
-                     <option value="0.6.1">0.6.1</option>
-                     <option value="0.6">0.6</option>
-                     <option value="0.5.1">0.5.1</option>
+                     <option value="misc">Misc</option>
                   </select>
                </div>
             </div>
             <div class="modal-footer">
-               <div id="spinnyboi"></div>
                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                <button type="button" class="btn btn-primary" onclick="uploadMods()">Upload</button>
+            </div>
+            <div class="progress">
+               <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress-bar" role="progressbar"
+                  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
             </div>
          </div>
       </div>
    </div>
+   <script src="/frontend.js"></script>
+   <script src="/upload.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
@@ -346,31 +415,31 @@
 </body>
 <script>
    const thisUrl = new URL(window.location.toLocaleString()).searchParams;
-const modId = thisUrl.get('modId');
+   const modId = thisUrl.get('modId');
 
-console.log(modId);
+   console.log(modId);
 
-function getUser(userId) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "/api_v2/users/" + userId, false);
-    xmlHttp.send();
-    const user = JSON.parse(xmlHttp.response);
+   function getUser(userId) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("GET", "/api_v2/users/" + userId, false);
+      xmlHttp.send();
+      const user = JSON.parse(xmlHttp.response);
 
-    return user
-}
+      return user
+   }
 
-function getMod(modId) {
-    var trHTML = '';
-    var tbHTML = '';
-    var modUrl = '';
-    var modImage = '';
+   function getMod(modId) {
+      var trHTML = '';
+      var tbHTML = '';
+      var modUrl = '';
+      var modImage = '';
 
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "/api_v2/mods/" + modId);
-    xmlHttp.send();
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("GET", "/api_v2/mods/" + modId);
+      xmlHttp.send();
 
-    xmlHttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
+      xmlHttp.onreadystatechange = function () {
+         if (this.readyState == 4 && this.status == 200) {
             const modData = JSON.parse(xmlHttp.responseText);
             user = getUser(modData["owner_id"]);
 
@@ -424,6 +493,7 @@ function getMod(modId) {
             //trHTML += '<li class="list-group-item bg-dark text-white">About: ' + modData["modDescription"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">File Size: ' + humanFileSize(modData["modFileSize"]) + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">Uploaded: ' + timeAgo + ' ago</li>';
+            trHTML += '<li class="list-group-item bg-dark text-white">Downloads: ' + modData["mod_downloads"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">ID: ' + modData["id"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">Tags: ' + modData["modTags"] + '</li>';
             trHTML += '</ul>';
@@ -435,62 +505,63 @@ function getMod(modId) {
             modUrl += '/mod/?modId=' + modData["id"];
             modImage += '/mods/' + modData["id"] + '/0';
 
-        }
-        document.getElementById("mod-info").innerHTML = trHTML;
-    }
-}
+         }
+         document.getElementById("mod-info").innerHTML = trHTML;
+      }
+   }
 
-function timeSince(date) {
+   function timeSince(date) {
 
-    var seconds = Math.floor((new Date() - date) / 1000);
+      var seconds = Math.floor((new Date() - date) / 1000);
 
-    var interval = seconds / 31536000;
+      var interval = seconds / 31536000;
 
-    if (interval > 1) {
-        return Math.floor(interval) + " years";
-    }
-    interval = seconds / 2592000;
-    if (interval > 1) {
-        return Math.floor(interval) + " months";
-    }
-    interval = seconds / 86400;
-    if (interval > 1) {
-        return Math.floor(interval) + " days";
-    }
-    interval = seconds / 3600;
-    if (interval > 1) {
-        return Math.floor(interval) + " hours";
-    }
-    interval = seconds / 60;
-    if (interval > 1) {
-        return Math.floor(interval) + " minutes";
-    }
-    return Math.floor(seconds) + " seconds";
-}
+      if (interval > 1) {
+         return Math.floor(interval) + " years";
+      }
+      interval = seconds / 2592000;
+      if (interval > 1) {
+         return Math.floor(interval) + " months";
+      }
+      interval = seconds / 86400;
+      if (interval > 1) {
+         return Math.floor(interval) + " days";
+      }
+      interval = seconds / 3600;
+      if (interval > 1) {
+         return Math.floor(interval) + " hours";
+      }
+      interval = seconds / 60;
+      if (interval > 1) {
+         return Math.floor(interval) + " minutes";
+      }
+      return Math.floor(seconds) + " seconds";
+   }
 
-function humanFileSize(bytes, si=false, dp=1) {
-    const thresh = si ? 1000 : 1024;
-  
-    if (Math.abs(bytes) < thresh) {
-      return bytes + ' B';
-    }
-  
-    const units = si 
-      ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] 
-      : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-    let u = -1;
-    const r = 10**dp;
-  
-    do {
-      bytes /= thresh;
-      ++u;
-    } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
-  
-  
-    return bytes.toFixed(dp) + ' ' + units[u];
-  }
+   function humanFileSize(bytes, si = false, dp = 1) {
+      const thresh = si ? 1000 : 1024;
+
+      if (Math.abs(bytes) < thresh) {
+         return bytes + ' B';
+      }
+
+      const units = si
+         ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+         : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+      let u = -1;
+      const r = 10 ** dp;
+
+      do {
+         bytes /= thresh;
+         ++u;
+      } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
 
 
-getMod(modId);
- </script>
+      return bytes.toFixed(dp) + ' ' + units[u];
+   }
+
+
+   getMod(modId);
+</script>
+
 </html>
