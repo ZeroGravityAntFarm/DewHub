@@ -126,7 +126,6 @@ def get_user_stats(db: Session, user_id: int):
                    'prefabs': prefab_count,
                    'mods': mod_count }
 
-
     return user_stats
 
 
@@ -260,7 +259,7 @@ def update_map(db: Session, map_id: int, user: str, mapUserDesc: str, mapTags: s
     return map
 
 
-#Update map
+#Update mod
 def update_mod(db: Session, mod_id: int, user: str, modUserDesc: str, modTags: str, modName: str, modVisibility: bool):
     mod = db.query(models.Mod).filter(models.Mod.id == mod_id and models.Mod.owner_id == user.id).first()
 
@@ -526,6 +525,33 @@ def create_user_mod(db: Session, modDescription: str, modTags: str, mod: schemas
         return db_mod, None
 
 
+#Validate the owner for updating a .pak file
+def validate_user_mod_file(db: Session, user_id: int, mod_id: int):
+    mod = db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).filter(models.Mod.id == mod_id).filter(models.Mod.owner_id == user_id).first()
+
+    if mod:
+        return mod
+
+    else:
+        return False
+
+
+#Update mod file size. We don't need user ID as calling function has already auth'd. 
+#DO NOT USE THIS OUT OF THE ABOVE CONTEXT
+def update_mod_size(db: Session, mod_id: int, newSize: int):
+    mod = db.query(models.Mod).filter(models.Mod.id == mod_id).first()
+
+    if mod:
+        mod.modFileSize = newSize
+
+        db.commit()
+
+        return True
+
+    else:
+        return False
+
+
 #Get all mods
 def get_mods(db: Session, skip: int = 0, limit: int = 100):
     return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).offset(skip).limit(limit).filter(models.Mod.notVisible == False).all()
@@ -551,7 +577,7 @@ def delete_mod(db: Session, mod_id: int, user: str):
                     shutil.rmtree("/app/static/mods/" + str(mod.id))
                 
                 else:
-                    return False, "Mod files not found"
+                    pass
                 
                 #Delete mod binaries
                 if os.path.exists("/app/static/mods/pak/" + str(mod.id)):

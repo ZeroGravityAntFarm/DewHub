@@ -333,7 +333,7 @@
               </div>
 
 
-              <div class="modal" tabindex="-1" id="editmod">
+              <div class="modal" tabindex="-1" id="editmod" data-bs-backdrop="static">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -376,6 +376,8 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#replaceModModal"
+                        data-bs-dismiss="modal" id="replaceModCall" value="">Replace File</button>
                       <button type="button" data-bs-dismiss="modal" id="editModCall" value="" class="btn btn-danger"
                         onclick="editMod(this.value)">Apply</button>
                     </div>
@@ -407,6 +409,35 @@
                         <button type="button" data-bs-dismiss="modal" id="editPasswordCall" value=""
                           class="btn btn-danger" onclick="editPassword()">Apply</button>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal" tabindex="-1" id="replaceModModal" data-bs-backdrop="static">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Replace Mod File</h5>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <p class="text-muted">This will replace the existing file for this mod. The original filename
+                          will be preserved along with the static link.</p>
+                        <label for="formFile" class="form-label">Mod File (.pak)</label>
+                        <input class="form-control" type="file" id="modFile">
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" id="replaceModButton" value="" class="btn btn-success"
+                          onclick="replaceMod(this.value)">Upload</button>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated"
+                          id="replacemod-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                          aria-valuemax="100" style="width: 0%"></div>
+                      </div>
+                      <div id="replace-mod-status"></div>
                     </div>
                   </div>
                 </div>
@@ -466,7 +497,6 @@
                         <select class="form-select" aria-label="webhooktype" id="webhookType">
                           <option value="map">Map</option>
                           <option value="mod">Mod</option>
-                          <option value="prefab">Prefab</option>
                         </select>
                       </div>
                       <div class="form-check">
@@ -476,8 +506,8 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary me-1" data-bs-dismiss="modal">Close</button>
-                        <button type="button" data-bs-dismiss="modal" id="webhookcall" value=""
-                          class="btn btn-success" onclick="createWebHook()">Apply</button>
+                        <button type="button" data-bs-dismiss="modal" id="webhookcall" value="" class="btn btn-success"
+                          onclick="createWebHook()">Apply</button>
                       </div>
                     </div>
                   </div>
@@ -500,7 +530,6 @@
                         <select class="form-select" aria-label="webhooktype" id="editwebhooktype">
                           <option value="map">Map</option>
                           <option value="mod">Mod</option>
-                          <option value="prefab">Prefab</option>
                         </select>
                       </div>
                       <div class="form-check">
@@ -639,10 +668,27 @@
                 var modalTitle = editMapModal.querySelector('.modal-title')
 
                 document.getElementById("editModCall").value = modId
+                document.getElementById("replaceModCall").value = modId
                 document.getElementById("usermodname").value = modName
                 document.getElementById("usermoddescription").value = modDescription
                 document.getElementById("modvisibilitycheckbox").checked = !modVis
                 document.getElementById("modTags").value = modTags
+              })
+            </script>
+
+            <script>
+              var replaceModModal = document.getElementById('replaceModModal')
+              replaceModModal.addEventListener('show.bs.modal', function (event) {
+                // Button that triggered the modal
+                var button = event.relatedTarget
+
+                // Extract value
+                var modId = button.getAttribute('value')
+
+                // Update the modal's content.
+                var modalTitle = replaceModModal.querySelector('.modal-title')
+
+                document.getElementById("replaceModButton").value = modId
               })
             </script>
 

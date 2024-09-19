@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Form, HTTPException, File, UploadFile, Depends, BackgroundTasks
 import uvicorn
 from PIL import Image
-import io
+from io import BytesIO
 from db import controller
 from db.session import SessionLocal
 from sqlalchemy.orm import Session
@@ -12,7 +12,7 @@ import re
 from pathlib import Path 
 from discord_webhook import DiscordWebhook
 import time
-
+import shutil
 
 router = APIRouter()
 logger = logging.getLogger('uvicorn')
@@ -58,11 +58,11 @@ def upload(background_tasks: BackgroundTasks, mapUserDesc: str = Form(" "), mapT
     valid_variants = ['variant.oddball', 'variant.zombiez', 'variant.ctf', 'variant.koth', 'variant.slayer', 'variant.assault', 'variant.vip', 'variant.jugg', 'variant.terries']
     map_images = []
 
-    if len(mapUserDesc) > 1200:
-        raise HTTPException(status_code=400, detail="Description too long.")
-
     if not user:
         raise HTTPException(status_code=403, detail="Unauthorized")
+
+    if len(mapUserDesc) > 1200:
+        raise HTTPException(status_code=400, detail="Description too long.")
 
     if len(files) > 7:
         raise HTTPException(status_code=400, detail="Too many files! Expected map, variant, and up to 5 Images.")
@@ -107,7 +107,6 @@ def upload(background_tasks: BackgroundTasks, mapUserDesc: str = Form(" "), mapT
 
     except:
         return HTTPException(status_code=400, detail="Failed to read variant file")
-
 
     if mapData == 1:
         return HTTPException(status_code=400, detail="Unexpected map file size")
@@ -246,7 +245,6 @@ def upload(prefabDesc: str = Form(" "), prefabTags: str = Form(...), files: List
                     f.write(image.file.read())
                     f.close()
                     
-                
                 #Create thumbnail image
                 image = Image.open(image.file)
                 image.convert('RGB')
@@ -310,7 +308,9 @@ def upload(background_tasks: BackgroundTasks, modDescription: str = Form(" "), m
     #Pak files could be larger than bytea size limit so we puts them on the disk instead
     Path("/app/static/mods/pak/" + str(mod_create.id) + "/").mkdir(parents=True, exist_ok=True)
     with open("/app/static/mods/pak/" + str(mod_create.id) + "/" + str(modFile.filename), "wb") as f:
-                f.write(modContents)
+                #f.write(modContents)
+                #Stream file in chunks to disk. This will free up additional memory for other threads.
+                shutil.copyfileobj(BytesIO(modContents), f, 128*1024)
                 f.close()
                 modFile.file.close()
 
@@ -321,9 +321,7 @@ def upload(background_tasks: BackgroundTasks, modDescription: str = Form(" "), m
             with open("/app/static/mods/" + str(mod_create.id) + "/" + str(idx), "wb") as f:
                 f.write(image.file.read())
                 f.close()
-                
 
-            
             #Create thumbnail
             image = Image.open(image.file)
             image = image.convert('RGB')
@@ -332,7 +330,6 @@ def upload(background_tasks: BackgroundTasks, modDescription: str = Form(" "), m
             Path("/app/static/mods/tb/" + str(mod_create.id) + "/").mkdir(parents=True, exist_ok=True)
             image.save("/app/static/mods/tb/" + str(mod_create.id) + "/" + str(idx), "JPEG")
             image.close()
-
 
     #Run webhook queue in background
     background_tasks.add_task(send_mod_webhooks, webhooks, mod_create.id)

@@ -33,7 +33,12 @@ templates = Jinja2Templates(directory="templates")
 async def return_map(request: Request, mapId: int, db: Session = Depends(get_db)):
     map = controller.get_map(db, map_id=mapId)
 
-    return templates.TemplateResponse("map/index.html", {"request": request, "mapName": map.mapName, "id": map.id, "mapDescription": map.mapDescription})
+
+    if map:
+        return templates.TemplateResponse("map/index.html", {"request": request, "mapName": map.mapName, "id": map.id, "mapDescription": map.mapDescription})
+
+    else:
+        return templates.TemplateResponse("404/index.html", {"request": request})
 
 
 #Returns dynamically built view for variants. Only way to get meta tags working (that I know of).

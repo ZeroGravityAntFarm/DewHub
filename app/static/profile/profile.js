@@ -827,7 +827,7 @@ function loadUserWebHooks(){
     const user_webhooks = JSON.parse(xmlHttp.responseText);
 
     for (let [i, object] of user_webhooks.entries()) {
-        trHTML += '<li class="list-group-item d-flex"><p class="p-0 m-0 flex-grow-1">' + object['webhookname'] + '</p><button class="btn btn-success" data-bs-dismiss="modal" data-bs-webhookid="'+ object["id"] +'" data-bs-webhookname="'+ object["webhookname"] +'" data-bs-webhooktype="'+ object["webhooktype"] +'" data-bs-webhookenabled="'+ object["webhookenabled"] +'" data-bs-target="#editwebhook" data-bs-toggle="modal">Edit</button><button onclick="deleteWebHook(' + object['id']+ ')" class="btn btn-danger" data-bs-dismiss="modal">Delete</button></li>';
+        trHTML += '<li class="list-group-item d-flex"><p class="p-0 m-0 flex-grow-1">' + object['webhookname'] + '</p><button class="btn btn-success me-1" data-bs-dismiss="modal" data-bs-webhookid="'+ object["id"] +'" data-bs-webhookname="'+ object["webhookname"] +'" data-bs-webhooktype="'+ object["webhooktype"] +'" data-bs-webhookenabled="'+ object["webhookenabled"] +'" data-bs-target="#editwebhook" data-bs-toggle="modal">Edit</button><button onclick="deleteWebHook(' + object['id']+ ')" class="btn btn-danger me-1" data-bs-dismiss="modal">Delete</button></li>';
     }
     document.getElementById("webhook-table").innerHTML = trHTML;
 
@@ -986,11 +986,64 @@ function updateWebHook(webhook_id) {
 }
 
 
+function replaceMod(modId) {
+    var formData = new FormData();
+    var trHTML = '';
+    var tagData = '';
+
+    const progressBar = document.getElementById('replacemod-progress-bar');
+    let uploadPercentage = 0;
+    formData.append("files", document.getElementById("modFile").files[0]);
+    var bearer_token = "Bearer " + token;
+
+    $.ajax({
+	url: '/api_v2/update/mod/' + modId ,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+	headers: {
+        'Authorization': bearer_token
+        },
+        xhr: function () {
+            const myXhr = $.ajaxSettings.xhr();
+            myXhr.open('POST', '/api_v2/upload/mod/' + modId);
+
+            if (myXhr.upload) {
+                myXhr.upload.onprogress = function (event) {
+                    uploadPercentage = Math.round((event.loaded / event.total) * 100);
+                    progressBar.style.width = uploadPercentage + '%';
+                };
+             }
+            return myXhr;
+        },
+        success: function (response) {
+            console.log('File uploaded successfully!', response);
+            trHTML += '<div class="alert alert-success" role="alert">';
+            trHTML += 'Success!';
+            trHTML += '</div>'
+            document.getElementById("replace-mod-status").innerHTML = trHTML;
+
+            delayRedirect();
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            console.log('File upload failed.', jqXhr.status, textStatus, errorThrown);
+            trHTML += '<div class="alert alert-danger" role="alert">';
+            trHTML += 'Upload failed: ' + jqXhr.status + '';
+            trHTML += '</div>'
+            document.getElementById("replace-mod-status").innerHTML = trHTML;
+            
+        }
+    });
+}
+
+
 function delayRedirect() {
     setTimeout(function () {
         window.location.href = "/";
     }, 2000);
 }
+
 
 function getUser(userId) {
     var xmlHttp = new XMLHttpRequest();
@@ -1021,5 +1074,6 @@ function delayRedirectLogin() {
         window.location.href = "/login/";
     }, 1000);
 }
+
 
 loadUserv2()

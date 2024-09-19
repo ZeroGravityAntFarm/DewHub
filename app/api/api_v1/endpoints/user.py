@@ -8,6 +8,7 @@ from email.utils import parseaddr
 
 router = APIRouter()
 
+
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -16,6 +17,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 #Create a new user
 @router.post("/users/", response_model=schemas.User)
@@ -30,6 +32,9 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid email address")
 
     if user.name.isspace():
+        raise HTTPException(status_code=400, detail="Empty username")
+
+    if user.name == None:
         raise HTTPException(status_code=400, detail="Empty username")
     
     #Check if email already registered

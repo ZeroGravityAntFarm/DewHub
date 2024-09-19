@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, Request, Form
+from fastapi import APIRouter, Depends, File, UploadFile, HTTPException, Response, Request, Form
 from fastapi_pagination import paginate, Page, Params
 from db.schemas import schemas
 from db import controller
@@ -9,6 +9,11 @@ from internal.limiter import limiter
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from internal.dewreader import *
+from typing import List
+from io import BytesIO
+import shutil
+import os
 
 router = APIRouter()
 
@@ -29,7 +34,11 @@ templates = Jinja2Templates(directory="templates")
 async def return_modview(request: Request, modId: int, db: Session = Depends(get_db)):
     mod = controller.get_mod(db, mod_id=modId)
 
-    return templates.TemplateResponse("mod/index.html", {"request": request, "modName": mod.modName, "id": mod.id, "modDescription": mod.modDescription})
+    if mod:
+        return templates.TemplateResponse("mod/index.html", {"request": request, "modName": mod.modName, "id": mod.id, "modDescription": mod.modDescription})
+
+    else:
+        return templates.TemplateResponse("404/index.html", {"request": request})
 
 
 #Get all Mods
@@ -102,7 +111,7 @@ def mod_file(request: Request, mod_id: int, db: Session = Depends(get_db)):
     mod_file = controller.get_mod_file(db, mod_id=mod_id)
 
     if mod_file:
-        headers = {'Content-Disposition': 'attachment; filename="{}"'.format(mod_file.modName+".pak")}
+        headers = {'Content-Disposition': 'attachment; filename="{}"'.format(mod_file.modName+".pak"), 'Content-Type': 'application/octet-stream'}
         return Response(mod_file.modFile, headers=headers, media_type='application/octet-stream')
 
     else:
@@ -134,3 +143,59 @@ def patch_mod(mod_id: int, modDescription: str = Form(" "), modName: str = Form(
     
     else:
         raise HTTPException(status_code=400, detail="Could not update mod")
+
+
+#Replace mod file
+@router.post("/update/mod/{mod_id}")
+def update_mod(mod_id: str, files: List[UploadFile] = File(...), db: Session = Depends(get_db), user: str = Depends(get_current_user)):
+    valid_files = [".pak"]
+
+    if not user:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    if len(files) > 1:
+        raise HTTPException(status_code=400, detail="Too many files! Expected single pak.")
+
+    if len(files) < 1:
+        raise HTTPException(status_code=400, detail="Missing files.")
+
+    for file in files:
+        if file.filename.lower().endswith(('.pak')):
+            modFile = file
+
+        elif file.filename not in valid_files:
+            raise HTTPException(status_code=400, detail="Invalid file {}".format(file.filename))
+
+    modContents = modFile.file.read()
+
+    #Cleanup
+    modFile.file.close()
+
+    #Extract mod file data
+    modData = modReader(modFile.filename, modContents)
+
+    if modData == 2:
+        raise HTTPException(status_code=400, detail="Mod file too big.")
+    
+    if modData == 1:
+        raise HTTPException(status_code=400, detail="Mod file empty")
+
+    #Validate ownership and grab mod file name
+    mod_create = controller.validate_user_mod_file(db, user_id=user.id, mod_id=mod_id)
+
+    if mod_create:
+        with open("/app/static/mods/pak/" + str(mod_id) + "/" + str(mod_create.modFileName), "wb") as f:
+            #Stream file in chunks to disk. This will free up additional memory for other threads.
+            shutil.copyfileobj(BytesIO(modContents), f, 128*1024)
+            f.close()
+            modFile.file.close()
+
+            #Update db with new mod size
+            if controller.update_mod_size(db, mod_id=mod_id, newSize=modData.modFileSize):
+                return HTTPException(status_code=200, detail="Success!")
+            
+            else:
+                raise HTTPException(status_code=400, detail="Failed to update file size.")
+
+    else:
+        raise HTTPException(status_code=400, detail="Access Denied")

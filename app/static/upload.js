@@ -2,6 +2,7 @@ function uploadMaps() {
     var data = new FormData();
     var trHTML = '';
     var tagData = '';
+
     tagData = document.getElementById("mapTags");
     tagData = tagData.value;
     mapDesc = document.getElementById("usermapdescription")

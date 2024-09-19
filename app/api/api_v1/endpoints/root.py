@@ -6,12 +6,13 @@ from sqlalchemy.orm import Session
 from db.session import SessionLocal
 from db.schemas import schemas
 from db import controller
+import mimetypes
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory="static")
 
-# Dependency
+#Dependency
 def get_db():
     db = SessionLocal()
     try:
@@ -19,6 +20,7 @@ def get_db():
 
     finally:
         db.close()
+
 
 @router.get("/", response_class=HTMLResponse)
 def root(request: Request, db: Session = Depends(get_db)):
