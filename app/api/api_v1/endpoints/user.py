@@ -1,10 +1,12 @@
-from fastapi import APIRouter, HTTPException, Depends, Form
+from fastapi import APIRouter, HTTPException, Depends, Request, Form
 from db.schemas import schemas
 from db import controller
 from db.session import SessionLocal
 from sqlalchemy.orm import Session
 from internal.auth import get_current_user
 from email.utils import parseaddr
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 
 router = APIRouter()
 
@@ -17,6 +19,26 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+#Set our Jinja template dir
+templates = Jinja2Templates(directory="templates")
+
+
+#Returns dynamically built view for maps. Only way to get meta tags working (that I know of).
+@router.get("/profile/{username}", response_class=HTMLResponse)
+async def return_map(request: Request, username: str, db: Session = Depends(get_db)):
+    user = controller.get_user(db, user_name=username)
+    maps = controller.get_user_maps_public(db, user=user, limit=500)
+    prefabs = controller.get_user_prefabs(db, user=user, limit=500)
+    mods = controller.get_user_mods_public(db, user=user, limit=500)
+    stats = controller.get_user_stats(db, user_id=user.id)
+
+    if user:
+        return templates.TemplateResponse("profile/index.html", {"request": request, "user": user, "maps": maps, "prefabs": prefabs, "mods": mods, "stats": stats})
+
+    else:
+        return templates.TemplateResponse("404/index.html", {"request": request})
 
 
 #Create a new user
@@ -106,7 +128,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 
 
 #Get single user by name
-@router.get("/users/{user_name}")
+@router.get("/username/{user_name}")
 def read_user_name(user_name: str, db: Session = Depends(get_db)):
     db_user = controller.get_user(db, user_name=user_name)
 

@@ -71,7 +71,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 #Query user profile 
 def get_user(db: Session, user_name: str):
     user = db.query(models.User).filter(models.User.name == user_name).first()
-    user_data = db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email']).filter(models.User.name == user_name).first()
+    user_data = db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email' and c.name != 'last_login_ip']).filter(models.User.name == user_name).first()
 
     if user:
         if user.prof_views != None:
@@ -87,7 +87,7 @@ def get_user(db: Session, user_name: str):
 #Query user profile
 def get_userId(db: Session, user_id: int):
     user = db.query(models.User).filter(models.User.id == user_id).first()
-    user_data = db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email']).filter(models.User.id == user_id).first()
+    user_data = db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email' and c.name != 'last_login_ip']).filter(models.User.id == user_id).first()
 
     if user:
       return user_data
@@ -95,7 +95,7 @@ def get_userId(db: Session, user_id: int):
 
 #Get all users
 def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email']).offset(skip).limit(limit).all()
+    return db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email' and c.name != 'last_login_ip']).offset(skip).limit(limit).all()
 
 
 #Query user by email
@@ -117,9 +117,9 @@ def create_user(db: Session, user: schemas.UserCreate):
 #Query user stats 
 def get_user_stats(db: Session, user_id: int):
 
-    map_count = db.query(models.Map).filter(models.Map.owner_id == user_id).count()
+    map_count = db.query(models.Map).filter(models.Map.owner_id == user_id).filter(models.Map.notVisible == False).count()
     prefab_count = db.query(models.PreFab).filter(models.PreFab.owner_id == user_id).count()
-    mod_count = db.query(models.Mod).filter(models.Mod.owner_id == user_id).count()
+    mod_count = db.query(models.Mod).filter(models.Mod.owner_id == user_id).filter(models.Mod.notVisible == False).count()
 
 
     user_stats = { 'maps': map_count, 
@@ -445,6 +445,11 @@ def get_user_maps(db: Session, user: str, skip: int = 0, limit: int = 100):
     return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.owner_id == user.id).offset(skip).limit(limit).all()
 
 
+#Get all maps for a specific user 
+def get_user_maps_public(db: Session, user: str, skip: int = 0, limit: int = 100):
+    return db.query(*[c for c in models.Map.__table__.c if c.name != 'mapFile']).filter(models.Map.owner_id == user.id).filter(models.Map.notVisible == False).offset(skip).limit(limit).all()
+
+
 #Create new map entry
 def create_user_map(db: Session, mapUserDesc: str, mapVisibility: bool, mapTags: str, map: schemas.MapCreate, user_id: int, variant_id: int):
 
@@ -483,6 +488,11 @@ def create_user_map(db: Session, mapUserDesc: str, mapVisibility: bool, mapTags:
 #Get all mods for a specific user 
 def get_user_mods(db: Session, user: str, skip: int = 0, limit: int = 100):
     return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).filter(models.Mod.owner_id == user.id).offset(skip).limit(limit).all()
+
+
+#Get all mods for a specific user 
+def get_user_mods_public(db: Session, user: str, skip: int = 0, limit: int = 100):
+    return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).filter(models.Mod.owner_id == user.id).filter(models.Mod.notVisible == False).offset(skip).limit(limit).all()
 
 
 #Case insensitive search for map name, author, or description
@@ -554,7 +564,7 @@ def update_mod_size(db: Session, mod_id: int, newSize: int):
 
 #Get all mods
 def get_mods(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).offset(skip).limit(limit).filter(models.Mod.notVisible == False).all()
+    return db.query(*[c for c in models.Mod.__table__.c if c.name != 'modFile']).filter(models.Mod.notVisible == False).offset(skip).limit(limit).all()
 
 
 #Get single mod

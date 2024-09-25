@@ -488,7 +488,7 @@
             trHTML += '<p class="card-text">' + modData["modDescription"] + '</p>';
             trHTML += '</div>';
             trHTML += '<ul class="list-group list-group-flush">';
-            trHTML += '<li class="list-group-item bg-dark text-white">Uploaded By: ' + user["name"] + '</li>';
+            trHTML += '<li class="list-group-item bg-dark text-white">Uploaded By: <a href="/api_v2/profile/' + user["name"] + '">' + user["name"] + '</a></li>';
             trHTML += '<li class="list-group-item bg-dark text-white">Author: ' + modData["modAuthor"] + '</li>';
             //trHTML += '<li class="list-group-item bg-dark text-white">About: ' + modData["modDescription"] + '</li>';
             trHTML += '<li class="list-group-item bg-dark text-white">File Size: ' + humanFileSize(modData["modFileSize"]) + '</li>';

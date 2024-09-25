@@ -84,6 +84,7 @@ function loadUserv2() {
                     trHTML += '<div class="p-4">';
                     trHTML += '<p class="font-italic mb-1 text-muted">' + user["about"] + '</p>';
                     trHTML += '</div>';
+                    trHTML += '<p class="font-italic mb-1 text-muted">Public Profile:</p><a href="https://fileshare.zgaf.io/api_v2/profile/' + user["name"] + '">https://fileshare.zgaf.io/api_v2/profile/' + user["name"] + '</a>';
                     trHTML += '</div>';
                     trHTML += '<ul class="nav nav-tabs mb-3 bg-dark" id="contentTabs" role="tablist">';
                     trHTML += '<li class="nav-item" role="presentation">';
