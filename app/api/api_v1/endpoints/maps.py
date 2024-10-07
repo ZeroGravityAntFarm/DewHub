@@ -157,7 +157,7 @@ def read_map(map_id: int = 0, db: Session = Depends(get_db), user: str = Depends
 @router.get("/maps/{map_id}/file")
 @limiter.limit("60/minute")
 def read_map(request: Request, map_id: int, db: Session = Depends(get_db)):
-    map_file = controller.get_map_file(db, map_id=map_id)
+    map_file = controller.get_map_file(db, map_id=map_id, request=request)
 
     if map_file:
         headers = {'Content-Disposition': 'attachment; filename="sandbox.map"'}

@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from fastapi import Request
 from sqlalchemy import func
 from db.models import models
 from db.schemas import schemas
@@ -12,6 +13,7 @@ import os
 import json
 import logging
 import uvicorn
+import hashlib
 
 logger = logging.getLogger('uvicorn')
 
@@ -383,18 +385,24 @@ def get_prefab_file(db: Session, prefab_id: int):
 
 
 #Get map file
-def get_map_file(db: Session, map_id: int):
+def get_map_file(db: Session, map_id: int, request: Request):
     map = db.query(models.Map).filter(models.Map.id == map_id).first()
 
-    #This is bad and will run on every download. --v
-    if map:
-        if map.map_downloads != None:
-            map.map_downloads += 1
+    requestString = bytes(str(map_id) + request.client.host, 'utf-8')
+    requestHash = hashlib.sha256(requestString).hexdigest()
+    requestExists = db.query(models.Tracking).filter(models.Tracking.requestHash == requestHash).first() is not None
 
-        #This condition will never be met again after the first download. 
-        else:
-            map.map_downloads = 1
-        db.commit()
+    if not requestExists:
+        if map:
+            if map.map_downloads != None:
+                map.map_downloads += 1
+
+            else:
+                map.map_downloads = 1
+
+            newRequest = models.Tracking(requestHash=requestHash)
+            db.add(newRequest)
+            db.commit()
 
     return map
 
@@ -507,14 +515,17 @@ def search_mods(db: Session, search_text: str):
 
 
 #Create new mod entry
-def create_user_mod(db: Session, modDescription: str, modTags: str, mod: schemas.ModCreate, user_id: int, modVisibility: bool):
+def create_user_mod(db: Session, modUserDescription: str, modTags: str, mod: schemas.ModCreate, user_id: int, modVisibility: bool):
     db_mod = models.Mod(modName=mod.modName, 
                         modAuthor=mod.modAuthor,
                         modTags=modTags,
                         modFileName=mod.modFile,
                         modFileSize=mod.modFileSize,
                         modDescription=mod.modDescription,
+                        modUserDescription=modUserDescription,
+                        modVersion=1,
                         notVisible=modVisibility,
+                        time_updated=datetime.utcnow(),
                         owner_id=user_id,
                         gameVersion="0.7.1",
                         mod_downloads=0)
@@ -553,6 +564,8 @@ def update_mod_size(db: Session, mod_id: int, newSize: int):
 
     if mod:
         mod.modFileSize = newSize
+        mod.modVersion += 1
+        mod.time_updated=datetime.utcnow(),
 
         db.commit()
 
@@ -618,7 +631,7 @@ def delete_mod(db: Session, mod_id: int, user: str):
 
 
 #Get mod file
-def get_mod_file(db: Session, mod_id: int):
+def get_mod_file(db: Session, mod_id: int, request: Request):
     mod = db.query(models.Mod).filter(models.Mod.id == mod_id).first()
 
     if mod:
