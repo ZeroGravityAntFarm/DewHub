@@ -48,7 +48,7 @@ class Map(Base):
     mapTags = Column(String(64))
     gameVersion = Column(String(64))
     time_created = Column(DateTime(timezone=True), default=func.now())
-    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+    time_updated = Column(DateTime(timezone=True))
 
     #Relationships
     owner_id = Column(Integer, ForeignKey("users.id"))
@@ -62,16 +62,17 @@ class Mod(Base):
     id = Column(Integer, primary_key=True, index=True)
     modName = Column(String(128), index=True)
     modDescription = Column(String(1200))
+    modUserDescription = Column(String(1200))
     modAuthor = Column(String(128), index=True)
     modFileName = Column(String(128), index=True)
     modFileSize = Column(BigInteger, index=True)
-    modId = Column(Integer, index=True)
+    modVersion = Column(Integer, index=True)
     notVisible = Column(Boolean)
     mod_downloads = Column(Integer, index=True)
     modTags = Column(String(64))
     gameVersion = Column(String(64))
     time_created = Column(DateTime(timezone=True), default=func.now())
-    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+    time_updated = Column(DateTime(timezone=True))
 
     #Relationships
     owner_id = Column(Integer, ForeignKey("users.id"))
@@ -88,7 +89,7 @@ class Variant(Base):
     variantFile = Column(LargeBinary)
     variantFileName = Column(String(32), index=True)
     time_created = Column(DateTime(timezone=True), default=func.now())
-    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+    time_updated = Column(DateTime(timezone=True))
     downloads = Column(Integer)
     gameVersion = Column(String(64))
 
@@ -110,7 +111,7 @@ class PreFab(Base):
     downloads = Column(Integer)
     gameVersion = Column(String(64))
     time_created = Column(DateTime(timezone=True), default=func.now())
-    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+    time_updated = Column(DateTime(timezone=True))
 
     #Relationships
     owner_id = Column(Integer, ForeignKey("users.id"))
@@ -141,3 +142,9 @@ class Vote(Base):
     mapId = Column(Integer, ForeignKey("maps.id"))
     vote = Column(Boolean)
 
+
+class Tracking(Base):
+    __tablename__  = "tracking"
+
+    id = Column(Integer, primary_key=True, index=True)
+    requestHash = Column(String(64))

@@ -169,3 +169,9 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     sub: str = None
     exp: int = None
+
+
+#Tracking models
+class TrackingBase(BaseModel):
+    id: int
+    requestHash: str
