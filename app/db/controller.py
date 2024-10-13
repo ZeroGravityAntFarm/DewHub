@@ -71,17 +71,25 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 
 #Query user profile 
-def get_user(db: Session, user_name: str):
+def get_user(db: Session, user_name: str, request: Request):
     user = db.query(models.User).filter(models.User.name == user_name).first()
     user_data = db.query(*[c for c in models.User.__table__.c if c.name != 'hashed_password' and c.name != 'role' and c.name != 'email' and c.name != 'last_login_ip']).filter(models.User.name == user_name).first()
 
-    if user:
-        if user.prof_views != None:
-            user.prof_views += 1
+    requestString = bytes(str(user_name) + request.client.host, 'utf-8')
+    requestHash = hashlib.sha256(requestString).hexdigest()
+    requestExists = db.query(models.Tracking).filter(models.Tracking.requestHash == requestHash).first() is not None
 
-        else:
-            user.prof_views = 1
-        db.commit()
+    if not requestExists:
+        if user:
+            if user.prof_views != None:
+                user.prof_views += 1
+
+            else:
+                user.prof_views = 1
+
+            newRequest = models.Tracking(requestHash=requestHash)
+            db.add(newRequest)
+            db.commit()
 
     return user_data
 

@@ -25,14 +25,18 @@ def get_db():
 templates = Jinja2Templates(directory="templates")
 
 
-#Returns dynamically built view for maps. Only way to get meta tags working (that I know of).
+#Returns dynamically built view for a users profile.
 @router.get("/profile/{username}", response_class=HTMLResponse)
 async def return_map(request: Request, username: str, db: Session = Depends(get_db)):
-    user = controller.get_user(db, user_name=username)
-    maps = controller.get_user_maps_public(db, user=user, limit=500)
-    prefabs = controller.get_user_prefabs(db, user=user, limit=500)
-    mods = controller.get_user_mods_public(db, user=user, limit=500)
-    stats = controller.get_user_stats(db, user_id=user.id)
+    try:
+        user = controller.get_user(db, user_name=username, request=request)
+        maps = controller.get_user_maps_public(db, user=user, limit=500)
+        prefabs = controller.get_user_prefabs(db, user=user, limit=500)
+        mods = controller.get_user_mods_public(db, user=user, limit=500)
+        stats = controller.get_user_stats(db, user_id=user.id)
+
+    except Exception:
+        return templates.TemplateResponse("404/index.html", {"request": request})
 
     if user:
         return templates.TemplateResponse("profile/index.html", {"request": request, "user": user, "maps": maps, "prefabs": prefabs, "mods": mods, "stats": stats})

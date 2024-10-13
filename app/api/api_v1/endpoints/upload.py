@@ -303,7 +303,7 @@ def upload(background_tasks: BackgroundTasks, modDescription: str = Form(" "), m
 
     modVisibility = not modVisibility #Invert value because I didnt want to mess with updating all values in db. 
 
-    mod_create, webhooks = controller.create_user_mod(db, modTags=modTags, mod=modData, user_id=user.id, modDescription=modDescription, modVisibility=modVisibility)
+    mod_create, webhooks = controller.create_user_mod(db, modTags=modTags, mod=modData, user_id=user.id, modUserDescription=modDescription, modVisibility=modVisibility)
 
     #Pak files could be larger than bytea size limit so we puts them on the disk instead
     Path("/app/static/mods/pak/" + str(mod_create.id) + "/").mkdir(parents=True, exist_ok=True)
